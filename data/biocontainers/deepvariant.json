@@ -1,0 +1,333 @@
+{
+  "tool_name": "deepvariant",
+  "display_name": "deepvariant",
+  "description": "Deepvariant is an analysis pipeline that uses a deep neural network to call genetic variants from next-generation dna sequencing data",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/deepvariant",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/deepvariant:0.4.1--np113py27_1",
+    "registry": "quay.io",
+    "tag": "0.4.1--np113py27_1",
+    "version": "deepvariant",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.4.1--np113py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.4.1--np113py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.4.1--np113py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.4.1--np113py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.4.1--np113py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.4.1--np113py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.6.1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.6.1--py27h5d9141f_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.6.1--py27h5d9141f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.6.1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.6.1--py27h5d9141f_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.6.1--py27h5d9141f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.6.1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.6.1--py27h5d9141f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.6.1--py27h5d9141f_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.6.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.6.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.6.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.7.2--py27h5d9141f_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.7.2--py27h5d9141f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.7.2--py27h5d9141f_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.7.2--py27h5d9141f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.7.2--py27h5d9141f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.7.2--py27h5d9141f_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.7.1--py27h5d9141f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.7.1--py27h5d9141f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.7.1--py27h5d9141f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.7.0--py27h5d9141f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.7.0--py27h5d9141f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.7.0--py27h5d9141f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.8.0--py27h7333d49_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.8.0--py27h7333d49_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.8.0--py27h7333d49_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.9.0--py27h7333d49_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.9.0--py27h7333d49_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.9.0--py27h7333d49_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.10.0--py36h7333d49_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.10.0--py36h7333d49_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.10.0--py36h7333d49_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.10.0--py36h7333d49_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.10.0--py36h7333d49_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.10.0--py36h7333d49_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.10.0--py27h7333d49_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.10.0--py27h7333d49_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.10.0--py27h7333d49_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.10.0--py36h7333d49_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.10.0--py36h7333d49_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.10.0--py36h7333d49_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==0.10.0--py36hf5a246b_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:0.10.0--py36hf5a246b_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:0.10.0--py36hf5a246b_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==1.0.0--py36hf5a246b_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:1.0.0--py36hf5a246b_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:1.0.0--py36hf5a246b_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==1.0.0--py36hf3e76ba_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:1.0.0--py36hf3e76ba_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:1.0.0--py36hf3e76ba_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==1.0.0--py36hf3e76ba_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:1.0.0--py36hf3e76ba_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "deepvariant==1.0.0--py36hf3e76ba_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/deepvariant:1.0.0--py36hf3e76ba_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:1.0.0--py36hf3e76ba_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/deepvariant:1.0.0--py36hf3e76ba_3",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 17,
+  "embedding_text": "Tool: deepvariant\nDescription: Deepvariant is an analysis pipeline that uses a deep neural network to call genetic variants from next-generation dna sequencing data\nContainer: quay.io/biocontainers/deepvariant:0.4.1--np113py27_1\nRecent versions: deepvariant, deepvariant, deepvariant\nUsage context: This tool is used in bioinformatics pipelines for deepvariant is an analysis pipeline that uses a deep neural network to call genetic variants from next-generation dna sequencing data.\nSnakemake container directive: container: \"quay.io/biocontainers/deepvariant:0.4.1--np113py27_1\""
+}

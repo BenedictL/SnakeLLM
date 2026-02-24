@@ -1,0 +1,703 @@
+{
+  "tool_name": "hisat2",
+  "display_name": "hisat2",
+  "description": "Graph-based alignment of short nucleotide reads to many genomes",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/hisat2",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/hisat2:2.0.3beta--py35_0",
+    "registry": "quay.io",
+    "tag": "2.0.3beta--py35_0",
+    "version": "hisat2",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.3beta--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.3beta--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.3beta--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.3beta--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.3beta--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.3beta--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.3beta--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.3beta--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.3beta--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.4--py34_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.4--py34_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py34_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.4--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.1beta--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.1beta--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.1beta--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.1beta--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.1beta--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.1beta--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.1beta--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.1beta--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.1beta--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.2beta--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.2beta--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.2beta--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.2beta--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.2beta--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.2beta--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.2beta--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.2beta--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.2beta--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py36h2d50403_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py27pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py27h6bb024c_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py36pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py27h2d50403_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py35h2d50403_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py35pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py36h2d50403_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py27pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py27h6bb024c_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py36pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py27h2d50403_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py27h2d50403_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py35h2d50403_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py35pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py27hc9558a2_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py27hc9558a2_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py36hc9558a2_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py36hc9558a2_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.1.0--py37hc9558a2_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.1.0--py37hc9558a2_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py27h2d50403_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py27h2d50403_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py27h6bb024c_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py27hc9558a2_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py27pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py35h2d50403_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py35pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py36h2d50403_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py36hc9558a2_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py36pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.1.0--py37hc9558a2_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.0beta--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.0beta--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.0beta--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.0beta--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.0beta--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.0beta--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.0beta--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.0beta--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.0beta--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.5--py35pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.5--py36pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.0.5--py27pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.5--py35pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.5--py36pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.0.5--py27pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.5--py27pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.5--py35pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.0.5--py36pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/hisat2:v2.0.5-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/hisat2:v2.1.0-2-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py27he1b5a44_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py27he1b5a44_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py27he1b5a44_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py27he1b5a44_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py36he1b5a44_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py36he1b5a44_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py36he1b5a44_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py36he1b5a44_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py37he1b5a44_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py37he1b5a44_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py37he1b5a44_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py37he1b5a44_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py27he1b5a44_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py27he1b5a44_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py36he1b5a44_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py36he1b5a44_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37he1b5a44_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37he1b5a44_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py37h3340039_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py37h3340039_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py36h831f99a_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py36h831f99a_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py36h831f99a_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37h3340039_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py37h3340039_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py37h3340039_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py36h831f99a_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py36h831f99a_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py36h831f99a_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37h3340039_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py27h877ad6c_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py27h877ad6c_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py37hfa133b6_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py37hfa133b6_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "hisat2==2.2.0--py36hf0b53f7_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/hisat2:2.2.0--py36hf0b53f7_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py27h877ad6c_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py36hf0b53f7_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/hisat2:2.2.0--py37hfa133b6_4",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 12,
+  "embedding_text": "Tool: hisat2\nDescription: Graph-based alignment of short nucleotide reads to many genomes\nContainer: quay.io/biocontainers/hisat2:2.0.3beta--py35_0\nRecent versions: hisat2, hisat2, hisat2\nUsage context: This tool is used in bioinformatics pipelines for graph-based alignment of short nucleotide reads to many genomes.\nSnakemake container directive: container: \"quay.io/biocontainers/hisat2:2.0.3beta--py35_0\""
+}

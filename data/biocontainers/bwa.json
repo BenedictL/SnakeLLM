@@ -1,0 +1,878 @@
+{
+  "tool_name": "bwa",
+  "display_name": "bwa",
+  "description": "Burrow-wheeler aligner for pairwise alignment between dna sequences",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bwa",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bwa:0.7.17--ha92aebf_3",
+    "registry": "quay.io",
+    "tag": "0.7.17--ha92aebf_3",
+    "version": "bwa",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--ha92aebf_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--h84994c4_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--h84994c4_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--pl5.22.0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--ha92aebf_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--h84994c4_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--h84994c4_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--pl5.22.0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--hed695b0_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--hed695b0_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--hed695b0_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--hed695b0_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--h84994c4_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--h84994c4_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--ha92aebf_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--pl5.22.0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--h5bf99c6_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--h5bf99c6_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--h5bf99c6_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--h7132678_9",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--h7132678_9",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--h7132678_9",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--he4a0461_11",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--he4a0461_11",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--he4a0461_10",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--he4a0461_10",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.17--h7132678_10",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.17--h7132678_10",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--h7132678_10",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--he4a0461_10",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.17--he4a0461_11",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--h84994c4_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--ha92aebf_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--h84994c4_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--ha92aebf_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--hed695b0_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--hed695b0_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--hed695b0_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--hed695b0_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--h84994c4_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--ha92aebf_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--hed695b0_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--hed695b0_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--h5bf99c6_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--h5bf99c6_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--h5bf99c6_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--h7132678_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--h7132678_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--h7132678_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--he4a0461_9",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--he4a0461_9",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--he4a0461_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--he4a0461_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--h7132678_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--h7132678_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--h7132678_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--he4a0461_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--he4a0461_9",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.8--h577a1d6_10",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.8--h577a1d6_10",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.8--h577a1d6_10",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--ha92aebf_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--h84994c4_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--ha92aebf_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--h84994c4_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--hed695b0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--hed695b0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--hed695b0_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--hed695b0_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--h84994c4_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--ha92aebf_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--hed695b0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--hed695b0_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--h5bf99c6_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--h5bf99c6_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--h5bf99c6_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--h7132678_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--h7132678_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--h7132678_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--he4a0461_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--he4a0461_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--he4a0461_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--he4a0461_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--h7132678_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--h7132678_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--h7132678_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--he4a0461_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--he4a0461_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.4--h577a1d6_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.4--h577a1d6_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.4--h577a1d6_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.6.2--ha92aebf_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.6.2--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.6.2--ha92aebf_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.6.2--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.6.2--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.6.2--ha92aebf_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.5.9--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.5.9--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.5.9--ha92aebf_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.5.9--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.5.9--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.5.9--ha92aebf_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.5.9--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.5.9--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.5.9--ha92aebf_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--ha92aebf_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h84994c4_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h84994c4_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--ha92aebf_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h84994c4_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h84994c4_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h84994c4_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h84994c4_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--ha92aebf_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--hed695b0_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--hed695b0_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--hed695b0_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h5bf99c6_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h5bf99c6_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h5bf99c6_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h7132678_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h7132678_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h7132678_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--he4a0461_9",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--he4a0461_9",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--he4a0461_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--he4a0461_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h7132678_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h7132678_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h7132678_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--he4a0461_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--he4a0461_9",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.3a--h577a1d6_10",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.3a--h577a1d6_10",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.3a--h577a1d6_10",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.13--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bwa:0.7.13",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.13--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.13--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.15--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.15--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bwa:0.7.15",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.15--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.15--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.15--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.15--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa:0.7.16--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa==0.7.16--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa:0.7.16--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bwa:v0.7.12_cv3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bwa:v0.7.12_cv2",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 17,
+  "embedding_text": "Tool: bwa\nDescription: Burrow-wheeler aligner for pairwise alignment between dna sequences\nContainer: quay.io/biocontainers/bwa:0.7.17--ha92aebf_3\nRecent versions: bwa, bwa, bwa\nUsage context: This tool is used in bioinformatics pipelines for burrow-wheeler aligner for pairwise alignment between dna sequences.\nSnakemake container directive: container: \"quay.io/biocontainers/bwa:0.7.17--ha92aebf_3\""
+}

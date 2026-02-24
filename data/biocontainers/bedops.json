@@ -1,0 +1,198 @@
+{
+  "tool_name": "bedops",
+  "display_name": "bedops",
+  "description": "High-performance genomic feature operations",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bedops",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bedops:2.4.23--0",
+    "registry": "quay.io",
+    "tag": "2.4.23--0",
+    "version": "bedops",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.23--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.23--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.23--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.24--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.24--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.24--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.22--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.22--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.22--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.19--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.19--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.19--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.25--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.25--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.25--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.35--h2d50403_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.35--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.35--h2d50403_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.35--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.35--h6bb024c_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.35--h6bb024c_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.35--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.35--h2d50403_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.35--h6bb024c_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.26--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.26--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.26--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.21--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.21--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.21--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.33--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.33--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.33--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bedops:2.4.30--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bedops==2.4.30--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bedops:2.4.30--0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 23,
+  "embedding_text": "Tool: bedops\nDescription: High-performance genomic feature operations\nContainer: quay.io/biocontainers/bedops:2.4.23--0\nRecent versions: bedops, bedops, bedops\nUsage context: This tool is used in bioinformatics pipelines for high-performance genomic feature operations.\nSnakemake container directive: container: \"quay.io/biocontainers/bedops:2.4.23--0\""
+}

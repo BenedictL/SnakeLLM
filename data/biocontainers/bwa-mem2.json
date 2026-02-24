@@ -1,0 +1,198 @@
+{
+  "tool_name": "bwa-mem2",
+  "display_name": "bwa-mem2",
+  "description": "The next version of bwa-mem",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bwa-mem2",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+    "registry": "quay.io",
+    "tag": "2.0--he513fc3_0",
+    "version": "bwa-mem2",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "bwa-mem2==2.0--he513fc3_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.0--he513fc3_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.0--he513fc3_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.0--he513fc3_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.1--he513fc3_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.1--he513fc3_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.1--he513fc3_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2--he513fc3_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2--he513fc3_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2--he513fc3_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--he513fc3_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--he513fc3_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--he513fc3_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--h9a82719_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--h9a82719_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--h9a82719_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--hd03093a_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--hd03093a_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--hd03093a_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--hd03093a_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--hd03093a_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--hd03093a_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--hd03093a_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--hd03093a_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--hd03093a_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--he70b90d_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--he70b90d_6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bwa-mem2:2.2.1--he70b90d_6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--he70b90d_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--he70b90d_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.2.1--he70b90d_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.2.1--he70b90d_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bwa-mem2==2.3--he70b90d_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bwa-mem2:2.3--he70b90d_0",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 5,
+  "embedding_text": "Tool: bwa-mem2\nDescription: The next version of bwa-mem\nContainer: quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0\nRecent versions: bwa-mem2, bwa-mem2, bwa-mem2\nUsage context: This tool is used in bioinformatics pipelines for the next version of bwa-mem.\nSnakemake container directive: container: \"quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0\""
+}

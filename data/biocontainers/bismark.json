@@ -1,0 +1,183 @@
+{
+  "tool_name": "bismark",
+  "display_name": "bismark",
+  "description": "Bismark is a tool to map bisulfite treated sequencing reads and perform methylation calling in a quick and easy-to-use fashion.",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bismark",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bismark:0.18.1--pl5.22.0_0",
+    "registry": "quay.io",
+    "tag": "0.18.1--pl5.22.0_0",
+    "version": "bismark",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bismark:0.18.1--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.18.1--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.18.1--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.17.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.17.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.17.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.19.0--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.19.0--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.19.0--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.19.0--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.19.0--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.19.0--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.20.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.20.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.20.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.19.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.19.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.19.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.21.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.21.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.21.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.22.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.22.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.22.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.22.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.22.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.22.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.22.2--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.22.2--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.22.2--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bismark==0.22.3--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bismark:0.22.3--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bismark:0.22.3--0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 17,
+  "embedding_text": "Tool: bismark\nDescription: Bismark is a tool to map bisulfite treated sequencing reads and perform methylation calling in a quick and easy-to-use fashion.\nContainer: quay.io/biocontainers/bismark:0.18.1--pl5.22.0_0\nRecent versions: bismark, bismark, bismark\nUsage context: This tool is used in bioinformatics pipelines for bismark is a tool to map bisulfite treated sequencing reads and perform methylation calling in a quick and easy-to-use fashion..\nSnakemake container directive: container: \"quay.io/biocontainers/bismark:0.18.1--pl5.22.0_0\""
+}

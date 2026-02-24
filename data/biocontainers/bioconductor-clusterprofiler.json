@@ -1,0 +1,213 @@
+{
+  "tool_name": "bioconductor-clusterprofiler",
+  "display_name": "bioconductor-clusterprofiler",
+  "description": "This package implements methods to analyze and visualize functional profiles (go and kegg) of gene and gene clusters.",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bioconductor-clusterprofiler",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+    "registry": "quay.io",
+    "tag": "3.6.0--r3.4.1_0",
+    "version": "bioconductor-clusterprofiler",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.6.0--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.0.5--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.0.5--r3.3.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.0.5--r3.3.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.0.5--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.0.5--r3.3.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.0.5--r3.3.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.0.5--r3.3.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.0.5--r3.3.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.0.5--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.10.1--r351_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.10.1--r351_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.10.1--r351_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.0.4--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.0.4--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.0.4--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.8.1--r351_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.8.1--r341_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.8.1--r351_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.8.1--r341_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.8.1--r341_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.8.1--r351_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.4.4--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.4.4--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.4.4--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.12.0--r36_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.12.0--r36_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.12.0--r36_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.14.0--r36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.14.0--r36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.14.0--r36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.16.0--r40_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.16.0--r40_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.16.0--r40_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-clusterprofiler==3.18.0--r40_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-clusterprofiler:3.18.0--r40_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-clusterprofiler:3.18.0--r40_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 17,
+  "embedding_text": "Tool: bioconductor-clusterprofiler\nDescription: This package implements methods to analyze and visualize functional profiles (go and kegg) of gene and gene clusters.\nContainer: quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0\nRecent versions: bioconductor-clusterprofiler, bioconductor-clusterprofiler, bioconductor-clusterprofiler\nUsage context: This tool is used in bioinformatics pipelines for this package implements methods to analyze and visualize functional profiles (go and kegg) of gene and gene clusters..\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0\""
+}

@@ -1,0 +1,183 @@
+{
+  "tool_name": "fastp",
+  "display_name": "fastp",
+  "description": "A tool designed to provide fast all-in-one preprocessing for fastq files",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/fastp",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/fastp:0.18.0--hd28b015_0",
+    "registry": "quay.io",
+    "tag": "0.18.0--hd28b015_0",
+    "version": "fastp",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/fastp:0.18.0--hd28b015_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.18.0--hd28b015_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.18.0--hd28b015_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.19.7--hdbcaa40_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.19.7--hdbcaa40_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.19.7--hdbcaa40_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.13.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.13.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.13.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.12.2--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.12.2--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.12.2--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.12.2--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.12.2--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.12.2--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.17.0--hd28b015_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.17.0--hd28b015_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.17.0--hd28b015_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.12.5--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.12.5--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.12.5--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.17.1--hd28b015_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.17.1--hd28b015_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.17.1--hd28b015_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.19.3--hd28b015_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.19.3--hd28b015_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.19.3--hd28b015_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.12.3--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.12.3--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.12.3--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastp:0.19.6--hd28b015_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastp==0.19.6--hd28b015_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastp:0.19.6--hd28b015_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 33,
+  "embedding_text": "Tool: fastp\nDescription: A tool designed to provide fast all-in-one preprocessing for fastq files\nContainer: quay.io/biocontainers/fastp:0.18.0--hd28b015_0\nRecent versions: fastp, fastp, fastp\nUsage context: This tool is used in bioinformatics pipelines for a tool designed to provide fast all-in-one preprocessing for fastq files.\nSnakemake container directive: container: \"quay.io/biocontainers/fastp:0.18.0--hd28b015_0\""
+}

@@ -1,0 +1,243 @@
+{
+  "tool_name": "star",
+  "display_name": "star",
+  "description": "An rna-seq read aligner.",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/star",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+    "registry": "quay.io",
+    "tag": "2.5.4a--0",
+    "version": "star",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/star:2.5.4a--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.5.4a--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.5.4a--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.7.0b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.7.0b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.7.0b--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.0c--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.0c--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.0c--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.0c--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.0c--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.0c--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.0c--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.0c--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.0c--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.0c--h9ee0642_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.0c--h9ee0642_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.0c--h9ee0642_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.1a--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.1a--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.1a--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.0b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.0b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.0b--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.4.0j--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.4.0j--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.4.0j--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.4.0j--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.4.0j--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.4.0j--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.4.0j--h9ee0642_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.4.0j--h9ee0642_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.4.0j--h9ee0642_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.7.0d--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.7.0d--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.7.0d--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.5.3a--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.5.3a--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.5.3a--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.6.1b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.6.1b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.6.1b--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/star:2.5.2b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "star==2.5.2b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/star:2.5.2b--0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 31,
+  "embedding_text": "Tool: star\nDescription: An rna-seq read aligner.\nContainer: quay.io/biocontainers/star:2.5.4a--0\nRecent versions: star, star, star\nUsage context: This tool is used in bioinformatics pipelines for an rna-seq read aligner..\nSnakemake container directive: container: \"quay.io/biocontainers/star:2.5.4a--0\""
+}

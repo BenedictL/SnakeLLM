@@ -1,0 +1,213 @@
+{
+  "tool_name": "bioconductor-chipseeker",
+  "display_name": "bioconductor-chipseeker",
+  "description": "This package implements functions to retrieve the nearest genes around the peak, annotate the genomic region of the peak, statistical methods for estimating the significance of overlap among chip peak data sets, and incorporate geo database to compare the own dataset with those deposited in database. the comparison can be used to infer cooperative regulation and thus can be used to generate hypotheses.",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bioconductor-chipseeker",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.4.1_0",
+    "registry": "quay.io",
+    "tag": "1.10.0--r3.4.1_0",
+    "version": "bioconductor-chipseeker",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.3.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.3.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.10.0--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.10.0--r3.3.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.10.0--r3.3.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.10.0--r3.3.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.10.0--r3.3.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.10.0--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.18.0--r351_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.18.0--r351_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.18.0--r351_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.16.1--r341_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.16.1--r351_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.16.1--r341_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.16.1--r351_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.16.1--r341_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.16.1--r351_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.12.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.12.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.12.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.6.6--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.6.6--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.6.6--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.14.2--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.14.2--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.14.2--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.14.0--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.14.0--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.14.0--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.20.0--r36_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.20.0--r36_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.20.0--r36_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.22.0--r36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.22.0--r36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.22.0--r36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-chipseeker==1.24.0--r40_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-chipseeker:1.24.0--r40_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-chipseeker:1.24.0--r40_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 19,
+  "embedding_text": "Tool: bioconductor-chipseeker\nDescription: This package implements functions to retrieve the nearest genes around the peak, annotate the genomic region of the peak, statistical methods for estimating the significance of overlap among chip peak data sets, and incorporate geo database to compare the own dataset with those deposited in database. the comparison can be used to infer cooperative regulation and thus can be used to generate hypotheses.\nContainer: quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.4.1_0\nRecent versions: bioconductor-chipseeker, bioconductor-chipseeker, bioconductor-chipseeker\nUsage context: This tool is used in bioinformatics pipelines for this package implements functions to retrieve the nearest genes around the peak, annotate the genomic region of the peak, statistical methods for estimating the significance of overlap among chip peak data sets, and incorporate geo database to compare the own dataset with those deposited in database. the comparison can be used to infer cooperative regulation and thus can be used to generate hypotheses..\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.4.1_0\""
+}

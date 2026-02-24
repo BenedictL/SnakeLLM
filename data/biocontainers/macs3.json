@@ -1,0 +1,358 @@
+{
+  "tool_name": "macs3",
+  "display_name": "macs3",
+  "description": "",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/macs3",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2",
+    "registry": "quay.io",
+    "tag": "3.0.1--py310h83093d7_2",
+    "version": "macs3",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "macs3==3.0.1--py310h83093d7_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py39h3d4b85c_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py39h3d4b85c_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py310h83093d7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py310h83093d7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py312he4a0461_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py312he4a0461_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py310h83093d7_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py310h83093d7_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py312he4a0461_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py39h3d4b85c_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py312he57d009_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py312he57d009_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py39he47c912_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py39he47c912_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py311h0152c62_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py311h0152c62_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.1--py310h1af8fb7_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.1--py310h1af8fb7_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py310h1af8fb7_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py311h0152c62_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py312he57d009_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.1--py39he47c912_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py311h0152c62_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py311h0152c62_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py310h1af8fb7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py310h1af8fb7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py312he57d009_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py312he57d009_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py39he47c912_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py39he47c912_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py39he47c912_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py39he47c912_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py312he57d009_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py312he57d009_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py310h1af8fb7_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py310h1af8fb7_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py311h0152c62_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py311h0152c62_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py310h1af8fb7_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py310h1af8fb7_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py311h0152c62_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py311h0152c62_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py312he57d009_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py312he57d009_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py39he47c912_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py39he47c912_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py310h397c9d8_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py310h397c9d8_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py312h4711d71_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py312h4711d71_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py311h384fd50_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py311h384fd50_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.2--py39h0699b22_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.2--py39h0699b22_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py310h397c9d8_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py311h384fd50_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py312h4711d71_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/macs3:3.0.2--py39h0699b22_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.3--py39h0699b22_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.3--py39h0699b22_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.3--py310h397c9d8_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.3--py310h397c9d8_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.3--py311h384fd50_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.3--py311h384fd50_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.3--py312h4711d71_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.3--py312h4711d71_0",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 3,
+  "embedding_text": "Tool: macs3\nDescription: \nContainer: quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2\nRecent versions: macs3, macs3, macs3\nUsage context: This tool is used in bioinformatics pipelines for .\nSnakemake container directive: container: \"quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2\""
+}

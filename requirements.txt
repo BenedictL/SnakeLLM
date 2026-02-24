@@ -1,0 +1,29 @@
+# SnakeLLM LLM Core — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# ── LLM PROVIDERS ─────────────────────────────────────────────────
+anthropic>=0.34.0           # Claude (Sonnet 4.6 / Opus 4.6)
+openai>=1.40.0              # GPT-4o (optional)
+google-generativeai>=0.8.0  # Gemini (optional)
+
+# ── RAG — VECTOR STORE ────────────────────────────────────────────
+chromadb>=0.5.0
+
+# ── RAG — EMBEDDINGS ──────────────────────────────────────────────
+sentence-transformers>=3.0.0
+torch>=2.0.0                # required by sentence-transformers
+
+# ── RAG — SPARSE RETRIEVAL ────────────────────────────────────────
+rank-bm25>=0.2.2
+
+# ── SCHEMA VALIDATION ─────────────────────────────────────────────
+pydantic>=2.7.0
+
+# ── HTTP (BioContainers API) ──────────────────────────────────────
+requests>=2.32.0
+
+# ── ENVIRONMENT / CONFIG ──────────────────────────────────────────
+python-dotenv>=1.0.0
+
+# ── UTILITIES ─────────────────────────────────────────────────────
+numpy>=1.26.0

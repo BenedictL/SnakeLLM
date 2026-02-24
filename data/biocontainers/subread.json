@@ -1,0 +1,208 @@
+{
+  "tool_name": "subread",
+  "display_name": "subread",
+  "description": "Toolkit for processing next-gen sequencing data",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/subread",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/subread:1.5.0p3--0",
+    "registry": "quay.io",
+    "tag": "1.5.0p3--0",
+    "version": "subread",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/subread:1.5.0p3--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.5.0p3--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.5.0p3--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.5.3--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.5.3--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.5.3--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.5.3--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.5.3--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.5.3--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.5.2--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.5.2--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.5.2--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.0--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.0--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.0--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.0--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.0--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.0--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.3--ha92aebf_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.3--h84994c4_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.3--ha92aebf_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.3--h84994c4_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.3--h84994c4_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.3--ha92aebf_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.2--ha92aebf_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.2--ha92aebf_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.2--ha92aebf_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/subread:v1.5.1dfsg-4-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "subread==1.6.4--h84994c4_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/subread:1.6.4--h84994c4_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/subread:1.6.4--h84994c4_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/subread:v1.6.3dfsg-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 17,
+  "embedding_text": "Tool: subread\nDescription: Toolkit for processing next-gen sequencing data\nContainer: quay.io/biocontainers/subread:1.5.0p3--0\nRecent versions: subread, subread, subread\nUsage context: This tool is used in bioinformatics pipelines for toolkit for processing next-gen sequencing data.\nSnakemake container directive: container: \"quay.io/biocontainers/subread:1.5.0p3--0\""
+}

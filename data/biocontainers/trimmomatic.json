@@ -1,0 +1,338 @@
+{
+  "tool_name": "trimmomatic",
+  "display_name": "trimmomatic",
+  "description": "A flexible read trimming tool for illumina ngs data",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/trimmomatic",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+    "registry": "quay.io",
+    "tag": "0.33--1",
+    "version": "trimmomatic",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.33--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.33--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.33--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.33--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.33--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.33--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.33--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.33--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.33--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.33--hdfd78af_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.33--hdfd78af_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.33--hdfd78af_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.36--6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.36--4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.36--5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.36--3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.36--6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.36--4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.36--5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.36--3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.36--3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.36--4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.36--5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.36--6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.38--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.38--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.38--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.38--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.38--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.38--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.32--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.32--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.32--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.32--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.32--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.32--3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.32--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.32--3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.32--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.32--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.32--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.32--3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.32--hdfd78af_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.32--hdfd78af_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.32--hdfd78af_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/trimmomatic:v0.36dfsg-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.39--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.39--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.39--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.39--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.39--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.39--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.39--hdfd78af_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.39--hdfd78af_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.35--6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.35--6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.35--6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.35--hdfd78af_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.35--hdfd78af_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/trimmomatic:0.35--hdfd78af_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/trimmomatic:v0.38dfsg-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "trimmomatic==0.40--hdfd78af_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/trimmomatic:0.40--hdfd78af_0",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 9,
+  "embedding_text": "Tool: trimmomatic\nDescription: A flexible read trimming tool for illumina ngs data\nContainer: quay.io/biocontainers/trimmomatic:0.33--1\nRecent versions: trimmomatic, trimmomatic, trimmomatic\nUsage context: This tool is used in bioinformatics pipelines for a flexible read trimming tool for illumina ngs data.\nSnakemake container directive: container: \"quay.io/biocontainers/trimmomatic:0.33--1\""
+}

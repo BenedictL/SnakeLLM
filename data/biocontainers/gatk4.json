@@ -1,0 +1,528 @@
+{
+  "tool_name": "gatk4",
+  "display_name": "gatk4",
+  "description": "Genome analysis toolkit (gatk4)",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/gatk4",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+    "registry": "quay.io",
+    "tag": "4.0.0.0--py36_0",
+    "version": "gatk4",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.0.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.0.0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.0.0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.0.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.0.0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.0.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.0.0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.0.0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b2--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b2--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b2--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b2--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b2--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b2--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b2--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b2--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b2--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b3--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b3--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b3--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b3--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b3--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b3--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b3--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b3--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b3--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.1.1--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.1.1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.1.1--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.1.1--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.1.1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.1.1--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.1.1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.1.1--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.1.1--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b6--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b6--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b6--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b6--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b6--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b6--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b6--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b6--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b6--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py35_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py27_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py36_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0a1.2.7.2--py36_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py35_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py27_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py36_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0a1.2.7.2--py36_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py27_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py35_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py36_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0a1.2.7.2--py36_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b5--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b5--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b5--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b5--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b5--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b5--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b5--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b5--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b5--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0.5.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0.5.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0.5.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b1--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b1--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b1--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b1--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b1--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b1--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b4--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b4--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/gatk4:4.0b4--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b4--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b4--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "gatk4==4.0b4--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b4--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b4--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/gatk4:4.0b4--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 50,
+  "embedding_text": "Tool: gatk4\nDescription: Genome analysis toolkit (gatk4)\nContainer: quay.io/biocontainers/gatk4:4.0.0.0--py36_0\nRecent versions: gatk4, gatk4, gatk4\nUsage context: This tool is used in bioinformatics pipelines for genome analysis toolkit (gatk4).\nSnakemake container directive: container: \"quay.io/biocontainers/gatk4:4.0.0.0--py36_0\""
+}

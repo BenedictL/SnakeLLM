@@ -1,0 +1,828 @@
+{
+  "tool_name": "htseq",
+  "display_name": "htseq",
+  "description": "High-throughput genome sequencing read analysis utilities",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/htseq",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/htseq:0.11.2--py36h7eb728f_0",
+    "registry": "quay.io",
+    "tag": "0.11.2--py36h7eb728f_0",
+    "version": "htseq",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py36h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py27h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py35h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py36h637b7d7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py27h637b7d7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.2--py37h637b7d7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py36h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py27h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py35h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py36h637b7d7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py27h637b7d7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.2--py37h637b7d7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py27h637b7d7_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py27h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py35h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py36h637b7d7_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py36h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.2--py37h637b7d7_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py35h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py35h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py36h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py27h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py36h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py27h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py35h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py35h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py36h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py27h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py36h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py27h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py27h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py27h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py35h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py35h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py36h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py36h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py36h39af1c6_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py36h39af1c6_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py27h76bc9d7_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py27h76bc9d7_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py38h1773678_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py38h1773678_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py37h70f9b12_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py37h70f9b12_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py37h0498b6d_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py37h0498b6d_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py27hfd4ddd4_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py27hfd4ddd4_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.9.1--py36h0234e80_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.9.1--py36h0234e80_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py27h76bc9d7_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py27hfd4ddd4_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py36h0234e80_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py36h39af1c6_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py37h0498b6d_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py37h70f9b12_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.9.1--py38h1773678_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py27h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py36h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py35h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py35h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py36h24bf2e0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py27h7eb728f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py27h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py36h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py35h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py35h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py36h24bf2e0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py27h7eb728f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py27h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py27h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py35h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py35h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py36h24bf2e0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py36h7eb728f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py27h76bc9d7_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py27h76bc9d7_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py36h39af1c6_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py36h39af1c6_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py36h0234e80_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py36h0234e80_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py37h70f9b12_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py37h70f9b12_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py27hfd4ddd4_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py27hfd4ddd4_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py38h1773678_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py38h1773678_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.7.2--py37h0498b6d_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.7.2--py37h0498b6d_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py27h76bc9d7_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py27hfd4ddd4_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py36h0234e80_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py36h39af1c6_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py37h0498b6d_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py37h70f9b12_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.7.2--py38h1773678_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.1--py36h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.1--py35h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.1--py27h7eb728f_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.1--py36h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.1--py35h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.1--py27h7eb728f_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.1--py27h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.1--py35h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.1--py36h7eb728f_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.0--py27h7eb728f_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.0--py35h7eb728f_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.11.0--py36h7eb728f_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.0--py27h7eb728f_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.0--py35h7eb728f_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.11.0--py36h7eb728f_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.0--py27h7eb728f_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.0--py35h7eb728f_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.11.0--py36h7eb728f_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1.post1--py27h7eb728f_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1.post1--py27h24bf2e0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1.post1--py27h7eb728f_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1.post1--py27h24bf2e0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1.post1--py27h24bf2e0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1.post1--py27h7eb728f_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1.post1--py27h76bc9d7_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1.post1--py27h76bc9d7_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1.post1--py27hfd4ddd4_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1.post1--py27hfd4ddd4_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1.post1--py27h76bc9d7_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1.post1--py27hfd4ddd4_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1--py27h470a237_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1--py27h470a237_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1--py27h470a237_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1--py27hfd4ddd4_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1--py27hfd4ddd4_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "htseq==0.6.1--py27h76bc9d7_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/htseq:0.6.1--py27h76bc9d7_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1--py27h76bc9d7_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/htseq:0.6.1--py27hfd4ddd4_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/htseq:v0.6.1p1-4-deb-py2_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/htseq:v0.11.2-1-deb-py3_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/htseq:v0.11.2-1-deb-py2_cv1",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 22,
+  "embedding_text": "Tool: htseq\nDescription: High-throughput genome sequencing read analysis utilities\nContainer: quay.io/biocontainers/htseq:0.11.2--py36h7eb728f_0\nRecent versions: htseq, htseq, htseq\nUsage context: This tool is used in bioinformatics pipelines for high-throughput genome sequencing read analysis utilities.\nSnakemake container directive: container: \"quay.io/biocontainers/htseq:0.11.2--py36h7eb728f_0\""
+}

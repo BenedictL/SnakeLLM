@@ -1,0 +1,308 @@
+{
+  "tool_name": "bioconductor-deseq2",
+  "display_name": "bioconductor-deseq2",
+  "description": "R package for rna-seq differential expression analysis",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bioconductor-deseq2",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+    "registry": "quay.io",
+    "tag": "1.20.0--r351hfc679d8_0",
+    "version": "bioconductor-deseq2",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r341hfc679d8_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.20.0--r351hfc679d8_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.20.0--r341hfc679d8_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.20.0--r341hfc679d8_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.18.0--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.18.0--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.18.0--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.16.1--r3.3.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.16.1--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.16.1--r3.4.1_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.16.1--r3.4.1_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.16.1--r3.3.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.16.1--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.16.1--r3.4.1_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.16.1--r3.4.1_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.16.1--r3.3.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.16.1--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.16.1--r3.4.1_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.16.1--r3.4.1_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.22.1--r351hf484d3e_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.22.1--r351hf484d3e_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.22.1--r351hf484d3e_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.18.1--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.18.1--r3.4.1_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.18.1--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.18.1--r3.4.1_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.18.1--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.18.1--r3.4.1_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.12.4--r3.3.1_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.12.4--r3.3.1_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.12.4--r3.3.1_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.12.4--r3.3.1_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.12.4--r3.3.1_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.12.4--r3.3.1_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.12.4--r3.3.1_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.12.4--r3.3.1_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.12.4--r3.3.1_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.12.4--r3.3.1_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.12.4--r3.3.1_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.12.4--r3.3.1_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.12.4--r3.3.1_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.12.4--r3.3.1_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.12.4--r3.3.1_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.14.1--r3.3.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.14.1--r3.3.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.14.1--r3.3.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.14.1--r3.3.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.14.1--r3.3.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.14.1--r3.3.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.10.1--r3.2.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.10.1--r3.2.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.10.1--r3.2.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bioconductor-deseq2:v1.14.1-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-deseq2==1.24.0--r36he1b5a44_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-deseq2:1.24.0--r36he1b5a44_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-deseq2:1.24.0--r36he1b5a44_1",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 20,
+  "embedding_text": "Tool: bioconductor-deseq2\nDescription: R package for rna-seq differential expression analysis\nContainer: quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0\nRecent versions: bioconductor-deseq2, bioconductor-deseq2, bioconductor-deseq2\nUsage context: This tool is used in bioinformatics pipelines for r package for rna-seq differential expression analysis.\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0\""
+}

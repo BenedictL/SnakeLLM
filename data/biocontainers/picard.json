@@ -1,0 +1,438 @@
+{
+  "tool_name": "picard",
+  "display_name": "picard",
+  "description": "Java tools for working with ngs data in the bam format",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/picard",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+    "registry": "quay.io",
+    "tag": "2.9.2--py35_1",
+    "version": "picard",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/picard:2.9.2--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.9.2--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.9.2--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.9.2--py36_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.9.2--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.9.2--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.9.2--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.9.2--py36_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.9.2--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.9.2--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.9.2--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.9.2--py36_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.20--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.20--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.20--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.3--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.3--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.3--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.3--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.3--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.3--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.3--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.3--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.3--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.3--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.3--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.3--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.3--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.3--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.3--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.3--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.3--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.3--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.13--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.13--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.13--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.13--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.13--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.13--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.13--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.13--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.13--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.13--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.13--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.13--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.11.0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.11.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.11.0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.11.0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.11.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.11.0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.11.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.11.0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.11.0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.2--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.2--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.17.2--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.2--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.2--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.17.2--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.2--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.2--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.17.2--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.22--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.22--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.22--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.18.0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.18.0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.18.0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.15.0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.15.0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/picard:2.15.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.15.0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.15.0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "picard==2.15.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.15.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.15.0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/picard:2.15.0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 131,
+  "embedding_text": "Tool: picard\nDescription: Java tools for working with ngs data in the bam format\nContainer: quay.io/biocontainers/picard:2.9.2--py35_1\nRecent versions: picard, picard, picard\nUsage context: This tool is used in bioinformatics pipelines for java tools for working with ngs data in the bam format.\nSnakemake container directive: container: \"quay.io/biocontainers/picard:2.9.2--py35_1\""
+}

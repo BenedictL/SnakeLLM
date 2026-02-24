@@ -1,0 +1,233 @@
+{
+  "tool_name": "bioconductor-edger",
+  "display_name": "bioconductor-edger",
+  "description": "Empirical analysis of digital gene expression data in r",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/bioconductor-edger",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0",
+    "registry": "quay.io",
+    "tag": "3.24.1--r351hf484d3e_0",
+    "version": "bioconductor-edger",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.24.1--r351hf484d3e_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.24.1--r351hf484d3e_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.22.5--r351hfc679d8_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.22.5--r341hfc679d8_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.22.5--r351hfc679d8_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.22.5--r341hfc679d8_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.22.5--r341hfc679d8_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.22.5--r351hfc679d8_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.12.1--r3.3.2_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.12.1--r3.4.1_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.12.1--r3.3.2_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.12.1--r3.4.1_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.12.1--r3.3.2_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.12.1--r3.4.1_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.16.5--r3.3.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.16.5--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.16.5--r3.3.2_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.16.5--r3.3.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.16.5--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.16.5--r3.3.2_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.16.5--r3.3.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.16.5--r3.3.2_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.16.5--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.18.1--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.18.1--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.18.1--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.14.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.14.0--r3.3.1_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.14.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.14.0--r3.3.1_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.14.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.14.0--r3.3.1_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.20.1--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.20.1--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.20.1--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.20.7--r3.4.1_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.20.7--r3.4.1_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.20.7--r3.4.1_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/bioconductor-edger:v3.14.0dfsg-1-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "bioconductor-edger==3.24.3--r351hf484d3e_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/bioconductor-edger:3.24.3--r351hf484d3e_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/bioconductor-edger:3.24.3--r351hf484d3e_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 24,
+  "embedding_text": "Tool: bioconductor-edger\nDescription: Empirical analysis of digital gene expression data in r\nContainer: quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0\nRecent versions: bioconductor-edger, bioconductor-edger, bioconductor-edger\nUsage context: This tool is used in bioinformatics pipelines for empirical analysis of digital gene expression data in r.\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-edger:3.24.1--r351hf484d3e_0\""
+}

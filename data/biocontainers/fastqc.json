@@ -1,0 +1,413 @@
+{
+  "tool_name": "fastqc",
+  "display_name": "fastqc",
+  "description": "A quality control tool for high throughput sequence data.",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/fastqc",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+    "registry": "quay.io",
+    "tag": "0.11.5--1",
+    "version": "fastqc",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.5--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.5--pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.5--pl5.22.0_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:0.11.5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.5--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.5--pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.5--pl5.22.0_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.5--4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.5--4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.5--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.5--4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.5--pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.5--pl5.22.0_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.5--hdfd78af_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.5--hdfd78af_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.5--hdfd78af_5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--pl5.22.0_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--pl5.22.0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--pl5.22.0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--pl5.22.0_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.7--hdfd78af_7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.7--hdfd78af_7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.7--hdfd78af_7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.10.1--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.10.1--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.10.1--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.2--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.2--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.2--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.2--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.2--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.2--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.4--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.4--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.4--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.6--pl5.22.0_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.6--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.6--pl5.22.0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.6--pl5.22.0_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.6--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.6--pl5.22.0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.6--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.6--pl5.22.0_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.6--pl5.22.0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.3--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.3--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.3--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.3--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.3--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.3--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.8--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.8--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.8--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.8--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "fastqc==0.11.8--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/fastqc:0.11.8--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.8--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.8--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/fastqc:0.11.8--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.5_cv3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.5_cv2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.5_cv1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.5_cv4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "biocontainers/fastqc:v0.11.8dfsg-2-deb_cv1",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 13,
+  "embedding_text": "Tool: fastqc\nDescription: A quality control tool for high throughput sequence data.\nContainer: quay.io/biocontainers/fastqc:0.11.5--1\nRecent versions: fastqc, fastqc, fastqc\nUsage context: This tool is used in bioinformatics pipelines for a quality control tool for high throughput sequence data..\nSnakemake container directive: container: \"quay.io/biocontainers/fastqc:0.11.5--1\""
+}
