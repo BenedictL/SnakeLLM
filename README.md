@@ -1,7 +1,6 @@
 # SnakeLLM — LLM Core
 
 > AI-powered Snakemake pipeline generator — LLM Core module  
-> Owner: Benedict (M.Sc. Bioinformatics, Freie Universität Berlin)
 
 ---
 
