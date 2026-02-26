@@ -81,6 +81,10 @@ class ExecuteRAG:
         # Hard-coded aliases for tools stored under a different name
         if "gatk4" in registry:
             registry["gatk"] = registry["gatk4"]
+            
+        if "subread" in registry:
+            registry["featurecounts"] = registry["subread"]
+            registry["featureCounts"] = registry["subread"]
 
         return registry
 

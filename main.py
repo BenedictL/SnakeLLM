@@ -24,15 +24,23 @@ import argparse
 import json
 import logging
 import sys
+from datetime import datetime
 from pathlib import Path
 
+import sys
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 os.makedirs("logs", exist_ok=True)
+log_filename = f"logs/snakellm_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
     datefmt="%H:%M:%S",
     handlers=[
-        logging.FileHandler("logs/snakellm.log"),
+        logging.FileHandler(log_filename, encoding="utf-8"),
         logging.StreamHandler()
     ]
 )
@@ -40,12 +48,16 @@ log = logging.getLogger(__name__)
 
 
 def check_api_key():
-    key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not key:
-        log.error("ANTHROPIC_API_KEY environment variable is not set.")
-        log.error("Set it with:  export ANTHROPIC_API_KEY=sk-ant-...")
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        log.info("✓ ANTHROPIC_API_KEY found")
+    elif os.environ.get("GEMINI_API_KEY"):
+        log.info("✓ GEMINI_API_KEY found")
+    elif os.environ.get("OPENAI_API_KEY"):
+        log.info("✓ OPENAI_API_KEY found")
+    else:
+        log.error("No API key found in environment variables.")
+        log.error("Please set ANTHROPIC_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY")
         sys.exit(1)
-    log.info("✓ ANTHROPIC_API_KEY found")
 
 
 def cmd_setup(args):

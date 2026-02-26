@@ -271,6 +271,11 @@ DEFAULT_TOOLS = [
     "bismark",
     # Misc
     "bowtie2", "subread",
+    
+    # Newly added extended tools
+    "salmon", "kallisto", "stringtie", "snpeff",
+    "manta", "cnvkit", "rseqc", "qualimap",
+    "starsolo", "cellranger", "diffbind"
 ]
 
 

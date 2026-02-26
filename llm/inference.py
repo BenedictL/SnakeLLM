@@ -62,8 +62,12 @@ RULES:
 2. Use the EXACT container URIs from the Container Details section — do NOT invent URIs.
 3. shell_cmd must be valid shell syntax with Snakemake {{wildcards}} and {{params}} substitutions.
 4. dag_edges must reference actual rule names you define.
-5. All rule names must be snake_case.
-6. Think about input/output file format chaining before writing rules.
+5. Think about input/output file format chaining before writing rules.
+6. IMPORTANT: Rules that produce a single output file (no wildcards in output) must use aggregate inputs. DESeq2, MultiQC, and clusterProfiler are aggregate rules — their input must reference a merged file or directory, NOT a {{sample}} wildcard pattern.
+7. strandedness must always be a config_param, never hardcoded. Include in config_params:
+  "strandedness": 0,  # 0=unstranded, 1=stranded, 2=reverse-stranded
+  "paired_end": true  # true for PE, false for SE
+The featureCounts -p flag must only be used when paired_end is true.
 
 PIPELINESPEC SCHEMA:
 {schema}
@@ -107,16 +111,48 @@ Output:
     {
       "name": "trim_reads",
       "tool": "Trimmomatic",
-      "input": ["data/{sample}_R1.fastq.gz", "data/{sample}_R2.fastq.gz"],
-      "output": ["trimmed/{sample}_R1.fastq.gz", "trimmed/{sample}_R2.fastq.gz"],
-      "params": {"adapters": "{config[adapters]}", "min_len": 36, "threads": 4},
-      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} /dev/null {output[1]} /dev/null ILLUMINACLIP:{params.adapters}:2:30:10 MINLEN:{params.min_len}",
+      "input": ["data/{{sample}}_R1.fastq.gz", "data/{{sample}}_R2.fastq.gz"],
+      "output": ["trimmed/{{sample}}_R1.fastq.gz", "trimmed/{{sample}}_R2.fastq.gz"],
+      "params": {"adapters": "{{config[adapters]}}", "min_len": 36, "threads": 4},
+      "shell_cmd": "trimmomatic PE -threads {{params.threads}} {{input[0]}} {{input[1]}} {{output[0]}} /dev/null {{output[1]}} /dev/null ILLUMINACLIP:{{params.adapters}}:2:30:10 MINLEN:{{params.min_len}}",
       "resources": {"cpus": 4, "mem_mb": 8000, "time_min": 60, "disk_mb": 20000},
-      "log": ["logs/trimmomatic/{sample}.log"]
+      "log": ["logs/trimmomatic/{{sample}}.log"]
+    },
+    {
+      "name": "align_star",
+      "tool": "STAR",
+      "input": ["trimmed/{{sample}}_R1.fastq.gz", "trimmed/{{sample}}_R2.fastq.gz"],
+      "output": ["aligned/{{sample}}.bam"],
+      "params": {"genomeDir": "{{config[genome_build]}}"},
+      "shell_cmd": "STAR --runThreadN 8 --genomeDir {{params.genomeDir}} --readFilesIn {{input[0]}} {{input[1]}} --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outFileNamePrefix aligned/{{sample}}_",
+      "resources": {"cpus": 8, "mem_mb": 32000, "time_min": 120, "disk_mb": 50000},
+      "log": ["logs/star/{{sample}}.log"]
+    },
+    {
+      "name": "run_deseq2",
+      "tool": "DESeq2",
+      "input": ["counts/all_samples_counts.txt"],
+      "output": ["results/diff_expr.csv"],
+      "params": {},
+      "shell_cmd": "Rscript scripts/run_deseq2.R {{input[0]}} {{output[0]}}",
+      "resources": {"cpus": 4, "mem_mb": 8000, "time_min": 60, "disk_mb": 20000},
+      "log": ["logs/deseq2/diff_expr.log"]
     }
   ],
-  "dag_edges": [],
-  "config_params": {"adapters": "resources/adapters.fa", "samples": ["S1", "S2"]},
+  "dag_edges": [
+    ["trim_reads", "post_trim_fastqc"],
+    ["trim_reads", "align_star"],
+    ["align_star", "run_deseq2"]
+  ],
+  "config_params": {
+    "adapters": "resources/adapters.fa", 
+    "samples": ["S1", "S2"],
+    "strandedness": 2,
+    "paired_end": true,
+    "organism_db": "org.Hs.eg.db",
+    "genome_build": "hg38",
+    "gtf_source": "ensembl"
+  },
   "wildcards": ["sample"]
 }
 """
