@@ -1,0 +1,41 @@
+# SnakeLLM — Pipeline configuration
+# Pipeline: {{ spec.pipeline_type | default('unknown') }}
+# Edit paths and parameters before running
+
+# Sample names — edit to match your actual sample IDs
+samples:
+{%- for s in samples %}
+  - {{ s }}
+{%- endfor %}
+
+{%- if ref_keys %}
+
+# Reference files — update paths for your system
+{%- for k, v in ref_keys.items() %}
+{%- if v is string %}
+{{ k }}: "{{ v }}"
+{%- else %}
+{{ k }}: {{ v }}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+
+{%- if stat_keys %}
+
+# Statistical thresholds
+{%- for k, v in stat_keys.items() %}
+{{ k }}: {{ v }}
+{%- endfor %}
+{%- endif %}
+
+{%- if other_keys %}
+
+# Pipeline parameters
+{%- for k, v in other_keys.items() %}
+{%- if v is string %}
+{{ k }}: "{{ v }}"
+{%- else %}
+{{ k }}: {{ v }}
+{%- endif %}
+{%- endfor %}
+{%- endif %}

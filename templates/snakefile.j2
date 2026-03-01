@@ -1,0 +1,63 @@
+# SnakeLLM — Auto-generated Snakefile
+# Pipeline:    {{ spec.pipeline_type | default('unknown') }}
+# Description: {{ spec.description | default('') }}
+# Source:      {{ source_name }}
+
+configfile: "config.yaml"
+
+samples = config["samples"]
+
+rule all:
+    input:
+{%- for t in all_targets %}
+        {{ t }},
+{%- endfor %}
+
+{% for rule in rules %}
+# ────────────────────────────────────────────────────────────
+rule {{ rule.name }}:
+{%- if rule.inputs %}
+    input:
+{%- for inp in rule.inputs %}
+{%- if loop.length == 2 and loop.index0 == 0 and "fastq" in rule.inputs[0] and "fastq" in rule.inputs[1] %}
+        r1 = {{ inp }},
+{%- elif loop.length == 2 and loop.index0 == 1 and "fastq" in rule.inputs[0] and "fastq" in rule.inputs[1] %}
+        r2 = {{ inp }},
+{%- else %}
+        {{ inp }},
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- if rule.outputs %}
+    output:
+{%- for out in rule.outputs %}
+        "{{ out }}"{% if not loop.last %},{% endif %}
+{%- endfor %}
+{%- endif %}
+{%- if rule.params %}
+    params:
+{%- for k, v in rule.params.items() %}
+    {%- if v is string %}
+        {{ k }} = "{{ v }}",
+    {%- else %}
+        {{ k }} = {{ v }},
+    {%- endif %}
+{%- endfor %}
+{%- endif %}
+    threads: {{ rule.resources.get('cpus', 1) }}
+    resources:
+        mem_mb  = {{ rule.resources.get('mem_mb', 4000) }},
+        runtime = {{ rule.resources.get('time_min', 60) }}
+    log:
+        "{{ rule.log }}"
+{%- if rule.script and not rule.shell_cmd %}
+    script:
+        "{{ rule.script }}"
+{%- elif rule.shell_cmd %}
+    shell:
+        "{{ rule.shell_cmd }} 2> {log}"
+{%- else %}
+    shell:
+        "echo '{{ rule.name }} — no shell command defined'"
+{%- endif %}
+{% endfor %}
