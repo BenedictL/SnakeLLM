@@ -63,7 +63,7 @@ RULES:
 3. shell_cmd must be valid shell syntax with Snakemake {{wildcards}} and {{params}} substitutions.
 4. dag_edges must reference actual rule names you define.
 5. Think about input/output file format chaining before writing rules.
-6. IMPORTANT: Rules that produce a single output file (no wildcards in output) must use aggregate inputs. DESeq2, MultiQC, and clusterProfiler are aggregate rules — their input must reference a merged file or directory, NOT a {{sample}} wildcard pattern.
+6. IMPORTANT: Aggregate rules (rules producing a single output with no wildcards, like MultiQC or DESeq2) MUST use the exact file dependencies from previous steps. You must NEVER use raw directory paths (e.g. "qc/fastqc/"). Instead, you MUST use Snakemake's expand() function to list specific files, e.g. "expand('qc/fastqc/{{sample}}_fastqc.html', sample=config['samples'])".
 7. strandedness must always be a config_param, never hardcoded. Include in config_params:
   "strandedness": 0,  # 0=unstranded, 1=stranded, 2=reverse-stranded
   "paired_end": true  # true for PE, false for SE
