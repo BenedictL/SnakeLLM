@@ -276,7 +276,7 @@ class SnakeLLMInference:
 
             raw_text = self.provider.complete(
                 system=system,
-                messages=[messages[0]],  # always send only the original user message
+                messages=messages,  # use multi-turn conversation history
                 max_tokens=8192,
             ).strip()
 
@@ -289,6 +289,9 @@ class SnakeLLMInference:
                 last_good_json = raw_json  # save the last parseable JSON
             except ValueError as e:
                 log.warning(f"    JSON parse failed: {e}")
+                # Optional: feed back JSON parsing error
+                messages.append({"role": "assistant", "content": raw_text})
+                messages.append({"role": "user", "content": f"JSON parse failed:\n{e}"})
                 continue
 
             # Try to validate schema
@@ -300,10 +303,9 @@ class SnakeLLMInference:
                 log.warning(f"    Schema validation failed:\n{errors}")
                 print("EXACT PYDANTIC ERROR:", e.errors())  # ← add this
 
-                # Retry with focused correction prompt (don't grow the history)
-                system += (
-                    f"\n\nPREVIOUS ATTEMPT ERRORS (fix these):\n{errors}"
-                )
+                # Retry with focused correction prompt (don't grow system prompt, just conversation history)
+                messages.append({"role": "assistant", "content": raw_text})
+                messages.append({"role": "user", "content": f"Fix these schema errors:\n{errors}"})
 
         # All attempts exhausted — save the last parseable JSON
         import os

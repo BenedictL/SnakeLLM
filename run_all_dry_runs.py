@@ -29,301 +29,50 @@ from openpyxl.utils import get_column_letter
 # SNAKEFILE GENERATOR  (inline — no external dependency)
 # ══════════════════════════════════════════════════════════════════════════════
 
-def clean_shell_cmd(cmd):
-    def fix_placeholder(m):
-        return '{' + re.sub(r'\s+', '', m.group(1)) + '}'
-    cmd = re.sub(r'\{([^{}]+)\}', fix_placeholder, cmd)
-    cmd = re.sub(r'\$\(if\s+\[.*?\]\s*;.*?fi\)', '', cmd, flags=re.DOTALL)
-    cmd = re.sub(r'\$\(\[.*?\].*?\)', '', cmd, flags=re.DOTALL)
-    cmd = re.sub(r'\s*2>\s*\{log\S*\}\s*$', '', cmd).strip()
-    cmd = re.sub(r'\s*>\s*\{log\S*\}\s*2>&1\s*$', '', cmd).strip()
-    cmd = re.sub(r'\s*&>\s*\{log\S*\}\s*$', '', cmd).strip()
-    cmd = re.sub(r'  +', ' ', cmd).strip()
-    parts = re.split(r'(\{[^{}]+\})', cmd)
-    return cmd.replace('"', '\\"')
+from generate_snakefile import generate_pipeline, prepare_template_data
 
-def fix_input_path(path):
-    if re.match(r'^data/(?!raw/)', path):
-        path = path.replace("data/", "data/raw/", 1)
-    if path.startswith("raw/"):
-        path = "data/" + path
-    return path
+# ══════════════════════════════════════════════════════════════════════════════
+# DATA PREPARATION (for dry-run specifically)
+# ══════════════════════════════════════════════════════════════════════════════
 
-def topological_sort(rules, edges):
-    rule_names = [r["name"] for r in rules]
-    in_degree  = {n: 0 for n in rule_names}
-    graph      = defaultdict(list)
-    for e in edges:
-        s, d = e[0], e[1]
-        if s in in_degree and d in in_degree:
-            graph[s].append(d)
-            in_degree[d] += 1
-    queue  = deque([n for n in rule_names if in_degree[n] == 0])
-    result = []
-    while queue:
-        node = queue.popleft()
-        result.append(node)
-        for nb in sorted(graph[node]):
-            in_degree[nb] -= 1
-            if in_degree[nb] == 0:
-                queue.append(nb)
-    for n in rule_names:
-        if n not in result:
-            result.append(n)
-    return result
-
-def is_aggregate(rule):
-    return all("{" not in o for o in rule.get("output", []))
-
-def has_wildcard(paths):
-    return any("{" in p for p in paths)
-
-def generate_snakefile(json_path, output_dir):
-    spec      = json.load(open(json_path, encoding="utf-8"))
-    rules     = spec["rules"]
-    edges     = spec.get("dag_edges", [])
-    config    = spec.get("config_params", {})
-
-    sample_list = config.get("samples", ["sample1", "sample2", "sample3"])
-    if not isinstance(sample_list, list):
-        sample_list = ["sample1", "sample2", "sample3"]
-    config_no_samples = {k: v for k, v in config.items() if k != "samples"}
-
-    ordered_names = topological_sort(rules, edges)
-    rules_by_name = {r["name"]: r for r in rules}
-    ordered_rules = [rules_by_name[n] for n in ordered_names if n in rules_by_name]
-
-    edge_sources   = {e[0] for e in edges}
-    terminal_names = [r["name"] for r in rules if r["name"] not in edge_sources] or [ordered_rules[-1]["name"]]
-
-    all_targets = []
-    for name in terminal_names:
-        if name not in rules_by_name:
-            continue
-        for out in rules_by_name[name].get("output", []):
-            all_targets.append(
-                f'expand("{out}", sample=config["samples"])' if "{sample}" in out else f'"{out}"'
-            )
-    if not all_targets:
-        for out in ordered_rules[-1].get("output", []):
-            all_targets.append(
-                f'expand("{out}", sample=config["samples"])' if "{sample}" in out else f'"{out}"'
-            )
-
-    lines = [
-        f'# SnakeLLM — {spec.get("pipeline_type", "unknown")}',
-        f'# {spec.get("description", "")}',
-        '',
-        'configfile: "config.yaml"',
-        'samples = config["samples"]',
-        '',
-        'rule all:',
-        '    input:',
-    ]
-    for t in all_targets:
-        lines.append(f'        {t},')
-    lines.append('')
-
-    for rule in ordered_rules:
-        name      = rule["name"]
-        inputs    = rule.get("input", [])
-        outputs   = rule.get("output", [])
-        params    = rule.get("params", {})
-        shell_cmd = rule.get("shell_cmd", "")
-        script    = rule.get("script", None)
-        logs      = rule.get("log", [])
-        resources = rule.get("resources", {})
-        aggregate = is_aggregate(rule)
-
-        lines.append(f'rule {name}:')
-
-        if inputs:
-            lines.append('    input:')
-            if aggregate and has_wildcard(inputs):
-                for inp in inputs:
-                    fixed = fix_input_path(inp)
-                    lines.append(
-                        f'        expand("{fixed}", sample=config["samples"]),'
-                        if "{sample}" in fixed else f'        "{fixed}",'
-                    )
-            elif len(inputs) == 1:
-                lines.append(f'        "{fix_input_path(inputs[0])}"')
-            else:
-                is_pe = (len(inputs) == 2 and
-                         all(any(x in i for x in [".fastq", ".fq", ".gz"]) for i in inputs))
-                if is_pe:
-                    for i, inp in enumerate(inputs):
-                        lines.append(f'        {"r1" if i==0 else "r2"} = "{fix_input_path(inp)}",')
-                else:
-                    for inp in inputs:
-                        lines.append(f'        "{fix_input_path(inp)}",')
-
-        if outputs:
-            lines.append('    output:')
-            for out in outputs:
-                lines.append(f'        "{out}",')
-
-        if params:
-            lines.append('    params:')
-            for k, v in params.items():
-                lines.append(f'        {k} = "{v}",' if isinstance(v, str) else f'        {k} = {v},')
-
-        lines.append(f'    threads: {resources.get("cpus", 1)}')
-        lines.append('    resources:')
-        lines.append(f'        mem_mb  = {resources.get("mem_mb", 4000)},')
-        lines.append(f'        runtime = {resources.get("time_min", 60)}')
-
-        log_path = logs[0] if logs else (
-            f'logs/{name}/{{sample}}.log' if not aggregate else f'logs/{name}/{name}.log'
-        )
-        lines.append('    log:')
-        lines.append(f'        "{log_path}"')
-
-        if script and not shell_cmd:
-            lines.append(f'    script:\n        "{script}"')
-        elif shell_cmd:
-            lines.append(f'    shell:\n        "{clean_shell_cmd(shell_cmd)} 2> {{log}}"')
-        else:
-            lines.append(f'    shell:\n        "echo \'{name}\'"')
-
-        lines.append('')
-
-    # config.yaml
-    cfg = ['# SnakeLLM config', f'# Pipeline: {spec.get("pipeline_type", "")}', '',
-           '# Samples', 'samples:']
-    for s in sample_list:
-        cfg.append(f'  - {s}')
-    cfg.append('')
-
-    ref_k   = [k for k in config_no_samples if any(x in k.lower() for x in
-               ["dir","file","path","gtf","fa","fasta","index","adapter","genome","annot","ref"])]
-    stat_k  = [k for k in config_no_samples if any(x in k.lower() for x in
-               ["threshold","cutoff","alpha","pval","padj","lfc","min","max","filter"])]
-    other_k = [k for k in config_no_samples if k not in ref_k and k not in stat_k]
-
-    if ref_k:
-        cfg.append('# Reference files')
-        for k in ref_k:
-            v = config_no_samples[k]
-            cfg.append(f'{k}: "{v}"' if isinstance(v, str) else f'{k}: {v}')
-        cfg.append('')
-    if stat_k:
-        cfg.append('# Thresholds')
-        for k in stat_k:
-            cfg.append(f'{k}: {config_no_samples[k]}')
-        cfg.append('')
-    if other_k:
-        cfg.append('# Parameters')
-        for k in other_k:
-            v = config_no_samples[k]
-    content = "\n".join(lines)
-    
-    # helper for string patching
-    def patch_ancient_dirs(content_str, rule_name):
-        lines = content_str.splitlines()
-        res = []
-        in_rule = False
-        in_input = False
-        rule_pat = re.compile(rf'^rule\s+{rule_name}\s*:')
-        for line in lines:
-            stripped = line.strip()
-            if rule_pat.match(stripped):
-                in_rule = True
-                in_input = False
-                res.append(line)
-                continue
-            if in_rule and re.match(r'^rule\s+\w+\s*:', stripped):
-                in_rule = False
-                in_input = False
-            if in_rule:
-                if stripped == "input:":
-                    in_input = True
-                    res.append(line)
-                    continue
-                if in_input:
-                    if re.match(r'^\w+\s*:', stripped) and stripped != "input:":
-                        in_input = False
-                        res.append(line)
-                        continue
-                    m = re.match(r'^(\s*)"([^"]+)"(,?)$', line)
-                    if m:
-                        indent, path, comma = m.groups()
-                        fname = Path(path).name
-                        if '.' not in fname and '{' not in path:
-                            res.append(f'{indent}ancient("{path}"){comma}')
-                            continue
-                    res.append(line)
-                    continue
-            res.append(line)
-        return "\n".join(res)
-
-    # General MultiQC wraps
-    content = patch_ancient_dirs(content, "multiqc_report")
-    content = patch_ancient_dirs(content, "multiqc")
-
-    # Pipeline-specific DAG fixes requiring ancient() wraps
-    if "atac_diffbind" in output_dir:
-        content = patch_ancient_dirs(content, "diff_accessibility")
-    if "rna_salmon" in output_dir:
-        content = patch_ancient_dirs(content, "tximeta_import")
-    if "scrna_seurat" in output_dir:
-        content = patch_ancient_dirs(content, "pseudobulk_deseq2")
-
-    if "chip_h3k27ac" in output_dir:
-        # Fix WildcardError for call_peaks matching {sample} inputs but not having them in outputs
-        m = re.search(r'(rule call_peaks:.*?)(?=\nrule |\Z)', content, re.DOTALL)
-        if m:
-            block = m.group(1)
-            inp = re.search(r'input:(.*?)(?=\n    \w)', block, re.DOTALL)
-            out = re.search(r'output:(.*?)(?=\n    \w)', block, re.DOTALL)
-            if inp and out and '{sample}' in inp.group(1) and '{sample}' not in out.group(1):
-                def add_sample(m2):
-                    p = Path(m2.group(1))
-                    return f'"{str(p.parent / f"{{sample}}_{p.name}").replace(chr(92), "/")}"'
-                new_out = re.sub(r'"([^"]+)"', add_sample, out.group(1))
-                content = content.replace(block, block.replace(out.group(1), new_out))
-
-    os.makedirs(output_dir, exist_ok=True)
-    with open(f"{output_dir}/Snakefile", "w", encoding="utf-8") as f:
-        f.write(content)
-    with open(f"{output_dir}/config.yaml", "w", encoding="utf-8") as f:
-        f.write("\n".join(cfg))
-
-    # Dummy input files
+def prepare_dry_run_environment(output_dir, sample_list):
+    """Creates the necessary dummy files and directories for a Snakemake dry-run."""
+    # 1. Dummy input files
     raw_dir = f"{output_dir}/data/raw"
     os.makedirs(raw_dir, exist_ok=True)
     for s in sample_list:
-        for suf in ["_R1.fastq.gz", "_R2.fastq.gz"]:
+        for suf in ["_R1.fastq.gz", "_R2.fastq.gz", ".fastq.gz"]:
             p = f"{raw_dir}/{s}{suf}"
             if not os.path.exists(p):
+                # Create empty dummy files
                 open(p, "w", encoding="utf-8").close()
 
-    # Common QC dirs for MultiQC
+    # 2. Common QC dirs for MultiQC to prevent MissingInputExceptions on directories
     for d in ["logs/star","logs/bowtie2","logs/fastqc","logs/trimmomatic",
               "logs/hisat2","logs/bwa","logs/picard","logs/macs2","logs/gatk",
               "logs/samtools","logs/featurecounts","logs/deeptools","logs/homer",
+              "logs/umi_dedup", "logs/deseq2",
               "qc/raw","qc/trimmed","qc/raw_fastqc","qc/post_trim_fastqc",
               "qc/fastqc","qc/flagstat","qc/bamqc","qc/ataqv","aligned",
               "counts","results","peaks","bigwig","annotation","dedup","deduped",
               "shifted","idr","motifs","salmon","seurat","qc/multiqc"]:
         os.makedirs(f"{output_dir}/{d}", exist_ok=True)
 
-    # DAG fixups for pipelines requiring intermediate files that aren't properly linked
-    if "atac_diffbind" in output_dir:
+    # 3. Pipeline-specific pipeline dummy files to satisfy complex DAGs
+    if "atac" in output_dir.lower() or "diffbind" in output_dir.lower():
         os.makedirs(f"{output_dir}/peaks", exist_ok=True)
         for s in sample_list:
             open(f"{output_dir}/peaks/{s}_peaks.narrowPeak", "w").close()
             open(f"{output_dir}/peaks/{s}_peaks.broadPeak", "w").close()
-    if "rna_salmon" in output_dir:
+            open(f"{output_dir}/peaks/{s}_peaks.xls", "w").close()
+    if "rna" in output_dir.lower() or "salmon" in output_dir.lower():
         for s in sample_list:
             os.makedirs(f"{output_dir}/salmon/{s}", exist_ok=True)
             open(f"{output_dir}/salmon/{s}/quant.sf", "w").close()
-    if "scrna_seurat" in output_dir:
+    if "scrna" in output_dir.lower() or "seurat" in output_dir.lower():
         os.makedirs(f"{output_dir}/seurat", exist_ok=True)
         for s in sample_list:
             open(f"{output_dir}/seurat/{s}_seurat.rds", "w").close()
-
-    return spec
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DRY-RUN RUNNER

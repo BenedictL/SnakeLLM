@@ -1,0 +1,258 @@
+# SnakeLLM — scrna-seq-advanced
+# Advanced single-cell RNA-seq pipeline with Cell Ranger alignment, ambient RNA removal (SoupX), doublet detection (scDblFinder), Seurat clustering, automated cell type annotation (SingleR), and pseudotime trajectory analysis (Monocle3).
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        "results/monocle3/cds_trajectory.rds",
+        "results/monocle3/pseudotime_values.csv",
+        "results/monocle3/trajectory_plot.pdf",
+        "results/monocle3/trajectory_genes.csv",
+
+rule cellranger_count:
+    input:
+        "data/raw/fastq/{sample}"
+    output:
+        "results/cellranger/{sample}/outs/filtered_feature_bc_matrix/matrix.mtx.gz",
+        "results/cellranger/{sample}/outs/raw_feature_bc_matrix/matrix.mtx.gz",
+        "results/cellranger/{sample}/outs/molecule_info.h5",
+    params:
+        reference = "{config[cellranger_reference]}",
+        localcores = 16,
+        localmem = 64,
+        chemistry = "{config[chemistry]}",
+    threads: 16
+    resources:
+        mem_mb  = 65536,
+        runtime = 480
+    log:
+        "logs/cellranger/{sample}.log"
+    shell:
+        "cellranger count --id={wildcards.sample} --transcriptome={params.reference} --fastqs={input[0]} --sample={wildcards.sample} --localcores={params.localcores} --localmem={params.localmem} --chemistry={params.chemistry} --output-dir=results/cellranger/{wildcards.sample} 2> {log}"
+
+rule soupx:
+    input:
+        r1 = "results/cellranger/{sample}/outs/filtered_feature_bc_matrix/matrix.mtx.gz",
+        r2 = "results/cellranger/{sample}/outs/raw_feature_bc_matrix/matrix.mtx.gz",
+    output:
+        "results/soupx/{sample}/corrected_counts.rds",
+    params:
+        filtered_dir = "results/cellranger/{sample}/outs/filtered_feature_bc_matrix",
+        raw_dir = "results/cellranger/{sample}/outs/raw_feature_bc_matrix",
+        out_dir = "results/soupx/{sample}",
+        contamination_fraction = "{config[soupx_contamination_fraction]}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/soupx/{sample}.log"
+    shell:
+        "Rscript scripts/run_soupx.R --filtered_dir={params.filtered_dir} --raw_dir={params.raw_dir} --out_dir={params.out_dir} --contamination_fraction={params.contamination_fraction} --sample={wildcards.sample} 2> {log}"
+
+rule scdblfinder:
+    input:
+        "results/soupx/{sample}/corrected_counts.rds"
+    output:
+        "results/scdblfinder/{sample}/doublet_calls.rds",
+    params:
+        out_dir = "results/scdblfinder/{sample}",
+        dbr_threshold = "{config[doublet_rate]}",
+        nfeatures = "{config[scdblfinder_nfeatures]}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/scdblfinder/{sample}.log"
+    shell:
+        "Rscript scripts/run_scdblfinder.R --input={input[0]} --out_dir={params.out_dir} --dbr={params.dbr_threshold} --nfeatures={params.nfeatures} --sample={wildcards.sample} 2> {log}"
+
+rule quality_control:
+    input:
+        "results/scdblfinder/{sample}/doublet_calls.rds"
+    output:
+        "results/qc/{sample}/seurat_filtered.rds",
+        "results/qc/{sample}/qc_metrics.csv",
+    params:
+        out_dir = "results/qc/{sample}",
+        min_features = "{config[min_features]}",
+        max_features = "{config[max_features]}",
+        min_counts = "{config[min_counts]}",
+        max_counts = "{config[max_counts]}",
+        max_mito_pct = "{config[max_mito_pct]}",
+        mito_pattern = "{config[mito_pattern]}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/qc/{sample}.log"
+    shell:
+        "Rscript scripts/run_seurat_qc.R --input={input[0]} --out_dir={params.out_dir} --min_features={params.min_features} --max_features={params.max_features} --min_counts={params.min_counts} --max_counts={params.max_counts} --max_mito_pct={params.max_mito_pct} --mito_pattern={params.mito_pattern} --sample={wildcards.sample} 2> {log}"
+
+rule normalization:
+    input:
+        "results/qc/{sample}/seurat_filtered.rds"
+    output:
+        "results/normalized/{sample}/seurat_normalized.rds",
+    params:
+        out_dir = "results/normalized/{sample}",
+        normalization_method = "{config[normalization_method]}",
+        scale_factor = "{config[scale_factor]}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 30
+    log:
+        "logs/normalization/{sample}.log"
+    shell:
+        "Rscript scripts/run_normalization.R --input={input[0]} --out_dir={params.out_dir} --normalization_method={params.normalization_method} --scale_factor={params.scale_factor} --sample={wildcards.sample} 2> {log}"
+
+rule feature_selection:
+    input:
+        "results/normalized/{sample}/seurat_normalized.rds"
+    output:
+        "results/hvg/{sample}/seurat_hvg.rds",
+        "results/hvg/{sample}/hvg_list.csv",
+    params:
+        out_dir = "results/hvg/{sample}",
+        n_hvg = "{config[n_hvg]}",
+        selection_method = "{config[hvg_selection_method]}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 30
+    log:
+        "logs/hvg/{sample}.log"
+    shell:
+        "Rscript scripts/run_feature_selection.R --input={input[0]} --out_dir={params.out_dir} --n_hvg={params.n_hvg} --selection_method={params.selection_method} --sample={wildcards.sample} 2> {log}"
+
+rule merge_samples:
+    input:
+        expand("results/hvg/{sample}/seurat_hvg.rds", sample=config["samples"]),
+    output:
+        "results/merged/seurat_merged.rds",
+    params:
+        out_dir = "results/merged",
+        samples = "{config[samples]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 60
+    log:
+        "logs/merge/merge_samples.log"
+    shell:
+        "Rscript scripts/merge_samples.R --input_dir=results/hvg --out_dir={params.out_dir} --samples={params.samples} 2> {log}"
+
+rule dimensionality_red:
+    input:
+        "results/merged/seurat_merged.rds"
+    output:
+        "results/dimred/seurat_dimred.rds",
+        "results/dimred/umap_coords.csv",
+        "results/dimred/pca_variance.csv",
+    params:
+        out_dir = "results/dimred",
+        n_pcs = "{config[n_pcs]}",
+        n_neighbors = "{config[umap_n_neighbors]}",
+        min_dist = "{config[umap_min_dist]}",
+        umap_dims = "{config[umap_dims]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 60
+    log:
+        "logs/dimred/dimred.log"
+    shell:
+        "Rscript scripts/run_dimred.R --input={input[0]} --out_dir={params.out_dir} --n_pcs={params.n_pcs} --n_neighbors={params.n_neighbors} --min_dist={params.min_dist} --umap_dims={params.umap_dims} 2> {log}"
+
+rule clustering:
+    input:
+        "results/dimred/seurat_dimred.rds"
+    output:
+        "results/clustering/seurat_clustered.rds",
+        "results/clustering/cluster_assignments.csv",
+    params:
+        out_dir = "results/clustering",
+        resolution = "{config[clustering_resolution]}",
+        algorithm = "{config[clustering_algorithm]}",
+        dims = "{config[umap_dims]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 60
+    log:
+        "logs/clustering/clustering.log"
+    shell:
+        "Rscript scripts/run_clustering.R --input={input[0]} --out_dir={params.out_dir} --resolution={params.resolution} --algorithm={params.algorithm} --dims={params.dims} 2> {log}"
+
+rule marker_genes:
+    input:
+        "results/clustering/seurat_clustered.rds"
+    output:
+        "results/markers/all_markers.csv",
+        "results/markers/top_markers.csv",
+        "results/markers/marker_heatmap.pdf",
+    params:
+        out_dir = "results/markers",
+        test_method = "{config[marker_test_method]}",
+        logfc_threshold = "{config[marker_logfc_threshold]}",
+        min_pct = "{config[marker_min_pct]}",
+        top_n = "{config[top_n_markers]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 90
+    log:
+        "logs/markers/marker_genes.log"
+    shell:
+        "Rscript scripts/run_marker_genes.R --input={input[0]} --out_dir={params.out_dir} --test_method={params.test_method} --logfc_threshold={params.logfc_threshold} --min_pct={params.min_pct} --top_n={params.top_n} 2> {log}"
+
+rule singler:
+    input:
+        "results/clustering/seurat_clustered.rds",
+        "results/markers/all_markers.csv",
+    output:
+        "results/singler/singler_annotations.rds",
+        "results/singler/cell_type_labels.csv",
+        "results/singler/annotation_heatmap.pdf",
+    params:
+        out_dir = "results/singler",
+        reference = "{config[singler_reference]}",
+        annotation_level = "{config[singler_annotation_level]}",
+        de_method = "{config[singler_de_method]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 90
+    log:
+        "logs/singler/singler.log"
+    shell:
+        "Rscript scripts/run_singler.R --input={input[0]} --out_dir={params.out_dir} --reference={params.reference} --annotation_level={params.annotation_level} --de_method={params.de_method} 2> {log}"
+
+rule monocle3:
+    input:
+        "results/singler/singler_annotations.rds",
+        "results/singler/cell_type_labels.csv",
+    output:
+        "results/monocle3/cds_trajectory.rds",
+        "results/monocle3/pseudotime_values.csv",
+        "results/monocle3/trajectory_plot.pdf",
+        "results/monocle3/trajectory_genes.csv",
+    params:
+        out_dir = "results/monocle3",
+        root_cell_type = "{config[monocle3_root_cell_type]}",
+        n_trajectory_genes = "{config[monocle3_n_trajectory_genes]}",
+        reduction_method = "{config[monocle3_reduction_method]}",
+        cluster_method = "{config[monocle3_cluster_method]}",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 120
+    log:
+        "logs/monocle3/monocle3.log"
+    shell:
+        "Rscript scripts/run_monocle3.R --input={input[0]} --cell_labels={input[1]} --out_dir={params.out_dir} --root_cell_type={params.root_cell_type} --n_trajectory_genes={params.n_trajectory_genes} --reduction_method={params.reduction_method} --cluster_method={params.cluster_method} 2> {log}"

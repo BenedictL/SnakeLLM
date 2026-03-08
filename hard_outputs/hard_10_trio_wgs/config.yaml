@@ -1,0 +1,14 @@
+# SnakeLLM config
+# Pipeline: wgs-germline-trio-variant-calling
+
+# Samples
+samples:
+  - mother
+  - father
+  - proband
+
+# Reference files
+reference: "resources/reference/GRCh38.fa"
+adapters: ""
+
+# Parameters

@@ -1,0 +1,213 @@
+# SnakeLLM — rna-seq-de
+# Bulk RNA-seq differential expression analysis in mouse liver using edgeR for identifying differentially expressed genes.
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        "results/enrichment/go_bp_results.csv",
+        "results/enrichment/go_mf_results.csv",
+        "results/enrichment/kegg_results.csv",
+        "results/enrichment/go_bp_dotplot.pdf",
+        "results/enrichment/kegg_dotplot.pdf",
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+
+rule raw_fastqc:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "qc/raw_fastqc/{sample}_R1_fastqc.html",
+        "qc/raw_fastqc/{sample}_R1_fastqc.zip",
+        "qc/raw_fastqc/{sample}_R2_fastqc.html",
+        "qc/raw_fastqc/{sample}_R2_fastqc.zip",
+    params:
+        outdir = "qc/raw_fastqc",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 4000,
+        runtime = 60
+    log:
+        "logs/raw_fastqc/{sample}.log"
+    shell:
+        "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log}"
+
+rule trim_reads:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz",
+    params:
+        adapters = "resources/adapters.fa",
+        leading = 3,
+        trailing = 3,
+        slidingwindow = "4:15",
+        minlen = 36,
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 90
+    log:
+        "logs/trimmomatic/{sample}.log"
+    shell:
+        "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log}"
+
+rule align_star:
+    input:
+        r1 = "trimmed/{sample}_R1.fastq.gz",
+        r2 = "trimmed/{sample}_R2.fastq.gz",
+    output:
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam",
+        "aligned/{sample}/Log.final.out",
+    params:
+        genome_dir = "resources/star_genome_mm10",
+        threads = 8,
+        outdir_prefix = "aligned/{sample}/",
+    threads: 8
+    resources:
+        mem_mb  = 40000,
+        runtime = 180
+    log:
+        "logs/star/{sample}.log"
+    shell:
+        "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outSAMattributes NH HI AS NM MD --outFileNamePrefix {params.outdir_prefix} --outSAMunmapped Within --runMode alignReads 2> {log}"
+
+rule post_trim_fastqc:
+    input:
+        r1 = "trimmed/{sample}_R1.fastq.gz",
+        r2 = "trimmed/{sample}_R2.fastq.gz",
+    output:
+        "qc/post_trim_fastqc/{sample}_R1_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R1_fastqc.zip",
+        "qc/post_trim_fastqc/{sample}_R2_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R2_fastqc.zip",
+    params:
+        outdir = "qc/post_trim_fastqc",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 4000,
+        runtime = 60
+    log:
+        "logs/post_trim_fastqc/{sample}.log"
+    shell:
+        "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log}"
+
+rule sort_index_bam:
+    input:
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam"
+    output:
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam.bai",
+    params:
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 60
+    log:
+        "logs/samtools/{sample}.log"
+    shell:
+        "samtools index -@ {params.threads} {input[0]} {output[0]} 2> {log}"
+
+rule featurecounts:
+    input:
+        "aligned/S1/Aligned.sortedByCoord.out.bam",
+        "aligned/S2/Aligned.sortedByCoord.out.bam",
+        "aligned/S3/Aligned.sortedByCoord.out.bam",
+        "aligned/S4/Aligned.sortedByCoord.out.bam",
+        "aligned/S5/Aligned.sortedByCoord.out.bam",
+        "aligned/S6/Aligned.sortedByCoord.out.bam",
+    output:
+        "counts/all_samples_counts.txt",
+        "counts/all_samples_counts.txt.summary",
+    params:
+        gtf = "resources/annotation/mm10.gtf",
+        threads = 8,
+        strandedness = "{config[strandedness]}",
+        paired_end_flag = "{config[paired_end]}",
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/featurecounts/featurecounts.log"
+    shell:
+        "featureCounts -T {params.threads} -s {params.strandedness} -a {params.gtf} -o {output[0]} {input} 2> {log}"
+
+rule differential_expr:
+    input:
+        "counts/all_samples_counts.txt"
+    output:
+        "results/edgeR/de_results.csv",
+        "results/edgeR/de_sig_genes.csv",
+        "results/edgeR/ma_plot.pdf",
+        "results/edgeR/volcano_plot.pdf",
+    params:
+        fdr_threshold = 0.05,
+        logfc_threshold = 1.0,
+        sample_metadata = "resources/sample_metadata.csv",
+        condition_column = "condition",
+        reference_level = "control",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/edgeR/differential_expr.log"
+    shell:
+        "Rscript scripts/run_edgeR.R --counts {input[0]} --metadata {params.sample_metadata} --condition_col {params.condition_column} --reference {params.reference_level} --fdr {params.fdr_threshold} --logfc {params.logfc_threshold} --out_de {output[0]} --out_sig {output[1]} --out_ma {output[2]} --out_volcano {output[3]} 2> {log}"
+
+rule go_enrichment:
+    input:
+        "results/edgeR/de_sig_genes.csv"
+    output:
+        "results/enrichment/go_bp_results.csv",
+        "results/enrichment/go_mf_results.csv",
+        "results/enrichment/kegg_results.csv",
+        "results/enrichment/go_bp_dotplot.pdf",
+        "results/enrichment/kegg_dotplot.pdf",
+    params:
+        organism_db = "org.Mm.eg.db",
+        kegg_organism = "mmu",
+        pvalue_cutoff = 0.05,
+        qvalue_cutoff = 0.2,
+        gene_id_type = "ENSEMBL",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/clusterProfiler/go_enrichment.log"
+    shell:
+        "Rscript scripts/run_clusterProfiler.R --de_genes {input[0]} --organism_db {params.organism_db} --kegg_organism {params.kegg_organism} --pvalue_cutoff {params.pvalue_cutoff} --qvalue_cutoff {params.qvalue_cutoff} --gene_id_type {params.gene_id_type} --out_go_bp {output[0]} --out_go_mf {output[1]} --out_kegg {output[2]} --out_go_bp_plot {output[3]} --out_kegg_plot {output[4]} 2> {log}"
+
+rule multiqc_report:
+    input:
+        ancient("qc/raw_fastqc"),
+        ancient("qc/post_trim_fastqc"),
+        ancient("logs/trimmomatic"),
+        ancient("aligned"),
+        "counts/all_samples_counts.txt.summary",
+        "results/edgeR/de_results.csv",
+    output:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+    params:
+        outdir = "qc/multiqc",
+        title = "Mouse Liver RNA-seq QC Report",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 30
+    log:
+        "logs/multiqc/multiqc.log"
+    shell:
+        "multiqc --force --title \"{params.title}\" --outdir {params.outdir} qc/raw_fastqc qc/post_trim_fastqc logs/trimmomatic aligned counts results/edgeR 2> {log}"

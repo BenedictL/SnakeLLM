@@ -1,0 +1,22 @@
+# SnakeLLM config
+# Pipeline: rna-seq-de-umi
+
+# Samples
+samples:
+  - S1
+  - S2
+  - S3
+
+# Reference files
+adapters: "resources/adapters.fa"
+genome_dir: "resources/star_index"
+gtf: "resources/annotation.gtf"
+
+# Thresholds
+contrast_denominator: control
+alpha: 0.05
+lfc_threshold: 1.0
+pval_cutoff: 0.05
+qval_cutoff: 0.2
+
+# Parameters

@@ -1,0 +1,781 @@
+{
+  "pipeline_type": "wgbs-methylation-analysis",
+  "description": "Whole genome bisulfite sequencing pipeline for CpG methylation profiling, DMR calling with DSS, CpG island annotation, and integration with matched RNA-seq gene expression data.",
+  "tools": [
+    {
+      "name": "fastqc",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Raw read quality control to assess base quality, adapter content, and bisulfite conversion metrics",
+      "language": "CLI"
+    },
+    {
+      "name": "trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter trimming and quality filtering prior to bisulfite alignment",
+      "language": "CLI"
+    },
+    {
+      "name": "bismark",
+      "version": "0.18.1",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bismark",
+        "tag": "0.18.1--pl5.22.0_0",
+        "full_uri": "quay.io/biocontainers/bismark:0.18.1--pl5.22.0_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Bisulfite-aware genome preparation, alignment, deduplication, methylation extraction, bedGraph conversion, and cytosine report generation",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort aligned BAM files for downstream deduplication and methylation extraction",
+      "language": "CLI"
+    },
+    {
+      "name": "DSS",
+      "version": "2.38.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Statistical DMR calling using beta-binomial regression across conditions via DSS R package",
+      "language": "R"
+    },
+    {
+      "name": "bedops",
+      "version": "2.4.23",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bedops",
+        "tag": "2.4.23--0",
+        "full_uri": "quay.io/biocontainers/bedops:2.4.23--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Annotate DMRs with CpG island, shore, shelf, and open-sea genomic context",
+      "language": "CLI"
+    },
+    {
+      "name": "STAR",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of matched RNA-seq reads to reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "featurecounts",
+      "version": "1.5.0p3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/subread",
+        "tag": "1.5.0p3--0",
+        "full_uri": "quay.io/biocontainers/subread:1.5.0p3--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level read quantification from RNA-seq BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Normalize RNA-seq counts and perform differential gene expression analysis between matched conditions",
+      "language": "R"
+    },
+    {
+      "name": "multiqc",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from FastQC, Bismark, and STAR into a unified HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "fastqc",
+      "input": [
+        "data/wgbs/{sample}_R1.fastq.gz",
+        "data/wgbs/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/raw_fastqc/{sample}_R1_fastqc.html",
+        "qc/raw_fastqc/{sample}_R2_fastqc.html",
+        "qc/raw_fastqc/{sample}_R1_fastqc.zip",
+        "qc/raw_fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/raw_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/raw_fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "trimmomatic",
+      "input": [
+        "data/wgbs/{sample}_R1.fastq.gz",
+        "data/wgbs/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/wgbs/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/wgbs/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/wgbs/{sample}_R2_trimmed.fastq.gz",
+        "trimmed/wgbs/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "sliding_window": "4:15",
+        "min_len": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.sliding_window} MINLEN:{params.min_len} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/trimmomatic/wgbs/{sample}.log"
+      ]
+    },
+    {
+      "name": "post_trim_fastqc",
+      "tool": "fastqc",
+      "input": [
+        "trimmed/wgbs/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/wgbs/{sample}_R2_trimmed.fastq.gz"
+      ],
+      "output": [
+        "qc/post_trim_fastqc/{sample}_R1_trimmed_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R2_trimmed_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R1_trimmed_fastqc.zip",
+        "qc/post_trim_fastqc/{sample}_R2_trimmed_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/post_trim_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/post_trim_fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "bismark_genome_prepare",
+      "tool": "bismark",
+      "input": [
+        "resources/genome"
+      ],
+      "output": [
+        "resources/genome/Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
+        "resources/genome/Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa"
+      ],
+      "params": {
+        "genome_dir": "resources/genome",
+        "threads": 4
+      },
+      "shell_cmd": "bismark_genome_preparation --parallel {params.threads} {params.genome_dir} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 32000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/bismark_genome_prepare/genome_prepare.log"
+      ]
+    },
+    {
+      "name": "bismark_align",
+      "tool": "bismark",
+      "input": [
+        "trimmed/wgbs/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/wgbs/{sample}_R2_trimmed.fastq.gz",
+        "resources/genome/Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa"
+      ],
+      "output": [
+        "aligned/wgbs/{sample}_bismark_bt2_pe.bam",
+        "aligned/wgbs/{sample}_bismark_bt2_PE_report.txt"
+      ],
+      "params": {
+        "genome_dir": "resources/genome",
+        "outdir": "aligned/wgbs",
+        "threads": 8
+      },
+      "shell_cmd": "bismark --genome {params.genome_dir} -1 {input[0]} -2 {input[1]} --output_dir {params.outdir} --parallel {params.threads} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 360,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/bismark_align/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_sort",
+      "tool": "samtools",
+      "input": [
+        "aligned/wgbs/{sample}_bismark_bt2_pe.bam"
+      ],
+      "output": [
+        "sorted/wgbs/{sample}_sorted.bam"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/samtools_sort/{sample}.log"
+      ]
+    },
+    {
+      "name": "bismark_deduplicate",
+      "tool": "bismark",
+      "input": [
+        "sorted/wgbs/{sample}_sorted.bam"
+      ],
+      "output": [
+        "dedup/wgbs/{sample}_sorted.deduplicated.bam",
+        "dedup/wgbs/{sample}_sorted.deduplication_report.txt"
+      ],
+      "params": {
+        "outdir": "dedup/wgbs"
+      },
+      "shell_cmd": "deduplicate_bismark --paired --bam --output_dir {params.outdir} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/bismark_deduplicate/{sample}.log"
+      ]
+    },
+    {
+      "name": "bismark_methylation_extractor",
+      "tool": "bismark",
+      "input": [
+        "dedup/wgbs/{sample}_sorted.deduplicated.bam"
+      ],
+      "output": [
+        "methylation/{sample}/CpG_OT_{sample}_sorted.deduplicated.txt",
+        "methylation/{sample}/CpG_OB_{sample}_sorted.deduplicated.txt",
+        "methylation/{sample}/{sample}_sorted.deduplicated_splitting_report.txt",
+        "methylation/{sample}/{sample}_sorted.deduplicated.M-bias.txt"
+      ],
+      "params": {
+        "outdir": "methylation/{sample}",
+        "threads": 4
+      },
+      "shell_cmd": "bismark_methylation_extractor --paired-end --comprehensive --CpG_only --gzip --parallel {params.threads} --output {params.outdir} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 180,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/bismark_methylation_extractor/{sample}.log"
+      ]
+    },
+    {
+      "name": "bismark2bedgraph",
+      "tool": "bismark",
+      "input": [
+        "methylation/{sample}/CpG_OT_{sample}_sorted.deduplicated.txt",
+        "methylation/{sample}/CpG_OB_{sample}_sorted.deduplicated.txt"
+      ],
+      "output": [
+        "bedgraph/{sample}/{sample}.bedGraph.gz",
+        "bedgraph/{sample}/{sample}.bismark.cov.gz"
+      ],
+      "params": {
+        "outdir": "bedgraph/{sample}",
+        "outfile": "{sample}.bedGraph"
+      },
+      "shell_cmd": "bismark2bedGraph --output {params.outfile} --dir {params.outdir} --CX_context --zero_based {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/bismark2bedgraph/{sample}.log"
+      ]
+    },
+    {
+      "name": "coverage2cytosine",
+      "tool": "bismark",
+      "input": [
+        "bedgraph/{sample}/{sample}.bismark.cov.gz",
+        "resources/genome/Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa"
+      ],
+      "output": [
+        "cytosine_reports/{sample}/{sample}.CpG_report.txt.gz"
+      ],
+      "params": {
+        "genome_dir": "resources/genome",
+        "outdir": "cytosine_reports/{sample}",
+        "outfile": "{sample}.CpG_report.txt"
+      },
+      "shell_cmd": "coverage2cytosine --genome_folder {params.genome_dir} --output {params.outfile} --dir {params.outdir} --gzip --CpG_only {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/coverage2cytosine/{sample}.log"
+      ]
+    },
+    {
+      "name": "dss_dmr_calling",
+      "tool": "DSS",
+      "input": [
+        "cytosine_reports/all_samples_cytosine_reports.txt"
+      ],
+      "output": [
+        "dmr/dss_dmr_results.txt",
+        "dmr/dss_dml_results.txt"
+      ],
+      "params": {
+        "condition_col": "condition",
+        "min_cov": 5,
+        "delta": 0.1,
+        "p_threshold": 0.05,
+        "smoothing": true
+      },
+      "shell_cmd": "Rscript scripts/dss_dmr_calling.R --input {input[0]} --dmr_output {output[0]} --dml_output {output[1]} --condition_col {params.condition_col} --min_cov {params.min_cov} --delta {params.delta} --p_threshold {params.p_threshold} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 240,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/dss_dmr_calling/dss_dmr.log"
+      ]
+    },
+    {
+      "name": "cpg_island_annotation",
+      "tool": "bedops",
+      "input": [
+        "dmr/dss_dmr_results.txt",
+        "resources/cpg_islands.bed"
+      ],
+      "output": [
+        "annotation/dmr_cpg_island_annotated.bed"
+      ],
+      "params": {},
+      "shell_cmd": "bedmap --echo --echo-map --fraction-map 0.5 --delim '\\t' <(awk 'NR>1 {print $1\"\\t\"$2\"\\t\"$3\"\\t\"$0}' {input[0]} | sort-bed -) <(sort-bed {input[1]}) > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/cpg_island_annotation/annotation.log"
+      ]
+    },
+    {
+      "name": "raw_fastqc_rnaseq",
+      "tool": "fastqc",
+      "input": [
+        "data/rnaseq/{sample}_R1.fastq.gz",
+        "data/rnaseq/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/raw_fastqc_rnaseq/{sample}_R1_fastqc.html",
+        "qc/raw_fastqc_rnaseq/{sample}_R2_fastqc.html",
+        "qc/raw_fastqc_rnaseq/{sample}_R1_fastqc.zip",
+        "qc/raw_fastqc_rnaseq/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/raw_fastqc_rnaseq",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/raw_fastqc_rnaseq/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads_rnaseq",
+      "tool": "trimmomatic",
+      "input": [
+        "data/rnaseq/{sample}_R1.fastq.gz",
+        "data/rnaseq/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/rnaseq/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/rnaseq/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/rnaseq/{sample}_R2_trimmed.fastq.gz",
+        "trimmed/rnaseq/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "sliding_window": "4:15",
+        "min_len": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.sliding_window} MINLEN:{params.min_len} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/trimmomatic/rnaseq/{sample}.log"
+      ]
+    },
+    {
+      "name": "star_align",
+      "tool": "STAR",
+      "input": [
+        "trimmed/rnaseq/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/rnaseq/{sample}_R2_trimmed.fastq.gz"
+      ],
+      "output": [
+        "aligned/rnaseq/{sample}/Aligned.sortedByCoord.out.bam",
+        "aligned/rnaseq/{sample}/Log.final.out"
+      ],
+      "params": {
+        "genome_dir": "resources/star_index",
+        "outdir_prefix": "aligned/rnaseq/{sample}/",
+        "threads": 8,
+        "outSAMtype": "BAM SortedByCoordinate"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype {params.outSAMtype} --outFileNamePrefix {params.outdir_prefix} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star_align/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts",
+      "tool": "featurecounts",
+      "input": [
+        "counts/rnaseq_bam_list.txt"
+      ],
+      "output": [
+        "counts/all_samples_counts.txt",
+        "counts/all_samples_counts.txt.summary"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "threads": 8,
+        "strandedness": 0,
+        "paired_end": true
+      },
+      "shell_cmd": "featureCounts -T {params.threads} -s {params.strandedness} -p -a {params.gtf} -o {output[0]} $(cat {input[0]}) 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/featurecounts/featurecounts.log"
+      ]
+    },
+    {
+      "name": "deseq2_expression",
+      "tool": "DESeq2",
+      "input": [
+        "counts/all_samples_counts.txt"
+      ],
+      "output": [
+        "expression/deseq2_results.csv",
+        "expression/deseq2_normalized_counts.csv",
+        "expression/deseq2_pca.pdf"
+      ],
+      "params": {
+        "condition_col": "condition",
+        "reference_level": "control",
+        "fdr_threshold": 0.05,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/deseq2_expression.R --counts {input[0]} --results {output[0]} --normalized {output[1]} --pca {output[2]} --condition_col {params.condition_col} --reference_level {params.reference_level} --fdr {params.fdr_threshold} --lfc {params.lfc_threshold} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deseq2/deseq2.log"
+      ]
+    },
+    {
+      "name": "methylation_expression_integration",
+      "tool": "DESeq2",
+      "input": [
+        "annotation/dmr_cpg_island_annotated.bed",
+        "expression/deseq2_results.csv"
+      ],
+      "output": [
+        "integration/methylation_expression_correlation.txt",
+        "integration/methylation_expression_plot.pdf"
+      ],
+      "params": {
+        "correlation_method": "spearman",
+        "gene_window_bp": 5000
+      },
+      "shell_cmd": "Rscript scripts/methylation_expression_integration.R --dmr {input[0]} --expression {input[1]} --output {output[0]} --plot {output[1]} --method {params.correlation_method} --window {params.gene_window_bp} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/integration/methylation_expression.log"
+      ]
+    },
+    {
+      "name": "multiqc",
+      "tool": "multiqc",
+      "input": [
+        "qc/raw_fastqc",
+        "qc/post_trim_fastqc",
+        "qc/raw_fastqc_rnaseq",
+        "aligned/wgbs",
+        "dedup/wgbs",
+        "methylation",
+        "aligned/rnaseq",
+        "counts/all_samples_counts.txt.summary"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc"
+      },
+      "shell_cmd": "multiqc qc/raw_fastqc qc/post_trim_fastqc qc/raw_fastqc_rnaseq aligned/wgbs dedup/wgbs methylation aligned/rnaseq counts/ --outdir {params.outdir} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "post_trim_fastqc"
+    ],
+    [
+      "trim_reads",
+      "bismark_align"
+    ],
+    [
+      "bismark_genome_prepare",
+      "bismark_align"
+    ],
+    [
+      "bismark_align",
+      "samtools_sort"
+    ],
+    [
+      "samtools_sort",
+      "bismark_deduplicate"
+    ],
+    [
+      "bismark_deduplicate",
+      "bismark_methylation_extractor"
+    ],
+    [
+      "bismark_methylation_extractor",
+      "bismark2bedgraph"
+    ],
+    [
+      "bismark2bedgraph",
+      "coverage2cytosine"
+    ],
+    [
+      "coverage2cytosine",
+      "dss_dmr_calling"
+    ],
+    [
+      "dss_dmr_calling",
+      "cpg_island_annotation"
+    ],
+    [
+      "cpg_island_annotation",
+      "methylation_expression_integration"
+    ],
+    [
+      "raw_fastqc_rnaseq",
+      "trim_reads_rnaseq"
+    ],
+    [
+      "trim_reads_rnaseq",
+      "star_align"
+    ],
+    [
+      "star_align",
+      "featurecounts"
+    ],
+    [
+      "featurecounts",
+      "deseq2_expression"
+    ],
+    [
+      "deseq2_expression",
+      "methylation_expression_integration"
+    ],
+    [
+      "methylation_expression_integration",
+      "multiqc"
+    ],
+    [
+      "post_trim_fastqc",
+      "multiqc"
+    ],
+    [
+      "bismark_methylation_extractor",
+      "multiqc"
+    ],
+    [
+      "star_align",
+      "multiqc"
+    ],
+    [
+      "featurecounts",
+      "multiqc"
+    ]
+  ],
+  "config_params": {
+    "wgbs_samples": [
+      "wgbs_sample1",
+      "wgbs_sample2"
+    ],
+    "rnaseq_samples": [
+      "rnaseq_sample1",
+      "rnaseq_sample2"
+    ],
+    "genome_dir": "resources/genome",
+    "star_index": "resources/star_index",
+    "gtf": "resources/annotation.gtf",
+    "cpg_islands_bed": "resources/cpg_islands.bed",
+    "adapters": "resources/adapters.fa",
+    "strandedness": 0
+  },
+  "wildcards": []
+}

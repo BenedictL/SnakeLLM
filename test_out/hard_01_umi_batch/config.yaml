@@ -1,0 +1,33 @@
+# SnakeLLM — Pipeline configuration
+# Pipeline: rna-seq-de-umi
+# Edit paths and parameters before running
+
+# Sample names — edit to match your actual sample IDs
+samples:
+  - S1
+  - S2
+  - S3
+
+# Reference files — update paths for your system
+adapters: "resources/adapters.fa"
+genome_dir: "resources/star_index"
+gtf: "resources/annotation.gtf"
+
+# Statistical thresholds
+contrast_denominator: control
+alpha: 0.05
+lfc_threshold: 1.0
+pval_cutoff: 0.05
+qval_cutoff: 0.2
+
+# Pipeline parameters
+strandedness: 2
+paired_end: True
+sample_metadata: "resources/sample_metadata.csv"
+batch_column: "batch"
+condition_column: "condition"
+contrast_numerator: "treatment"
+umi_pattern: "NNNNNNNN"
+dedup_method: "directional"
+organism_db: "org.Hs.eg.db"
+gene_id_type: "ENSEMBL"

@@ -1,0 +1,256 @@
+# SnakeLLM — atac-seq
+# ATAC-seq chromatin accessibility pipeline with Tn5 insertion site shift correction and transcription factor motif enrichment using HOMER.
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+
+rule raw_fastqc:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "qc/fastqc/raw/{sample}_R1_fastqc.html",
+        "qc/fastqc/raw/{sample}_R2_fastqc.html",
+        "qc/fastqc/raw/{sample}_R1_fastqc.zip",
+        "qc/fastqc/raw/{sample}_R2_fastqc.zip",
+    params:
+        outdir = "qc/fastqc/raw",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 4000,
+        runtime = 60
+    log:
+        "logs/fastqc/raw/{sample}.log"
+    shell:
+        "fastqc -t {params.threads} -o {params.outdir} {input[0]} {input[1]} 2> {log}"
+
+rule trim_reads:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz",
+    params:
+        adapters = "resources/NexteraPE-PE.fa",
+        leading = 3,
+        trailing = 3,
+        slidingwindow = "4:15",
+        minlen = 36,
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 90
+    log:
+        "logs/trimmomatic/{sample}.log"
+    shell:
+        "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log}"
+
+rule align_bowtie2:
+    input:
+        r1 = "trimmed/{sample}_R1.fastq.gz",
+        r2 = "trimmed/{sample}_R2.fastq.gz",
+    output:
+        "aligned/{sample}.bam",
+    params:
+        index = "resources/bowtie2_index/genome",
+        threads = 8,
+        max_fragment_size = 2000,
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 180
+    log:
+        "logs/bowtie2/{sample}.log"
+    shell:
+        "bowtie2 -p {params.threads} -X {params.max_fragment_size} --no-mixed --no-discordant -x {params.index} -1 {input[0]} -2 {input[1]} 2> {log[0]} | samtools view -bS - > {output[0]} 2> {log}"
+
+rule filter_bam:
+    input:
+        "aligned/{sample}.bam"
+    output:
+        "filtered/{sample}.filtered.bam",
+        "filtered/{sample}.filtered.bam.bai",
+    params:
+        mapq = 30,
+        threads = 4,
+        chrM = "chrM",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/samtools/filter/{sample}.log"
+    shell:
+        "samtools view -b -F 1804 -f 2 -q {params.mapq} {input[0]} | grep -v {params.chrM} | samtools sort -@ {params.threads} -o {output[0]} - && samtools index {output[0]} 2> {log}"
+
+rule remove_duplicates:
+    input:
+        "filtered/{sample}.filtered.bam"
+    output:
+        "deduped/{sample}.deduped.bam",
+        "qc/picard/{sample}.dup_metrics.txt",
+    params:
+        java_opts = "-Xmx16g",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 120
+    log:
+        "logs/picard/{sample}.log"
+    shell:
+        "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[1]} REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT 2> {log[0]} && samtools index {output[0]} 2> {log}"
+
+rule shift_reads:
+    input:
+        "deduped/{sample}.deduped.bam"
+    output:
+        "shifted/{sample}.shifted.bam",
+        "shifted/{sample}.shifted.bam.bai",
+    params:
+        threads = 4,
+        shift_plus = 4,
+        shift_minus = -5,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/deeptools/alignmentSieve/{sample}.log"
+    shell:
+        "alignmentSieve --numberOfProcessors {params.threads} --ATACshift --bam {input[0]} -o {output[0]} 2> {log[0]} && samtools index {output[0]} 2> {log}"
+
+rule call_peaks:
+    input:
+        "shifted/{sample}.shifted.bam"
+    output:
+        "peaks/{sample}_peaks.narrowPeak",
+        "peaks/{sample}_summits.bed",
+        "peaks/{sample}_peaks.xls",
+    params:
+        genome_size = "hs",
+        name = "{sample}",
+        outdir = "peaks",
+        qvalue = 0.05,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 90
+    log:
+        "logs/macs2/{sample}.log"
+    shell:
+        "macs2 callpeak -t {input[0]} -f BAMPE -g {params.genome_size} -n {params.name} --outdir {params.outdir} --nomodel --shift -100 --extsize 200 -q {params.qvalue} --keep-dup all 2> {log}"
+
+rule create_bigwig:
+    input:
+        "shifted/{sample}.shifted.bam"
+    output:
+        "bigwig/{sample}.bw",
+    params:
+        threads = 8,
+        bin_size = 10,
+        normalize_using = "RPKM",
+        effective_genome_size = 2864785220,
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 90
+    log:
+        "logs/deeptools/bamCoverage/{sample}.log"
+    shell:
+        "bamCoverage --bam {input[0]} -o {output[0]} --binSize {params.bin_size} --normalizeUsing {params.normalize_using} --effectiveGenomeSize {params.effective_genome_size} --numberOfProcessors {params.threads} 2> {log}"
+
+rule peak_qc:
+    input:
+        "shifted/{sample}.shifted.bam",
+        "peaks/{sample}_peaks.narrowPeak",
+    output:
+        "qc/ataqv/{sample}.ataqv.json.gz",
+        "qc/ataqv/{sample}.ataqv.out",
+    params:
+        organism = "human",
+        tss_file = "resources/tss.bed",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 90
+    log:
+        "logs/ataqv/{sample}.log"
+    shell:
+        "ataqv --peak-file {input[1]} --tss-file {params.tss_file} --metrics-file {output[0]} {params.organism} {input[0]} > {output[1]} 2> {log}"
+
+rule annotate_peaks:
+    input:
+        "peaks/{sample}_peaks.narrowPeak"
+    output:
+        "annotation/{sample}_peak_annotation.txt",
+        "annotation/{sample}_peak_annotation.pdf",
+    params:
+        txdb = "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        organism_db = "org.Hs.eg.db",
+        tss_region_start = -3000,
+        tss_region_end = 3000,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/chipseeker/{sample}.log"
+    shell:
+        "Rscript scripts/chipseeker_annotate.R {input[0]} {params.txdb} {params.organism_db} {params.tss_region_start} {params.tss_region_end} {output[0]} {output[1]} 2> {log}"
+
+rule motif_analysis:
+    input:
+        "peaks/{sample}_peaks.narrowPeak"
+    output:
+        "motifs/{sample}/homerResults.html",
+        "motifs/{sample}/knownResults.html",
+    params:
+        genome = "hg38",
+        size = 200,
+        threads = 4,
+        outdir = "motifs/{sample}",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 180
+    log:
+        "logs/homer/{sample}.log"
+    shell:
+        "findMotifsGenome.pl {input[0]} {params.genome} {params.outdir} -size {params.size} -p {params.threads} 2> {log}"
+
+rule multiqc_report:
+    input:
+        ancient("qc/fastqc/raw"),
+        ancient("logs/trimmomatic"),
+        ancient("logs/bowtie2"),
+        ancient("qc/picard"),
+        ancient("qc/ataqv"),
+        ancient("bigwig"),
+        ancient("motifs"),
+        ancient("annotation"),
+    output:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+    params:
+        outdir = "qc/multiqc",
+        dirs = "qc/fastqc/raw logs/trimmomatic logs/bowtie2 qc/picard qc/ataqv",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 30
+    log:
+        "logs/multiqc/multiqc.log"
+    shell:
+        "multiqc {params.dirs} --outdir {params.outdir} --force 2> {log}"

@@ -1,0 +1,16 @@
+# SnakeLLM config
+# Pipeline: wgbs-methylation-analysis
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+
+# Reference files
+genome_dir: "resources/genome"
+star_index: "resources/star_index"
+gtf: "resources/annotation.gtf"
+adapters: "resources/adapters.fa"
+
+# Parameters

@@ -1,0 +1,15 @@
+# SnakeLLM config
+# Pipeline: wgs-variant-calling
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+
+# Reference files
+reference: "resources/hg38/Homo_sapiens_assembly38.fasta"
+ref_version: "hg38"
+adapters: "resources/adapters/TruSeq3-PE.fa"
+
+# Parameters

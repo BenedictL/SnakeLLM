@@ -1,0 +1,21 @@
+# SnakeLLM config
+# Pipeline: rna-seq-de-umi
+
+# Samples
+samples:
+  - S1
+  - S2
+  - S3
+
+# Reference files
+genome_dir: "resources/star_index"
+gtf: "resources/annotation.gtf"
+adapters: "resources/adapters.fa"
+ref_level: "control"
+
+# Thresholds
+padj_threshold: 0.05
+lfc_threshold: 1.0
+min_read_len: 36
+
+# Parameters

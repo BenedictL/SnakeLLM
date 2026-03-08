@@ -1,0 +1,298 @@
+# SnakeLLM — wgs-somatic-variant-calling
+# Tumor-normal paired somatic variant calling pipeline using BWA-MEM2 alignment, GATK4 Mutect2 for SNVs/indels, Manta for structural variants, CNVkit for copy number analysis, and VEP for functional annotation.
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+
+rule fastqc_raw:
+    input:
+        "data/raw/{sample}_{read}.fastq.gz"
+    output:
+        "qc/fastqc/{sample}_{read}_fastqc.html",
+        "qc/fastqc/{sample}_{read}_fastqc.zip",
+    params:
+        outdir = "qc/fastqc",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 60
+    log:
+        "logs/fastqc/{sample}_{read}.log"
+    shell:
+        "fastqc --threads {params.threads} --outdir {params.outdir} {input} 2> {log}"
+
+rule trimmomatic_pe:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "trimmed/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2_trimmed.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz",
+    params:
+        adapters = "resources/adapters.fa",
+        leading = 3,
+        trailing = 3,
+        slidingwindow = "4:15",
+        minlen = 36,
+        threads = 8,
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/trimmomatic/{sample}.log"
+    shell:
+        "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log}"
+
+rule bwa_mem2_align:
+    input:
+        r1 = "trimmed/{sample}_R1_trimmed.fastq.gz",
+        r2 = "trimmed/{sample}_R2_trimmed.fastq.gz",
+    output:
+        "aligned/{sample}.bam",
+    params:
+        reference = "resources/reference/genome.fa",
+        threads = 16,
+        read_group = "@RG\tID:{sample}\tSM:{sample}\tPL:ILLUMINA\tLB:{sample}\tPU:{sample}",
+    threads: 16
+    resources:
+        mem_mb  = 64000,
+        runtime = 480
+    log:
+        "logs/bwa_mem2/{sample}.log"
+    shell:
+        "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log}"
+
+rule samtools_sort:
+    input:
+        "aligned/{sample}.bam"
+    output:
+        "sorted/{sample}.sorted.bam",
+    params:
+        threads = 8,
+        memory_per_thread = "2G",
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 180
+    log:
+        "logs/samtools_sort/{sample}.log"
+    shell:
+        "samtools sort -@ {params.threads} -m {params.memory_per_thread} -o {output[0]} {input[0]} && samtools index {output[0]} 2> {log}"
+
+rule picard_markduplicates:
+    input:
+        "sorted/{sample}.sorted.bam"
+    output:
+        "deduped/{sample}.deduped.bam",
+        "deduped/{sample}.deduped.bai",
+        "deduped/{sample}.metrics.txt",
+    params:
+        java_opts = "-Xmx32g",
+        validation_stringency = "LENIENT",
+    threads: 4
+    resources:
+        mem_mb  = 40000,
+        runtime = 240
+    log:
+        "logs/picard_markduplicates/{sample}.log"
+    shell:
+        "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} REMOVE_DUPLICATES=false CREATE_INDEX=true VALIDATION_STRINGENCY={params.validation_stringency} 2> {log}"
+
+rule gatk_baserecalibrator:
+    input:
+        "deduped/{sample}.deduped.bam"
+    output:
+        "bqsr/{sample}.recal.table",
+    params:
+        reference = "resources/reference/genome.fa",
+        known_sites_dbsnp = "resources/dbsnp.vcf.gz",
+        known_sites_mills = "resources/mills_indels.vcf.gz",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 24000,
+        runtime = 240
+    log:
+        "logs/gatk_baserecalibrator/{sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites_dbsnp} --known-sites {params.known_sites_mills} -O {output[0]} 2> {log}"
+
+rule gatk_applybqsr:
+    input:
+        "deduped/{sample}.deduped.bam",
+        "bqsr/{sample}.recal.table",
+    output:
+        "bqsr/{sample}.bqsr.bam",
+        "bqsr/{sample}.bqsr.bai",
+    params:
+        reference = "resources/reference/genome.fa",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 24000,
+        runtime = 180
+    log:
+        "logs/gatk_applybqsr/{sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' ApplyBQSR -R {params.reference} -I {input[0]} --bqsr-recal-file {input[1]} -O {output[0]} 2> {log}"
+
+rule cnvkit_batch:
+    input:
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam",
+    output:
+        "cnvkit/{tumor_sample}_vs_{normal_sample}/{tumor_sample}.bqsr.cnr",
+        "cnvkit/{tumor_sample}_vs_{normal_sample}/{tumor_sample}.bqsr.cns",
+    params:
+        reference = "resources/reference/genome.fa",
+        targets = "resources/target_regions.bed",
+        outdir = "cnvkit/{tumor_sample}_vs_{normal_sample}",
+        method = "wgs",
+        threads = 8,
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 240
+    log:
+        "logs/cnvkit/{tumor_sample}_vs_{normal_sample}.log"
+    shell:
+        "cnvkit.py batch {input[0]} --normal {input[1]} --fasta {params.reference} --method {params.method} --output-dir {params.outdir} -p {params.threads} 2> {log}"
+
+rule gatk_mutect2:
+    input:
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam",
+    output:
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz.tbi",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.stats",
+    params:
+        reference = "resources/reference/genome.fa",
+        germline_resource = "resources/af-only-gnomad.vcf.gz",
+        panel_of_normals = "resources/somatic-hg38-1e6-pon.vcf.gz",
+        java_opts = "-Xmx32g",
+        threads = 8,
+    threads: 8
+    resources:
+        mem_mb  = 48000,
+        runtime = 600
+    log:
+        "logs/mutect2/{tumor_sample}_vs_{normal_sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' Mutect2 -R {params.reference} -I {input[0]} -tumor {wildcards.tumor_sample} -I {input[1]} -normal {wildcards.normal_sample} --germline-resource {params.germline_resource} --panel-of-normals {params.panel_of_normals} -O {output[0]} --native-pair-hmm-threads {params.threads} 2> {log}"
+
+rule manta_somatic:
+    input:
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam",
+    output:
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz",
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz.tbi",
+    params:
+        reference = "resources/reference/genome.fa",
+        rundir = "manta/{tumor_sample}_vs_{normal_sample}",
+        jobs = 8,
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 360
+    log:
+        "logs/manta/{tumor_sample}_vs_{normal_sample}.log"
+    shell:
+        "configManta.py --tumorBam {input[0]} --normalBam {input[1]} --referenceFasta {params.reference} --runDir {params.rundir} && {params.rundir}/runWorkflow.py -m local -j {params.jobs} 2> {log}"
+
+rule gatk_filtermutectcalls:
+    input:
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.stats",
+    output:
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz",
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz.tbi",
+    params:
+        reference = "resources/reference/genome.fa",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 24000,
+        runtime = 120
+    log:
+        "logs/filtermutectcalls/{tumor_sample}_vs_{normal_sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' FilterMutectCalls -R {params.reference} -V {input[0]} --stats {input[1]} -O {output[0]} 2> {log}"
+
+rule vep_annotate_sv:
+    input:
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz"
+    output:
+        "vep/{tumor_sample}_vs_{normal_sample}.sv.vep.vcf.gz",
+        "vep/{tumor_sample}_vs_{normal_sample}.sv.vep.vcf.gz_summary.html",
+    params:
+        vep_cache = "resources/vep_cache",
+        assembly = "GRCh38",
+        species = "homo_sapiens",
+        fork = 8,
+        extra_flags = "--everything --vcf --compress_output bgzip --force_overwrite",
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/vep/{tumor_sample}_vs_{normal_sample}_sv.log"
+    shell:
+        "vep --input_file {input[0]} --output_file {output[0]} --stats_file {output[1]} --cache --dir_cache {params.vep_cache} --assembly {params.assembly} --species {params.species} --fork {params.fork} {params.extra_flags} 2> {log}"
+
+rule vep_annotate_snv:
+    input:
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz"
+    output:
+        "vep/{tumor_sample}_vs_{normal_sample}.snv.vep.vcf.gz",
+        "vep/{tumor_sample}_vs_{normal_sample}.snv.vep.vcf.gz_summary.html",
+    params:
+        vep_cache = "resources/vep_cache",
+        assembly = "GRCh38",
+        species = "homo_sapiens",
+        fork = 8,
+        extra_flags = "--everything --vcf --compress_output bgzip --force_overwrite",
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 240
+    log:
+        "logs/vep/{tumor_sample}_vs_{normal_sample}_snv.log"
+    shell:
+        "vep --input_file {input[0]} --output_file {output[0]} --stats_file {output[1]} --cache --dir_cache {params.vep_cache} --assembly {params.assembly} --species {params.species} --fork {params.fork} {params.extra_flags} 2> {log}"
+
+rule multiqc_report:
+    input:
+        expand("qc/fastqc/{sample}_{read}_fastqc.html", sample=samples, read=["R1", "R2"]),
+        expand("trimmed/{sample}_R1_trimmed.fastq.gz", sample=samples),
+        expand("deduped/{sample}.metrics.txt", sample=samples),
+        expand("bqsr/{sample}.recal.table", sample=samples),
+        "mutect2/{tumor}_vs_{normal}.stats".format(tumor=samples[0], normal=samples[1]),
+        "filtered/{tumor}_vs_{normal}.filtered.vcf.gz".format(tumor=samples[0], normal=samples[1]),
+        "cnvkit/{tumor}_vs_{normal}/{tumor}.bqsr.cns".format(tumor=samples[0], normal=samples[1]),
+        "vep/{tumor}_vs_{normal}.sv.vep.vcf.gz_summary.html".format(tumor=samples[0], normal=samples[1]),
+        "vep/{tumor}_vs_{normal}.snv.vep.vcf.gz_summary.html".format(tumor=samples[0], normal=samples[1]),
+    output:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+    params:
+        outdir = "qc/multiqc",
+        title = "WGS Somatic Variant Calling QC Report",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 30
+    log:
+        "logs/multiqc/multiqc.log"
+    shell:
+        "multiqc qc/fastqc logs/trimmomatic deduped bqsr mutect2 filtered cnvkit vep --outdir {params.outdir} --title '{params.title}' --force 2> {log}"

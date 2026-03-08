@@ -1,0 +1,20 @@
+# SnakeLLM config
+# Pipeline: rna-seq-de
+
+# Samples
+samples:
+  - S1
+  - S2
+  - S3
+
+# Reference files
+salmon_index: "resources/salmon_index"
+adapters: "resources/adapters.fa"
+genome_build: "GRCh38"
+reference_level: "control"
+
+# Thresholds
+lfc_threshold: 1.0
+fdr_threshold: 0.05
+
+# Parameters

@@ -1,0 +1,543 @@
+{
+  "pipeline_type": "rna-seq-de-dual-quantification",
+  "description": "Bulk RNA-seq differential expression pipeline running STAR/featureCounts and Salmon/alevin quantification in parallel, with DESeq2 applied to each path independently and results compared via MultiQC.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw and trimmed FASTQ reads",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming of raw reads",
+      "language": "CLI"
+    },
+    {
+      "name": "STAR",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of trimmed reads to the reference genome producing BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "Salmon",
+      "version": "0.4.1",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/deepvariant",
+        "tag": "0.4.1--np113py27_1",
+        "full_uri": "quay.io/biocontainers/deepvariant:0.4.1--np113py27_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quasi-mapping and transcript-level quantification using Salmon alevin",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort and index STAR-produced BAM files for downstream counting",
+      "language": "CLI"
+    },
+    {
+      "name": "featureCounts",
+      "version": "1.5.0p3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/subread",
+        "tag": "1.5.0p3--0",
+        "full_uri": "quay.io/biocontainers/subread:1.5.0p3--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level read quantification from sorted BAM files using genomic annotation GTF",
+      "language": "CLI"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Differential expression analysis on featureCounts integer count matrix and tximeta-imported Salmon quantifications",
+      "language": "R"
+    },
+    {
+      "name": "MultiQC",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from all pipeline steps into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "fastqc_raw",
+      "tool": "FastQC",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc_raw/{sample}_R1_fastqc.html",
+        "qc/fastqc_raw/{sample}_R1_fastqc.zip",
+        "qc/fastqc_raw/{sample}_R2_fastqc.html",
+        "qc/fastqc_raw/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc_raw",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc_raw/{sample}.log"
+      ]
+    },
+    {
+      "name": "trimmomatic",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "fastqc_trimmed",
+      "tool": "FastQC",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc_trimmed/{sample}_R1_paired_fastqc.html",
+        "qc/fastqc_trimmed/{sample}_R1_paired_fastqc.zip",
+        "qc/fastqc_trimmed/{sample}_R2_paired_fastqc.html",
+        "qc/fastqc_trimmed/{sample}_R2_paired_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc_trimmed",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc_trimmed/{sample}.log"
+      ]
+    },
+    {
+      "name": "star_align",
+      "tool": "STAR",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "star/{sample}/Aligned.out.bam",
+        "star/{sample}/Log.final.out"
+      ],
+      "params": {
+        "genome_dir": "resources/star_index",
+        "threads": 8,
+        "outdir_prefix": "star/{sample}/"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --outFileNamePrefix {params.outdir_prefix} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star/{sample}.log"
+      ]
+    },
+    {
+      "name": "salmon_alevin",
+      "tool": "Salmon",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "salmon/{sample}/quant.sf",
+        "salmon/{sample}/lib_format_counts.json"
+      ],
+      "params": {
+        "index": "resources/salmon_index",
+        "libtype": "A",
+        "threads": 8,
+        "outdir": "salmon/{sample}"
+      },
+      "shell_cmd": "salmon quant --index {params.index} --libType {params.libtype} -1 {input[0]} -2 {input[1]} --validateMappings --threads {params.threads} --output {params.outdir} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/salmon_alevin/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_sort_index",
+      "tool": "samtools",
+      "input": [
+        "star/{sample}/Aligned.out.bam"
+      ],
+      "output": [
+        "star/{sample}/Aligned.sortedByCoord.bam",
+        "star/{sample}/Aligned.sortedByCoord.bam.bai"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} && samtools index {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/samtools/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts",
+      "tool": "featureCounts",
+      "input": [
+        "counts/bam_list.txt"
+      ],
+      "output": [
+        "counts/featurecounts_all.txt",
+        "counts/featurecounts_all.txt.summary"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "strandedness": "{config[strandedness]}",
+        "threads": 8,
+        "paired_end_flag": "{config[paired_end]}"
+      },
+      "shell_cmd": "featureCounts $(if [ \"{params.paired_end_flag}\" = \"true\" ]; then echo \"-p\"; fi) -s {params.strandedness} -T {params.threads} -a {params.gtf} -o {output[0]} $(cat {input[0]}) 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/featurecounts/featurecounts.log"
+      ]
+    },
+    {
+      "name": "deseq2_featurecounts",
+      "tool": "DESeq2",
+      "input": [
+        "counts/featurecounts_all.txt"
+      ],
+      "output": [
+        "results/deseq2_featurecounts/deseq2_fc_results.csv",
+        "results/deseq2_featurecounts/deseq2_fc_normalized_counts.csv",
+        "results/deseq2_featurecounts/deseq2_fc_ma_plot.pdf",
+        "results/deseq2_featurecounts/deseq2_fc_volcano_plot.pdf"
+      ],
+      "params": {
+        "condition_col": "condition",
+        "ref_level": "control",
+        "alpha": 0.05,
+        "lfc_threshold": 1.0,
+        "sample_sheet": "config/sample_sheet.csv"
+      },
+      "shell_cmd": "Rscript scripts/deseq2_featurecounts.R --counts {input[0]} --sample_sheet {params.sample_sheet} --condition {params.condition_col} --ref_level {params.ref_level} --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --outdir results/deseq2_featurecounts 2> {log[0]}",
+      "script": "scripts/deseq2_featurecounts.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deseq2_featurecounts/deseq2_fc.log"
+      ]
+    },
+    {
+      "name": "tximeta_deseq2_salmon",
+      "tool": "DESeq2",
+      "input": [
+        "salmon/sample_paths.txt"
+      ],
+      "output": [
+        "results/deseq2_salmon/deseq2_salmon_results.csv",
+        "results/deseq2_salmon/deseq2_salmon_normalized_counts.csv",
+        "results/deseq2_salmon/deseq2_salmon_ma_plot.pdf",
+        "results/deseq2_salmon/deseq2_salmon_volcano_plot.pdf"
+      ],
+      "params": {
+        "condition_col": "condition",
+        "ref_level": "control",
+        "alpha": 0.05,
+        "lfc_threshold": 1.0,
+        "sample_sheet": "config/sample_sheet.csv",
+        "tx2gene": "resources/tx2gene.csv"
+      },
+      "shell_cmd": "Rscript scripts/tximeta_deseq2_salmon.R --salmon_paths {input[0]} --sample_sheet {params.sample_sheet} --tx2gene {params.tx2gene} --condition {params.condition_col} --ref_level {params.ref_level} --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --outdir results/deseq2_salmon 2> {log[0]}",
+      "script": "scripts/tximeta_deseq2_salmon.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deseq2_salmon/deseq2_salmon.log"
+      ]
+    },
+    {
+      "name": "results_comparison",
+      "tool": "DESeq2",
+      "input": [
+        "results/deseq2_featurecounts/deseq2_fc_results.csv",
+        "results/deseq2_salmon/deseq2_salmon_results.csv"
+      ],
+      "output": [
+        "results/comparison/fc_vs_salmon_concordance.csv",
+        "results/comparison/fc_vs_salmon_lfc_correlation.pdf",
+        "results/comparison/fc_vs_salmon_venn.pdf",
+        "results/comparison/fc_vs_salmon_summary.txt"
+      ],
+      "params": {
+        "alpha": 0.05,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/results_comparison.R --fc_results {input[0]} --salmon_results {input[1]} --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --outdir results/comparison 2> {log[0]}",
+      "script": "scripts/results_comparison.R",
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/results_comparison/comparison.log"
+      ]
+    },
+    {
+      "name": "multiqc",
+      "tool": "MultiQC",
+      "input": [
+        "qc/fastqc_raw",
+        "qc/fastqc_trimmed",
+        "logs/trimmomatic",
+        "star",
+        "salmon",
+        "counts/featurecounts_all.txt.summary",
+        "results/deseq2_featurecounts",
+        "results/deseq2_salmon",
+        "results/comparison"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "title": "Dual Quantification RNA-seq QC Report"
+      },
+      "shell_cmd": "multiqc --force --title \"{params.title}\" --outdir {params.outdir} qc/fastqc_raw qc/fastqc_trimmed logs/trimmomatic star salmon counts results/comparison 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "fastqc_raw",
+      "trimmomatic"
+    ],
+    [
+      "trimmomatic",
+      "fastqc_trimmed"
+    ],
+    [
+      "trimmomatic",
+      "star_align"
+    ],
+    [
+      "trimmomatic",
+      "salmon_alevin"
+    ],
+    [
+      "star_align",
+      "samtools_sort_index"
+    ],
+    [
+      "samtools_sort_index",
+      "featurecounts"
+    ],
+    [
+      "featurecounts",
+      "deseq2_featurecounts"
+    ],
+    [
+      "salmon_alevin",
+      "tximeta_deseq2_salmon"
+    ],
+    [
+      "deseq2_featurecounts",
+      "results_comparison"
+    ],
+    [
+      "tximeta_deseq2_salmon",
+      "results_comparison"
+    ],
+    [
+      "fastqc_raw",
+      "multiqc"
+    ],
+    [
+      "fastqc_trimmed",
+      "multiqc"
+    ],
+    [
+      "trimmomatic",
+      "multiqc"
+    ],
+    [
+      "star_align",
+      "multiqc"
+    ],
+    [
+      "salmon_alevin",
+      "multiqc"
+    ],
+    [
+      "featurecounts",
+      "multiqc"
+    ],
+    [
+      "deseq2_featurecounts",
+      "multiqc"
+    ],
+    [
+      "tximeta_deseq2_salmon",
+      "multiqc"
+    ],
+    [
+      "results_comparison",
+      "multiqc"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "S1",
+      "S2",
+      "S3",
+      "S4"
+    ],
+    "strandedness": 0,
+    "paired_end": true,
+    "genome_dir": "resources/star_index",
+    "salmon_index": "resources/salmon_index",
+    "gtf": "resources/annotation.gtf",
+    "tx2gene": "resources/tx2gene.csv",
+    "adapters": "resources/adapters.fa",
+    "sample_sheet": "config/sample_sheet.csv",
+    "condition_col": "condition",
+    "ref_level": "control",
+    "alpha": 0.05,
+    "lfc_threshold": 1.0,
+    "organism_db": "org.Hs.eg.db",
+    "genome_build": "hg38",
+    "gtf_source": "ensembl"
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

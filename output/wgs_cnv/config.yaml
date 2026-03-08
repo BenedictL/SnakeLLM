@@ -1,0 +1,17 @@
+# SnakeLLM config
+# Pipeline: wgs-cnv-analysis
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+
+# Reference files
+reference_genome: "resources/genome.fa"
+adapters: "resources/adapters.fa"
+
+# Thresholds
+trimmomatic_minlen: 36
+
+# Parameters

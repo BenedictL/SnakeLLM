@@ -1,0 +1,2 @@
+chip_h3k27ac: WildcardError in rule call_peaks in file "C:\Users\bened\Desktop\snakellm\output\chip_h3k27ac\Snakefile", line 112:
+TOTAL PASSED: 21

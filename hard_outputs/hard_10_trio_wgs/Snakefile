@@ -1,0 +1,387 @@
+# SnakeLLM — wgs-germline-trio-variant-calling
+# Germline trio (mother, father, proband) variant calling using GATK4 best practices with BWA-MEM2 alignment, per-sample GVCF calling, joint genotyping, VQSR filtering, DeNovoGear de novo detection, and SnpEff annotation.
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        "qc/multiqc/multiqc_report.html",
+
+rule raw_fastqc:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.zip",
+    params:
+        outdir = "qc/fastqc",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 4000,
+        runtime = 60
+    log:
+        "logs/fastqc/{sample}.log"
+    shell:
+        "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log}"
+
+rule trim_reads:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz",
+    params:
+        adapters = "config[adapters]",
+        leading = 3,
+        trailing = 3,
+        sliding_window = "4:15",
+        min_len = 36,
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 120
+    log:
+        "logs/trimmomatic/{sample}.log"
+    shell:
+        "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.sliding_window} MINLEN:{params.min_len} 2> {log}"
+
+rule align_bwa_mem2:
+    input:
+        r1 = "trimmed/{sample}_R1.fastq.gz",
+        r2 = "trimmed/{sample}_R2.fastq.gz",
+    output:
+        "aligned/{sample}.bam",
+    params:
+        reference = "config[reference]",
+        threads = 16,
+        read_group = "@RG\tID:{wildcards.sample}\tSM:{wildcards.sample}\tPL:ILLUMINA\tLB:{wildcards.sample}\tPU:{wildcards.sample}",
+    threads: 16
+    resources:
+        mem_mb  = 32000,
+        runtime = 360
+    log:
+        "logs/bwa_mem2/{sample}.log"
+    shell:
+        "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log}"
+
+rule sort_bam:
+    input:
+        "aligned/{sample}.bam"
+    output:
+        "sorted/{sample}.sorted.bam",
+        "sorted/{sample}.sorted.bam.bai",
+    params:
+        threads = 8,
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/samtools/sort_{sample}.log"
+    shell:
+        "samtools sort -@ {params.threads} -o {output[0]} {input[0]} > {log[0]} 2>&1 && samtools index {output[0]} > 2> {log}"
+
+rule flagstat:
+    input:
+        "sorted/{sample}.sorted.bam"
+    output:
+        "qc/flagstat/{sample}.flagstat.txt",
+    threads: 2
+    resources:
+        mem_mb  = 4000,
+        runtime = 30
+    log:
+        "logs/samtools/flagstat_{sample}.log"
+    shell:
+        "samtools flagstat {input[0]} > {output[0]} 2> {log}"
+
+rule mark_duplicates:
+    input:
+        "sorted/{sample}.sorted.bam"
+    output:
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.metrics.txt",
+    params:
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 180
+    log:
+        "logs/picard/mark_duplicates_{sample}.log"
+    shell:
+        "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[1]} VALIDATION_STRINGENCY=LENIENT CREATE_INDEX=true 2> {log}"
+
+rule base_recalibrator:
+    input:
+        "dedup/{sample}.dedup.bam"
+    output:
+        "bqsr/{sample}.recal.table",
+    params:
+        reference = "config[reference]",
+        known_sites_dbsnp = "config[known_sites_dbsnp]",
+        known_sites_mills = "config[known_sites_mills]",
+        known_sites_1kg = "config[known_sites_1kg]",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 240
+    log:
+        "logs/gatk/base_recalibrator_{sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites_dbsnp} --known-sites {params.known_sites_mills} --known-sites {params.known_sites_1kg} -O {output[0]} 2> {log}"
+
+rule apply_bqsr:
+    input:
+        "dedup/{sample}.dedup.bam",
+        "bqsr/{sample}.recal.table",
+    output:
+        "recal/{sample}.recal.bam",
+        "recal/{sample}.recal.bai",
+    params:
+        reference = "config[reference]",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 180
+    log:
+        "logs/gatk/apply_bqsr_{sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' ApplyBQSR -R {params.reference} -I {input[0]} --bqsr-recal-file {input[1]} -O {output[0]} 2> {log}"
+
+rule haplotype_caller:
+    input:
+        "recal/{sample}.recal.bam"
+    output:
+        "gvcf/{sample}.g.vcf.gz",
+        "gvcf/{sample}.g.vcf.gz.tbi",
+    params:
+        reference = "config[reference]",
+        dbsnp = "config[known_sites_dbsnp]",
+        java_opts = "-Xmx16g",
+    threads: 8
+    resources:
+        mem_mb  = 24000,
+        runtime = 480
+    log:
+        "logs/gatk/haplotype_caller_{sample}.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' HaplotypeCaller -R {params.reference} -I {input[0]} -O {output[0]} -ERC GVCF --dbsnp {params.dbsnp} 2> {log}"
+
+rule genomicsdb_import:
+    input:
+        "gvcf/mother.g.vcf.gz",
+        "gvcf/father.g.vcf.gz",
+        "gvcf/proband.g.vcf.gz",
+    output:
+        "genomicsdb/trio_db",
+    params:
+        intervals = "config[calling_intervals]",
+        java_opts = "-Xmx32g",
+    threads: 8
+    resources:
+        mem_mb  = 40000,
+        runtime = 360
+    log:
+        "logs/gatk/genomicsdb_import.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' GenomicsDBImport -V {input[0]} -V {input[1]} -V {input[2]} --genomicsdb-workspace-path {output[0]} -L {params.intervals} 2> {log}"
+
+rule genotype_gvcfs:
+    input:
+        "genomicsdb/trio_db"
+    output:
+        "vcf/trio.genotyped.vcf.gz",
+        "vcf/trio.genotyped.vcf.gz.tbi",
+    params:
+        reference = "config[reference]",
+        dbsnp = "config[known_sites_dbsnp]",
+        java_opts = "-Xmx32g",
+    threads: 8
+    resources:
+        mem_mb  = 40000,
+        runtime = 360
+    log:
+        "logs/gatk/genotype_gvcfs.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' GenotypeGVCFs -R {params.reference} -V gendb://{input[0]} -O {output[0]} --dbsnp {params.dbsnp} 2> {log}"
+
+rule vqsr_indel:
+    input:
+        "vcf/trio.genotyped.vcf.gz"
+    output:
+        "vqsr/trio.indel.recal",
+        "vqsr/trio.indel.tranches",
+        "vqsr/trio.indel.rscript.R",
+    params:
+        reference = "config[reference]",
+        mills = "config[known_sites_mills]",
+        dbsnp = "config[known_sites_dbsnp]",
+        java_opts = "-Xmx32g",
+        max_gaussians = 4,
+    threads: 8
+    resources:
+        mem_mb  = 40000,
+        runtime = 240
+    log:
+        "logs/gatk/vqsr_indel.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' VariantRecalibrator -R {params.reference} -V {input[0]} --resource:mills,known=false,training=true,truth=true,prior=12.0 {params.mills} --resource:dbsnp,known=true,training=false,truth=false,prior=2.0 {params.dbsnp} -an QD -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode INDEL --max-gaussians {params.max_gaussians} -O {output[0]} --tranches-file {output[1]} --rscript-file {output[2]} 2> {log}"
+
+rule vqsr_snp:
+    input:
+        "vcf/trio.genotyped.vcf.gz"
+    output:
+        "vqsr/trio.snp.recal",
+        "vqsr/trio.snp.tranches",
+        "vqsr/trio.snp.rscript.R",
+    params:
+        reference = "config[reference]",
+        hapmap = "config[hapmap]",
+        omni = "config[omni]",
+        1kg_snps = "config[1kg_snps]",
+        dbsnp = "config[known_sites_dbsnp]",
+        java_opts = "-Xmx32g",
+        max_gaussians = 4,
+    threads: 8
+    resources:
+        mem_mb  = 40000,
+        runtime = 240
+    log:
+        "logs/gatk/vqsr_snp.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' VariantRecalibrator -R {params.reference} -V {input[0]} --resource:hapmap,known=false,training=true,truth=true,prior=15.0 {params.hapmap} --resource:omni,known=false,training=true,truth=true,prior=12.0 {params.omni} --resource:1000G,known=false,training=true,truth=false,prior=10.0 {params.1kg_snps} --resource:dbsnp,known=true,training=false,truth=false,prior=7.0 {params.dbsnp} -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode SNP --max-gaussians {params.max_gaussians} -O {output[0]} --tranches-file {output[1]} --rscript-file {output[2]} 2> {log}"
+
+rule apply_vqsr_indel:
+    input:
+        "vcf/trio.genotyped.vcf.gz",
+        "vqsr/trio.indel.recal",
+        "vqsr/trio.indel.tranches",
+    output:
+        "vqsr/trio.indel.filtered.vcf.gz",
+        "vqsr/trio.indel.filtered.vcf.gz.tbi",
+    params:
+        reference = "config[reference]",
+        ts_filter_level = 99.0,
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 120
+    log:
+        "logs/gatk/apply_vqsr_indel.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' ApplyVQSR -R {params.reference} -V {input[0]} --recal-file {input[1]} --tranches-file {input[2]} --truth-sensitivity-filter-level {params.ts_filter_level} --create-output-variant-index true -mode INDEL -O {output[0]} 2> {log}"
+
+rule apply_vqsr_snp:
+    input:
+        "vcf/trio.genotyped.vcf.gz",
+        "vqsr/trio.snp.recal",
+        "vqsr/trio.snp.tranches",
+    output:
+        "vqsr/trio.snp.filtered.vcf.gz",
+        "vqsr/trio.snp.filtered.vcf.gz.tbi",
+    params:
+        reference = "config[reference]",
+        ts_filter_level = 99.5,
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 120
+    log:
+        "logs/gatk/apply_vqsr_snp.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' ApplyVQSR -R {params.reference} -V {input[0]} --recal-file {input[1]} --tranches-file {input[2]} --truth-sensitivity-filter-level {params.ts_filter_level} --create-output-variant-index true -mode SNP -O {output[0]} 2> {log}"
+
+rule merge_filtered_vcf:
+    input:
+        r1 = "vqsr/trio.snp.filtered.vcf.gz",
+        r2 = "vqsr/trio.indel.filtered.vcf.gz",
+    output:
+        "vcf/trio.filtered.merged.vcf.gz",
+        "vcf/trio.filtered.merged.vcf.gz.tbi",
+    params:
+        reference = "config[reference]",
+        java_opts = "-Xmx16g",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/gatk/merge_filtered_vcf.log"
+    shell:
+        "gatk --java-options '{params.java_opts}' MergeVcfs -I {input[0]} -I {input[1]} -O {output[0]} 2> {log}"
+
+rule denovogear:
+    input:
+        "vcf/trio.filtered.merged.vcf.gz",
+        "recal/mother.recal.bam",
+        "recal/father.recal.bam",
+        "recal/proband.recal.bam",
+    output:
+        "denovo/trio.denovo.vcf",
+    params:
+        ped = "config[pedigree_file]",
+        min_snp_pp = 0.9,
+        min_indel_pp = 0.9,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/denovogear/denovogear.log"
+    shell:
+        "dng dnm --ped {params.ped} --vcf {input[0]} --min-snp-pp {params.min_snp_pp} --min-indel-pp {params.min_indel_pp} > {output[0]} 2> {log}"
+
+rule snpeff_annotate:
+    input:
+        "denovo/trio.denovo.vcf"
+    output:
+        "annotated/trio.denovo.annotated.vcf",
+        "annotated/trio.denovo.snpeff.html",
+        "annotated/trio.denovo.snpeff.csv",
+    params:
+        genome_db = "config[snpeff_genome_db]",
+        java_opts = "-Xmx16g",
+        data_dir = "config[snpeff_data_dir]",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 120
+    log:
+        "logs/snpeff/snpeff_annotate.log"
+    shell:
+        "snpEff {params.java_opts} -dataDir {params.data_dir} -v -stats {output[1]} -csvStats {output[2]} {params.genome_db} {input[0]} > {output[0]} 2> {log}"
+
+rule multiqc_report:
+    input:
+        ancient("qc/fastqc"),
+        ancient("logs/trimmomatic"),
+        ancient("qc/flagstat"),
+        ancient("logs/gatk"),
+        "annotated/trio.denovo.snpeff.html",
+    output:
+        "qc/multiqc/multiqc_report.html",
+    params:
+        outdir = "qc/multiqc",
+        dirs = "qc logs annotated",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 60
+    log:
+        "logs/multiqc/multiqc.log"
+    shell:
+        "multiqc {params.dirs} --outdir {params.outdir} --force 2> {log}"

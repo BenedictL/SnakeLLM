@@ -1,0 +1,656 @@
+{
+  "pipeline_type": "chip-seq",
+  "description": "Paired-end ChIP-seq pipeline for H3K4me3, H3K27ac (narrow peaks) and H3K27me3 (broad peaks) with Bowtie2 alignment, Picard deduplication, MACS2 peak calling, IDR filtering, deepTools bigWig generation, and ChIPseeker annotation.",
+  "tools": [
+    {
+      "name": "fastqc",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw paired-end FASTQ reads for all ChIP and Input samples",
+      "language": "CLI"
+    },
+    {
+      "name": "trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter trimming and quality filtering of paired-end reads",
+      "language": "CLI"
+    },
+    {
+      "name": "bowtie2",
+      "version": "2.3.4.1",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bowtie2",
+        "tag": "2.3.4.1--py35h2d50403_1",
+        "full_uri": "quay.io/biocontainers/bowtie2:2.3.4.1--py35h2d50403_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Paired-end alignment of trimmed reads to reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Sort, index, and filter BAM files by MAPQ and mapped status",
+      "language": "CLI"
+    },
+    {
+      "name": "picard",
+      "version": "2.9.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/picard",
+        "tag": "2.9.2--py35_1",
+        "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Mark and remove PCR duplicates with MarkDuplicates",
+      "language": "CLI"
+    },
+    {
+      "name": "macs2",
+      "version": "2.1.1.20160309",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/macs2",
+        "tag": "2.1.1.20160309--py27h7eb728f_3",
+        "full_uri": "quay.io/biocontainers/macs2:2.1.1.20160309--py27h7eb728f_3",
+        "source": "biocontainers"
+      },
+      "purpose": "Call narrow peaks for H3K4me3/H3K27ac and broad peaks for H3K27me3 using matched Input controls",
+      "language": "CLI"
+    },
+    {
+      "name": "idr",
+      "version": "2.0.4",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/idr",
+        "tag": "2.0.4--py36_2",
+        "full_uri": "quay.io/biocontainers/idr:2.0.4--py36_2",
+        "source": "biocontainers"
+      },
+      "purpose": "Irreproducibility Discovery Rate filtering across biological replicates for each histone mark",
+      "language": "CLI"
+    },
+    {
+      "name": "deeptools",
+      "version": "3.0.1",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/deeptools",
+        "tag": "3.0.1--py27_0",
+        "full_uri": "quay.io/biocontainers/deeptools:3.0.1--py27_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Generate normalized bigWig tracks via bamCoverage and evaluate ChIP enrichment with plotFingerprint",
+      "language": "CLI"
+    },
+    {
+      "name": "chipseeker",
+      "version": "1.10.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-chipseeker",
+        "tag": "1.10.0--r3.4.1_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-chipseeker:1.10.0--r3.4.1_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Annotate IDR-filtered peaks to nearest genomic features (promoters, enhancers, gene bodies)",
+      "language": "R"
+    },
+    {
+      "name": "multiqc",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate all QC metrics from FastQC, Trimmomatic, Bowtie2, Picard, and deepTools into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "fastqc_raw",
+      "tool": "fastqc",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "bowtie2_align",
+      "tool": "bowtie2",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}.bam"
+      ],
+      "params": {
+        "index": "resources/bowtie2_index/genome",
+        "threads": 8,
+        "max_insert": 1000
+      },
+      "shell_cmd": "bowtie2 -p {params.threads} -x {params.index} -1 {input[0]} -2 {input[1]} -X {params.max_insert} --no-mixed --no-discordant 2> {log[0]} | samtools view -bS - > {output[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/bowtie2/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_filter_sort",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}.bam"
+      ],
+      "output": [
+        "filtered/{sample}.filtered.sorted.bam",
+        "filtered/{sample}.filtered.sorted.bam.bai"
+      ],
+      "params": {
+        "mapq": 20,
+        "threads": 4
+      },
+      "shell_cmd": "samtools view -b -F 4 -q {params.mapq} {input[0]} | samtools sort -@ {params.threads} -o {output[0]} - && samtools index {output[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/samtools/{sample}.log"
+      ]
+    },
+    {
+      "name": "picard_markdup",
+      "tool": "picard",
+      "input": [
+        "filtered/{sample}.filtered.sorted.bam"
+      ],
+      "output": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai",
+        "dedup/{sample}.dup_metrics.txt"
+      ],
+      "params": {
+        "java_opts": "-Xmx16g",
+        "remove_duplicates": "true",
+        "validation_stringency": "LENIENT"
+      },
+      "shell_cmd": "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} REMOVE_DUPLICATES={params.remove_duplicates} VALIDATION_STRINGENCY={params.validation_stringency} 2> {log[0]} && samtools index {output[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/picard/{sample}.log"
+      ]
+    },
+    {
+      "name": "macs2_narrow_peaks",
+      "tool": "macs2",
+      "input": [
+        "dedup/{chip_sample}.dedup.bam",
+        "dedup/{input_sample}.dedup.bam"
+      ],
+      "output": [
+        "peaks/narrow/{chip_sample}_peaks.narrowPeak",
+        "peaks/narrow/{chip_sample}_summits.bed",
+        "peaks/narrow/{chip_sample}_peaks.xls"
+      ],
+      "params": {
+        "outdir": "peaks/narrow",
+        "genome_size": "hs",
+        "qvalue": 0.05,
+        "format": "BAMPE"
+      },
+      "shell_cmd": "macs2 callpeak -t {input[0]} -c {input[1]} -f {params.format} -g {params.genome_size} -q {params.qvalue} --outdir {params.outdir} -n {wildcards.chip_sample} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/macs2/narrow_{chip_sample}.log"
+      ]
+    },
+    {
+      "name": "macs2_broad_peaks",
+      "tool": "macs2",
+      "input": [
+        "dedup/{chip_sample}.dedup.bam",
+        "dedup/{input_sample}.dedup.bam"
+      ],
+      "output": [
+        "peaks/broad/{chip_sample}_peaks.broadPeak",
+        "peaks/broad/{chip_sample}_peaks.gappedPeak",
+        "peaks/broad/{chip_sample}_peaks.xls"
+      ],
+      "params": {
+        "outdir": "peaks/broad",
+        "genome_size": "hs",
+        "qvalue": 0.05,
+        "format": "BAMPE"
+      },
+      "shell_cmd": "macs2 callpeak -t {input[0]} -c {input[1]} -f {params.format} -g {params.genome_size} -q {params.qvalue} --broad --outdir {params.outdir} -n {wildcards.chip_sample} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/macs2/broad_{chip_sample}.log"
+      ]
+    },
+    {
+      "name": "idr_narrow",
+      "tool": "idr",
+      "input": [
+        "peaks/narrow/{rep1_sample}_peaks.narrowPeak",
+        "peaks/narrow/{rep2_sample}_peaks.narrowPeak"
+      ],
+      "output": [
+        "idr/narrow/{mark}_idr_peaks.narrowPeak",
+        "idr/narrow/{mark}_idr.log"
+      ],
+      "params": {
+        "threshold": 0.05,
+        "rank": "signal.value",
+        "peak_type": "narrowPeak",
+        "plot": "--plot"
+      },
+      "shell_cmd": "idr --samples {input[0]} {input[1]} --input-file-type {params.peak_type} --rank {params.rank} --soft-idr-threshold {params.threshold} {params.plot} --output-file {output[0]} --log-output-file {output[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/idr/narrow_{mark}.log"
+      ]
+    },
+    {
+      "name": "idr_broad",
+      "tool": "idr",
+      "input": [
+        "peaks/broad/{rep1_sample}_peaks.broadPeak",
+        "peaks/broad/{rep2_sample}_peaks.broadPeak"
+      ],
+      "output": [
+        "idr/broad/{mark}_idr_peaks.broadPeak",
+        "idr/broad/{mark}_idr.log"
+      ],
+      "params": {
+        "threshold": 0.05,
+        "rank": "signal.value",
+        "peak_type": "broadPeak",
+        "plot": "--plot"
+      },
+      "shell_cmd": "idr --samples {input[0]} {input[1]} --input-file-type {params.peak_type} --rank {params.rank} --soft-idr-threshold {params.threshold} {params.plot} --output-file {output[0]} --log-output-file {output[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/idr/broad_{mark}.log"
+      ]
+    },
+    {
+      "name": "deeptools_bamcoverage",
+      "tool": "deeptools",
+      "input": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai"
+      ],
+      "output": [
+        "bigwig/{sample}.bw"
+      ],
+      "params": {
+        "bin_size": 10,
+        "normalize_using": "RPKM",
+        "threads": 8,
+        "ignore_duplicates": "--ignoreDuplicates",
+        "extendreads": "--extendReads"
+      },
+      "shell_cmd": "bamCoverage --bam {input[0]} --outFileName {output[0]} --outFileFormat bigwig --binSize {params.bin_size} --normalizeUsing {params.normalize_using} --numberOfProcessors {params.threads} {params.ignore_duplicates} {params.extendreads} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/deeptools/bamcoverage_{sample}.log"
+      ]
+    },
+    {
+      "name": "deeptools_fingerprint",
+      "tool": "deeptools",
+      "input": [
+        "dedup/all_dedup_bams.txt"
+      ],
+      "output": [
+        "qc/deeptools/fingerprint.png",
+        "qc/deeptools/fingerprint_counts.tab",
+        "qc/deeptools/fingerprint_qc.tab"
+      ],
+      "params": {
+        "threads": 8,
+        "bin_size": 500,
+        "outdir": "qc/deeptools"
+      },
+      "shell_cmd": "plotFingerprint --bamfiles $(cat {input[0]}) --numberOfProcessors {params.threads} --binSize {params.bin_size} --plotFile {output[0]} --outRawCounts {output[1]} --outQualityMetrics {output[2]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deeptools/fingerprint.log"
+      ]
+    },
+    {
+      "name": "chipseeker_annotate",
+      "tool": "chipseeker",
+      "input": [
+        "idr/all_idr_peaks.txt"
+      ],
+      "output": [
+        "annotation/chipseeker_annotation.csv",
+        "annotation/chipseeker_pie.pdf",
+        "annotation/chipseeker_upsetplot.pdf",
+        "annotation/chipseeker_tss_heatmap.pdf"
+      ],
+      "params": {
+        "txdb": "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        "organism_db": "org.Hs.eg.db",
+        "tss_region_upstream": 3000,
+        "tss_region_downstream": 3000
+      },
+      "shell_cmd": "Rscript scripts/chipseeker_annotate.R {input[0]} {params.txdb} {params.organism_db} {params.tss_region_upstream} {params.tss_region_downstream} {output[0]} {output[1]} {output[2]} {output[3]} 2> {log[0]}",
+      "script": "scripts/chipseeker_annotate.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/chipseeker/annotate.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "multiqc",
+      "input": [
+        "qc/fastqc",
+        "logs/trimmomatic",
+        "logs/bowtie2",
+        "dedup",
+        "qc/deeptools"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "title": "ChIP-seq QC Report"
+      },
+      "shell_cmd": "multiqc {input[0]} {input[1]} {input[2]} {input[3]} {input[4]} --outdir {params.outdir} --title \"{params.title}\" --force 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "fastqc_raw",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "bowtie2_align"
+    ],
+    [
+      "bowtie2_align",
+      "samtools_filter_sort"
+    ],
+    [
+      "samtools_filter_sort",
+      "picard_markdup"
+    ],
+    [
+      "picard_markdup",
+      "macs2_narrow_peaks"
+    ],
+    [
+      "picard_markdup",
+      "macs2_broad_peaks"
+    ],
+    [
+      "picard_markdup",
+      "deeptools_bamcoverage"
+    ],
+    [
+      "picard_markdup",
+      "deeptools_fingerprint"
+    ],
+    [
+      "macs2_narrow_peaks",
+      "idr_narrow"
+    ],
+    [
+      "macs2_broad_peaks",
+      "idr_broad"
+    ],
+    [
+      "idr_narrow",
+      "chipseeker_annotate"
+    ],
+    [
+      "idr_broad",
+      "chipseeker_annotate"
+    ],
+    [
+      "fastqc_raw",
+      "multiqc_report"
+    ],
+    [
+      "trim_reads",
+      "multiqc_report"
+    ],
+    [
+      "bowtie2_align",
+      "multiqc_report"
+    ],
+    [
+      "picard_markdup",
+      "multiqc_report"
+    ],
+    [
+      "deeptools_fingerprint",
+      "multiqc_report"
+    ],
+    [
+      "chipseeker_annotate",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "paired_end": true,
+    "strandedness": 0,
+    "samples": [
+      "H3K4me3_rep1",
+      "H3K4me3_rep2",
+      "H3K27ac_rep1",
+      "H3K27ac_rep2",
+      "H3K27me3_rep1",
+      "H3K27me3_rep2",
+      "Input_rep1",
+      "Input_rep2"
+    ],
+    "narrow_marks": [
+      "H3K4me3",
+      "H3K27ac"
+    ],
+    "broad_marks": [
+      "H3K27me3"
+    ],
+    "chip_input_pairs": {
+      "H3K4me3_rep1": "Input_rep1",
+      "H3K4me3_rep2": "Input_rep2",
+      "H3K27ac_rep1": "Input_rep1",
+      "H3K27ac_rep2": "Input_rep2",
+      "H3K27me3_rep1": "Input_rep1",
+      "H3K27me3_rep2": "Input_rep2"
+    },
+    "idr_narrow_pairs": {
+      "H3K4me3": [
+        "H3K4me3_rep1",
+        "H3K4me3_rep2"
+      ],
+      "H3K27ac": [
+        "H3K27ac_rep1",
+        "H3K27ac_rep2"
+      ]
+    },
+    "idr_broad_pairs": {
+      "H3K27me3": [
+        "H3K27me3_rep1",
+        "H3K27me3_rep2"
+      ]
+    },
+    "genome_build": "hg38",
+    "bowtie2_index": "resources/bowtie2_index/genome",
+    "adapters": "resources/adapters.fa",
+    "mapq_threshold": 20,
+    "genome_size": "hs",
+    "macs2_qvalue": 0.05,
+    "idr_threshold": 0.05,
+    "bigwig_bin_size": 10,
+    "bigwig_normalize_using": "RPKM",
+    "txdb": "TxDb.Hsapiens.UCSC.hg38.knownGene",
+    "organism_db": "org.Hs.eg.db",
+    "tss_region_upstream": 3000,
+    "tss_region_downstream": 3000
+  },
+  "wildcards": [
+    "sample",
+    "chip_sample",
+    "input_sample",
+    "mark",
+    "rep1_sample",
+    "rep2_sample"
+  ]
+}

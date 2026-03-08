@@ -1,0 +1,22 @@
+# SnakeLLM config
+# Pipeline: atac-seq
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+  - sample4
+
+# Reference files
+genome_build: "hg38"
+bowtie2_index: "resources/bowtie2_index/genome"
+tss_file: "resources/tss.bed"
+nextera_adapters: "resources/NexteraPE-PE.fa"
+genome_size: "hs"
+
+# Thresholds
+mapq_threshold: 30
+diffbind_min_overlap: 2
+
+# Parameters

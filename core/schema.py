@@ -10,7 +10,7 @@ depend on this schema directly.
 
 from __future__ import annotations
 from typing import Any, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 # ── TOOL LEVEL ────────────────────────────────────────────────────────────────
@@ -84,31 +84,23 @@ class PipelineSpec(BaseModel):
     config_params:  dict[str, Any]        = Field(..., description="user-tunable config.yaml defaults")
     wildcards:      list[str]             = Field(default_factory=list, description="e.g. ['sample', 'unit']")
 
-    @field_validator("dag_edges")
-    @classmethod
-    def edges_reference_valid_rules(cls, edges: list, info) -> list:
-        # Only validate if rules are already parsed
-        if hasattr(info, 'data') and 'rules' in info.data:
-            rule_names = {r.name.lower() for r in info.data["rules"]}
-            for src, dst in edges:
-                if src.lower() not in rule_names:
-                    raise ValueError(f"DAG edge references unknown rule: '{src}'")
-                if dst.lower() not in rule_names:
-                    raise ValueError(f"DAG edge references unknown rule: '{dst}'")
-        return edges
+    @model_validator(mode='after')
+    def validate_cross_field_references(self) -> 'PipelineSpec':
+        tool_names = {t.name.lower() for t in self.tools}
+        for rule in self.rules:
+            if rule.tool.lower() not in tool_names:
+                raise ValueError(
+                    f"Rule '{rule.name}' references tool '{rule.tool}' "
+                    f"which is not in tools list. Available: {tool_names}"
+                )
 
-    @field_validator("rules")
-    @classmethod
-    def tools_exist_for_rules(cls, rules: list, info) -> list:
-        if hasattr(info, 'data') and 'tools' in info.data:
-            tool_names = {t.name.lower() for t in info.data["tools"]}
-            for rule in rules:
-                if rule.tool.lower() not in tool_names:
-                    raise ValueError(
-                        f"Rule '{rule.name}' references tool '{rule.tool}' "
-                        f"which is not in tools list. Available: {tool_names}"
-                    )
-        return rules
+        rule_names = {r.name.lower() for r in self.rules}
+        for src, dst in self.dag_edges:
+            if src.lower() not in rule_names:
+                raise ValueError(f"DAG edge references unknown rule: '{src}'")
+            if dst.lower() not in rule_names:
+                raise ValueError(f"DAG edge references unknown rule: '{dst}'")
+        return self
 
     def get_rule(self, name: str) -> Optional[RuleSpec]:
         return next((r for r in self.rules if r.name == name), None)

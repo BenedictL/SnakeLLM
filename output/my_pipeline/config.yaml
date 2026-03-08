@@ -1,0 +1,24 @@
+# SnakeLLM config
+# Pipeline: rna-seq-de
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+  - sample4
+
+# Reference files
+raw_data_dir: "data/raw"
+adapters: "resources/adapters.fa"
+star_genome_dir: "resources/star_genome"
+gtf: "resources/annotation.gtf"
+
+# Thresholds
+deseq2_alpha: 0.05
+lfc_threshold: 1.0
+pvalue_cutoff: 0.05
+qvalue_cutoff: 0.2
+trimmomatic_minlen: 36
+
+# Parameters

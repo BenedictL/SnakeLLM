@@ -1,0 +1,676 @@
+{
+  "pipeline_type": "rna-seq-de-long-read-nanopore",
+  "description": "Long-read Oxford Nanopore RNA-seq pipeline with splice-aware minimap2 alignment, featureCounts quantification, DESeq2 differential expression, and cross-platform comparison against matched short-read Illumina results.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "QC assessment of raw Nanopore and Illumina reads, and post-trim Illumina reads",
+      "language": "CLI"
+    },
+    {
+      "name": "NanoStat",
+      "version": "1.6.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/nanostat",
+        "tag": "1.6.0--pyhdfd78af_0",
+        "full_uri": "quay.io/biocontainers/nanostat:1.6.0--pyhdfd78af_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Nanopore-specific QC metrics including N50, mean read length, and quality score distribution",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming for Illumina short reads",
+      "language": "CLI"
+    },
+    {
+      "name": "minimap2",
+      "version": "2.24",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/minimap2",
+        "tag": "2.24--h7132678_1",
+        "full_uri": "quay.io/biocontainers/minimap2:2.24--h7132678_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of Nanopore long reads to the reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "STAR",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of Illumina short reads to the reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort and index BAM files for both Nanopore and Illumina alignments",
+      "language": "CLI"
+    },
+    {
+      "name": "featureCounts",
+      "version": "2.0.3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/subread",
+        "tag": "2.0.3--h7132678_1",
+        "full_uri": "quay.io/biocontainers/subread:2.0.3--h7132678_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level read quantification for both Nanopore and Illumina alignments",
+      "language": "CLI"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Differential expression analysis on both Nanopore and Illumina count matrices",
+      "language": "R"
+    },
+    {
+      "name": "MultiQC",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate all QC metrics from Nanopore and Illumina arms into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "fastqc_raw_nanopore",
+      "tool": "FastQC",
+      "input": [
+        "data/nanopore/{sample}.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/nanopore/{sample}_fastqc.html",
+        "qc/fastqc/nanopore/{sample}_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc/nanopore",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/fastqc_raw_nanopore/{sample}.log"
+      ]
+    },
+    {
+      "name": "nanostat",
+      "tool": "NanoStat",
+      "input": [
+        "data/nanopore/{sample}.fastq.gz"
+      ],
+      "output": [
+        "qc/nanostat/{sample}_nanostat.txt"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "NanoStat --fastq {input[0]} --threads {params.threads} --outdir qc/nanostat --name {wildcards.sample}_nanostat.txt 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/nanostat/{sample}.log"
+      ]
+    },
+    {
+      "name": "fastqc_raw_illumina",
+      "tool": "FastQC",
+      "input": [
+        "data/illumina/{sample}_R1.fastq.gz",
+        "data/illumina/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/illumina/raw/{sample}_R1_fastqc.html",
+        "qc/fastqc/illumina/raw/{sample}_R1_fastqc.zip",
+        "qc/fastqc/illumina/raw/{sample}_R2_fastqc.html",
+        "qc/fastqc/illumina/raw/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc/illumina/raw",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/fastqc_raw_illumina/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads_illumina",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/illumina/{sample}_R1.fastq.gz",
+        "data/illumina/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/illumina/{sample}_R1.fastq.gz",
+        "trimmed/illumina/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/illumina/{sample}_R2.fastq.gz",
+        "trimmed/illumina/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/trim_reads_illumina/{sample}.log"
+      ]
+    },
+    {
+      "name": "fastqc_post_trim_illumina",
+      "tool": "FastQC",
+      "input": [
+        "trimmed/illumina/{sample}_R1.fastq.gz",
+        "trimmed/illumina/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/illumina/trimmed/{sample}_R1_fastqc.html",
+        "qc/fastqc/illumina/trimmed/{sample}_R1_fastqc.zip",
+        "qc/fastqc/illumina/trimmed/{sample}_R2_fastqc.html",
+        "qc/fastqc/illumina/trimmed/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc/illumina/trimmed",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/fastqc_post_trim_illumina/{sample}.log"
+      ]
+    },
+    {
+      "name": "minimap2_align",
+      "tool": "minimap2",
+      "input": [
+        "data/nanopore/{sample}.fastq.gz"
+      ],
+      "output": [
+        "aligned/nanopore/{sample}.sam"
+      ],
+      "params": {
+        "genome": "resources/genome.fa",
+        "preset": "splice",
+        "extra_flags": "-uf -k14",
+        "threads": 8
+      },
+      "shell_cmd": "minimap2 -ax {params.preset} {params.extra_flags} -t {params.threads} {params.genome} {input[0]} > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/minimap2/{sample}.log"
+      ]
+    },
+    {
+      "name": "star_align",
+      "tool": "STAR",
+      "input": [
+        "trimmed/illumina/{sample}_R1.fastq.gz",
+        "trimmed/illumina/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/illumina/{sample}/Aligned.sortedByCoord.out.bam"
+      ],
+      "params": {
+        "genome_dir": "resources/star_index",
+        "threads": 8,
+        "outdir_prefix": "aligned/illumina/{sample}/"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outFileNamePrefix {params.outdir_prefix} --outSAMattributes NH HI AS NM MD 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 120,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star_align/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_sort_index_nanopore",
+      "tool": "samtools",
+      "input": [
+        "aligned/nanopore/{sample}.sam"
+      ],
+      "output": [
+        "aligned/nanopore/{sample}.sorted.bam",
+        "aligned/nanopore/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 4,
+        "mem_per_thread": "2G"
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -m {params.mem_per_thread} -o {output[0]} {input[0]} 2> {log[0]} && samtools index {output[0]} 2>> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 12000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/samtools_sort_index_nanopore/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_sort_index_illumina",
+      "tool": "samtools",
+      "input": [
+        "aligned/illumina/{sample}/Aligned.sortedByCoord.out.bam"
+      ],
+      "output": [
+        "aligned/illumina/{sample}.sorted.bam",
+        "aligned/illumina/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 4,
+        "mem_per_thread": "2G"
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -m {params.mem_per_thread} -o {output[0]} {input[0]} 2> {log[0]} && samtools index {output[0]} 2>> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 12000,
+        "time_min": 60,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/samtools_sort_index_illumina/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts_nanopore",
+      "tool": "featureCounts",
+      "input": [
+        "counts/nanopore/bam_list.txt"
+      ],
+      "output": [
+        "counts/nanopore/counts_matrix.txt",
+        "counts/nanopore/counts_matrix.txt.summary"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "threads": 8,
+        "strandedness": "{config[strandedness]}",
+        "feature_type": "exon",
+        "attribute_type": "gene_id"
+      },
+      "shell_cmd": "bams=$(cat {input[0]}) && featureCounts -L -T {params.threads} -s {params.strandedness} -t {params.feature_type} -g {params.attribute_type} -a {params.gtf} -o {output[0]} $bams 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/featurecounts_nanopore/featurecounts.log"
+      ]
+    },
+    {
+      "name": "featurecounts_illumina",
+      "tool": "featureCounts",
+      "input": [
+        "counts/illumina/bam_list.txt"
+      ],
+      "output": [
+        "counts/illumina/counts_matrix.txt",
+        "counts/illumina/counts_matrix.txt.summary"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "threads": 8,
+        "strandedness": "{config[strandedness]}",
+        "paired_end": "{config[paired_end]}",
+        "feature_type": "exon",
+        "attribute_type": "gene_id"
+      },
+      "shell_cmd": "pe_flag=$([ \"{params.paired_end}\" = \"True\" ] && echo \"-p\" || echo \"\") && bams=$(cat {input[0]}) && featureCounts $pe_flag -T {params.threads} -s {params.strandedness} -t {params.feature_type} -g {params.attribute_type} -a {params.gtf} -o {output[0]} $bams 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/featurecounts_illumina/featurecounts.log"
+      ]
+    },
+    {
+      "name": "deseq2_nanopore",
+      "tool": "DESeq2",
+      "input": [
+        "counts/nanopore/counts_matrix.txt"
+      ],
+      "output": [
+        "results/deseq2/nanopore/de_results.csv",
+        "results/deseq2/nanopore/ma_plot.pdf",
+        "results/deseq2/nanopore/pca_plot.pdf",
+        "results/deseq2/nanopore/normalized_counts.csv"
+      ],
+      "params": {
+        "design_formula": "~condition",
+        "alpha": 0.05,
+        "lfc_threshold": 1.0,
+        "condition_col": "condition",
+        "reference_level": "control"
+      },
+      "shell_cmd": "Rscript scripts/deseq2_analysis.R --counts {input[0]} --outdir results/deseq2/nanopore --design \"{params.design_formula}\" --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --condition_col {params.condition_col} --reference_level {params.reference_level} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/deseq2_nanopore/deseq2.log"
+      ]
+    },
+    {
+      "name": "deseq2_illumina",
+      "tool": "DESeq2",
+      "input": [
+        "counts/illumina/counts_matrix.txt"
+      ],
+      "output": [
+        "results/deseq2/illumina/de_results.csv",
+        "results/deseq2/illumina/ma_plot.pdf",
+        "results/deseq2/illumina/pca_plot.pdf",
+        "results/deseq2/illumina/normalized_counts.csv"
+      ],
+      "params": {
+        "design_formula": "~condition",
+        "alpha": 0.05,
+        "lfc_threshold": 1.0,
+        "condition_col": "condition",
+        "reference_level": "control"
+      },
+      "shell_cmd": "Rscript scripts/deseq2_analysis.R --counts {input[0]} --outdir results/deseq2/illumina --design \"{params.design_formula}\" --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --condition_col {params.condition_col} --reference_level {params.reference_level} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/deseq2_illumina/deseq2.log"
+      ]
+    },
+    {
+      "name": "cross_platform_comparison",
+      "tool": "DESeq2",
+      "input": [
+        "results/deseq2/nanopore/de_results.csv",
+        "results/deseq2/illumina/de_results.csv",
+        "counts/nanopore/counts_matrix.txt",
+        "counts/illumina/counts_matrix.txt"
+      ],
+      "output": [
+        "results/comparison/lfc_concordance_plot.pdf",
+        "results/comparison/venn_diagram_degs.pdf",
+        "results/comparison/count_correlation_plot.pdf",
+        "results/comparison/platform_comparison_summary.csv"
+      ],
+      "params": {
+        "alpha": 0.05,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/cross_platform_comparison.R --nano_de {input[0]} --illumina_de {input[1]} --nano_counts {input[2]} --illumina_counts {input[3]} --outdir results/comparison --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/cross_platform_comparison/comparison.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "MultiQC",
+      "input": [
+        "qc/fastqc/nanopore",
+        "qc/nanostat",
+        "qc/fastqc/illumina/raw",
+        "qc/fastqc/illumina/trimmed",
+        "aligned/nanopore",
+        "aligned/illumina",
+        "counts/nanopore/counts_matrix.txt.summary",
+        "counts/illumina/counts_matrix.txt.summary"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "title": "Long-read Nanopore vs Short-read Illumina RNA-seq QC Report"
+      },
+      "shell_cmd": "multiqc qc/fastqc/nanopore qc/nanostat qc/fastqc/illumina/raw qc/fastqc/illumina/trimmed aligned/nanopore aligned/illumina counts/nanopore counts/illumina --outdir {params.outdir} --title \"{params.title}\" --force 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "fastqc_raw_nanopore",
+      "minimap2_align"
+    ],
+    [
+      "nanostat",
+      "minimap2_align"
+    ],
+    [
+      "fastqc_raw_illumina",
+      "trim_reads_illumina"
+    ],
+    [
+      "trim_reads_illumina",
+      "fastqc_post_trim_illumina"
+    ],
+    [
+      "fastqc_post_trim_illumina",
+      "star_align"
+    ],
+    [
+      "minimap2_align",
+      "samtools_sort_index_nanopore"
+    ],
+    [
+      "star_align",
+      "samtools_sort_index_illumina"
+    ],
+    [
+      "samtools_sort_index_nanopore",
+      "featurecounts_nanopore"
+    ],
+    [
+      "samtools_sort_index_illumina",
+      "featurecounts_illumina"
+    ],
+    [
+      "featurecounts_nanopore",
+      "deseq2_nanopore"
+    ],
+    [
+      "featurecounts_illumina",
+      "deseq2_illumina"
+    ],
+    [
+      "deseq2_nanopore",
+      "cross_platform_comparison"
+    ],
+    [
+      "deseq2_illumina",
+      "cross_platform_comparison"
+    ],
+    [
+      "fastqc_raw_nanopore",
+      "multiqc_report"
+    ],
+    [
+      "nanostat",
+      "multiqc_report"
+    ],
+    [
+      "fastqc_raw_illumina",
+      "multiqc_report"
+    ],
+    [
+      "fastqc_post_trim_illumina",
+      "multiqc_report"
+    ],
+    [
+      "samtools_sort_index_nanopore",
+      "multiqc_report"
+    ],
+    [
+      "samtools_sort_index_illumina",
+      "multiqc_report"
+    ],
+    [
+      "featurecounts_nanopore",
+      "multiqc_report"
+    ],
+    [
+      "featurecounts_illumina",
+      "multiqc_report"
+    ],
+    [
+      "cross_platform_comparison",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "strandedness": 1,
+    "paired_end": true,
+    "genome_fa": "resources/genome.fa",
+    "star_index": "resources/star_index",
+    "gtf": "resources/annotation.gtf",
+    "adapters": "resources/adapters.fa",
+    "minimap2_preset": "splice",
+    "minimap2_extra_flags": "-uf -k14",
+    "condition_col": "condition",
+    "reference_level": "control",
+    "deseq2_alpha": 0.05,
+    "lfc_threshold": 1.0,
+    "deseq2_design": "~condition",
+    "featurecounts_feature_type": "exon",
+    "featurecounts_attribute_type": "gene_id",
+    "sample_metadata": "resources/sample_metadata.tsv"
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

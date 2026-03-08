@@ -144,6 +144,11 @@ def cmd_generate(args):
     output_path = args.output if hasattr(args, 'output') and args.output else "pipeline_spec.json"
     spec_json   = json.loads(spec.model_dump_json(indent=2))
 
+    import os
+    out_dir = os.path.dirname(output_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
     with open(output_path, "w") as f:
         json.dump(spec_json, f, indent=2)
 

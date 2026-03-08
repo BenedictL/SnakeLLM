@@ -1,0 +1,17 @@
+# SnakeLLM config
+# Pipeline: wgs-variant-calling
+
+# Samples
+samples:
+  - sample1
+  - sample2
+
+# Reference files
+reference: "resources/reference/hg38.fa"
+genome_build: "hg38"
+gtf_source: "ensembl"
+adapters: "resources/adapters/TruSeq3-PE.fa"
+annotations_db: "resources/annotations/dbsnp_146.hg38.vcf.gz"
+bwa_index: "resources/reference/hg38"
+
+# Parameters

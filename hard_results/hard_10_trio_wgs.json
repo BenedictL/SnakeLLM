@@ -1,0 +1,762 @@
+{
+  "pipeline_type": "wgs-germline-trio-variant-calling",
+  "description": "Germline trio (mother, father, proband) variant calling using GATK4 best practices with BWA-MEM2 alignment, per-sample GVCF calling, joint genotyping, VQSR filtering, DeNovoGear de novo detection, and SnpEff annotation.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw FASTQ reads for all three trio members",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter trimming and quality-based read filtering",
+      "language": "CLI"
+    },
+    {
+      "name": "BWA-MEM2",
+      "version": "2.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bwa-mem2",
+        "tag": "2.0--he513fc3_0",
+        "full_uri": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Fast alignment of trimmed reads to reference genome for each trio member",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort and index aligned BAM files; flagstat for QC",
+      "language": "CLI"
+    },
+    {
+      "name": "Picard",
+      "version": "2.9.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/picard",
+        "tag": "2.9.2--py35_1",
+        "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Mark PCR duplicates with MarkDuplicates and CreateSequenceDictionary for reference",
+      "language": "CLI"
+    },
+    {
+      "name": "GATK4",
+      "version": "4.0.0.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/gatk4",
+        "tag": "4.0.0.0--py36_0",
+        "full_uri": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+        "source": "biocontainers"
+      },
+      "purpose": "BaseRecalibrator, ApplyBQSR, HaplotypeCaller, GenomicsDBImport, GenotypeGVCFs, VQSR",
+      "language": "CLI"
+    },
+    {
+      "name": "DeNovoGear",
+      "version": "0.5.4",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/deepvariant",
+        "tag": "0.4.1--np113py27_1",
+        "full_uri": "quay.io/biocontainers/deepvariant:0.4.1--np113py27_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Identify de novo variants in the proband using trio pedigree structure",
+      "language": "CLI"
+    },
+    {
+      "name": "SnpEff",
+      "version": "4.3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bedops",
+        "tag": "2.4.23--0",
+        "full_uri": "quay.io/biocontainers/bedops:2.4.23--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Functional annotation of variants with predicted effects, gene names, and impact categories",
+      "language": "CLI"
+    },
+    {
+      "name": "MultiQC",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from FastQC, Trimmomatic, samtools flagstat, and GATK logs into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "config[adapters]",
+        "leading": 3,
+        "trailing": 3,
+        "sliding_window": "4:15",
+        "min_len": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.sliding_window} MINLEN:{params.min_len} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_bwa_mem2",
+      "tool": "BWA-MEM2",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}.bam"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "threads": 16,
+        "read_group": "@RG\\tID:{wildcards.sample}\\tSM:{wildcards.sample}\\tPL:ILLUMINA\\tLB:{wildcards.sample}\\tPU:{wildcards.sample}"
+      },
+      "shell_cmd": "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 16,
+        "mem_mb": 32000,
+        "time_min": 360,
+        "disk_mb": 80000
+      },
+      "log": [
+        "logs/bwa_mem2/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam",
+        "sorted/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 8
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} > {log[0]} 2>&1 && samtools index {output[0]} >> {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/samtools/sort_{sample}.log"
+      ]
+    },
+    {
+      "name": "flagstat",
+      "tool": "samtools",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "qc/flagstat/{sample}.flagstat.txt"
+      ],
+      "params": {},
+      "shell_cmd": "samtools flagstat {input[0]} > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 4000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/samtools/flagstat_{sample}.log"
+      ]
+    },
+    {
+      "name": "mark_duplicates",
+      "tool": "Picard",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.metrics.txt"
+      ],
+      "params": {
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[1]} VALIDATION_STRINGENCY=LENIENT CREATE_INDEX=true > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 180,
+        "disk_mb": 80000
+      },
+      "log": [
+        "logs/picard/mark_duplicates_{sample}.log"
+      ]
+    },
+    {
+      "name": "base_recalibrator",
+      "tool": "GATK4",
+      "input": [
+        "dedup/{sample}.dedup.bam"
+      ],
+      "output": [
+        "bqsr/{sample}.recal.table"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "known_sites_dbsnp": "config[known_sites_dbsnp]",
+        "known_sites_mills": "config[known_sites_mills]",
+        "known_sites_1kg": "config[known_sites_1kg]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites_dbsnp} --known-sites {params.known_sites_mills} --known-sites {params.known_sites_1kg} -O {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 240,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/base_recalibrator_{sample}.log"
+      ]
+    },
+    {
+      "name": "apply_bqsr",
+      "tool": "GATK4",
+      "input": [
+        "dedup/{sample}.dedup.bam",
+        "bqsr/{sample}.recal.table"
+      ],
+      "output": [
+        "recal/{sample}.recal.bam",
+        "recal/{sample}.recal.bai"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' ApplyBQSR -R {params.reference} -I {input[0]} --bqsr-recal-file {input[1]} -O {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 180,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/gatk/apply_bqsr_{sample}.log"
+      ]
+    },
+    {
+      "name": "haplotype_caller",
+      "tool": "GATK4",
+      "input": [
+        "recal/{sample}.recal.bam"
+      ],
+      "output": [
+        "gvcf/{sample}.g.vcf.gz",
+        "gvcf/{sample}.g.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "dbsnp": "config[known_sites_dbsnp]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' HaplotypeCaller -R {params.reference} -I {input[0]} -O {output[0]} -ERC GVCF --dbsnp {params.dbsnp} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 24000,
+        "time_min": 480,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/gatk/haplotype_caller_{sample}.log"
+      ]
+    },
+    {
+      "name": "genomicsdb_import",
+      "tool": "GATK4",
+      "input": [
+        "gvcf/mother.g.vcf.gz",
+        "gvcf/father.g.vcf.gz",
+        "gvcf/proband.g.vcf.gz"
+      ],
+      "output": [
+        "genomicsdb/trio_db"
+      ],
+      "params": {
+        "intervals": "config[calling_intervals]",
+        "java_opts": "-Xmx32g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' GenomicsDBImport -V {input[0]} -V {input[1]} -V {input[2]} --genomicsdb-workspace-path {output[0]} -L {params.intervals} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 360,
+        "disk_mb": 100000
+      },
+      "log": [
+        "logs/gatk/genomicsdb_import.log"
+      ]
+    },
+    {
+      "name": "genotype_gvcfs",
+      "tool": "GATK4",
+      "input": [
+        "genomicsdb/trio_db"
+      ],
+      "output": [
+        "vcf/trio.genotyped.vcf.gz",
+        "vcf/trio.genotyped.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "dbsnp": "config[known_sites_dbsnp]",
+        "java_opts": "-Xmx32g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' GenotypeGVCFs -R {params.reference} -V gendb://{input[0]} -O {output[0]} --dbsnp {params.dbsnp} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 360,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/gatk/genotype_gvcfs.log"
+      ]
+    },
+    {
+      "name": "vqsr_snp",
+      "tool": "GATK4",
+      "input": [
+        "vcf/trio.genotyped.vcf.gz"
+      ],
+      "output": [
+        "vqsr/trio.snp.recal",
+        "vqsr/trio.snp.tranches",
+        "vqsr/trio.snp.rscript.R"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "hapmap": "config[hapmap]",
+        "omni": "config[omni]",
+        "1kg_snps": "config[1kg_snps]",
+        "dbsnp": "config[known_sites_dbsnp]",
+        "java_opts": "-Xmx32g",
+        "max_gaussians": 4
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' VariantRecalibrator -R {params.reference} -V {input[0]} --resource:hapmap,known=false,training=true,truth=true,prior=15.0 {params.hapmap} --resource:omni,known=false,training=true,truth=true,prior=12.0 {params.omni} --resource:1000G,known=false,training=true,truth=false,prior=10.0 {params.1kg_snps} --resource:dbsnp,known=true,training=false,truth=false,prior=7.0 {params.dbsnp} -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode SNP --max-gaussians {params.max_gaussians} -O {output[0]} --tranches-file {output[1]} --rscript-file {output[2]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 240,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/vqsr_snp.log"
+      ]
+    },
+    {
+      "name": "vqsr_indel",
+      "tool": "GATK4",
+      "input": [
+        "vcf/trio.genotyped.vcf.gz"
+      ],
+      "output": [
+        "vqsr/trio.indel.recal",
+        "vqsr/trio.indel.tranches",
+        "vqsr/trio.indel.rscript.R"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "mills": "config[known_sites_mills]",
+        "dbsnp": "config[known_sites_dbsnp]",
+        "java_opts": "-Xmx32g",
+        "max_gaussians": 4
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' VariantRecalibrator -R {params.reference} -V {input[0]} --resource:mills,known=false,training=true,truth=true,prior=12.0 {params.mills} --resource:dbsnp,known=true,training=false,truth=false,prior=2.0 {params.dbsnp} -an QD -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode INDEL --max-gaussians {params.max_gaussians} -O {output[0]} --tranches-file {output[1]} --rscript-file {output[2]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 240,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/vqsr_indel.log"
+      ]
+    },
+    {
+      "name": "apply_vqsr_snp",
+      "tool": "GATK4",
+      "input": [
+        "vcf/trio.genotyped.vcf.gz",
+        "vqsr/trio.snp.recal",
+        "vqsr/trio.snp.tranches"
+      ],
+      "output": [
+        "vqsr/trio.snp.filtered.vcf.gz",
+        "vqsr/trio.snp.filtered.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "ts_filter_level": 99.5,
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' ApplyVQSR -R {params.reference} -V {input[0]} --recal-file {input[1]} --tranches-file {input[2]} --truth-sensitivity-filter-level {params.ts_filter_level} --create-output-variant-index true -mode SNP -O {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/apply_vqsr_snp.log"
+      ]
+    },
+    {
+      "name": "apply_vqsr_indel",
+      "tool": "GATK4",
+      "input": [
+        "vcf/trio.genotyped.vcf.gz",
+        "vqsr/trio.indel.recal",
+        "vqsr/trio.indel.tranches"
+      ],
+      "output": [
+        "vqsr/trio.indel.filtered.vcf.gz",
+        "vqsr/trio.indel.filtered.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "ts_filter_level": 99.0,
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' ApplyVQSR -R {params.reference} -V {input[0]} --recal-file {input[1]} --tranches-file {input[2]} --truth-sensitivity-filter-level {params.ts_filter_level} --create-output-variant-index true -mode INDEL -O {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/apply_vqsr_indel.log"
+      ]
+    },
+    {
+      "name": "merge_filtered_vcf",
+      "tool": "GATK4",
+      "input": [
+        "vqsr/trio.snp.filtered.vcf.gz",
+        "vqsr/trio.indel.filtered.vcf.gz"
+      ],
+      "output": [
+        "vcf/trio.filtered.merged.vcf.gz",
+        "vcf/trio.filtered.merged.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' MergeVcfs -I {input[0]} -I {input[1]} -O {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/gatk/merge_filtered_vcf.log"
+      ]
+    },
+    {
+      "name": "denovogear",
+      "tool": "DeNovoGear",
+      "input": [
+        "vcf/trio.filtered.merged.vcf.gz",
+        "recal/mother.recal.bam",
+        "recal/father.recal.bam",
+        "recal/proband.recal.bam"
+      ],
+      "output": [
+        "denovo/trio.denovo.vcf"
+      ],
+      "params": {
+        "ped": "config[pedigree_file]",
+        "min_snp_pp": 0.9,
+        "min_indel_pp": 0.9
+      },
+      "shell_cmd": "dng dnm --ped {params.ped} --vcf {input[0]} --min-snp-pp {params.min_snp_pp} --min-indel-pp {params.min_indel_pp} > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/denovogear/denovogear.log"
+      ]
+    },
+    {
+      "name": "snpeff_annotate",
+      "tool": "SnpEff",
+      "input": [
+        "denovo/trio.denovo.vcf"
+      ],
+      "output": [
+        "annotated/trio.denovo.annotated.vcf",
+        "annotated/trio.denovo.snpeff.html",
+        "annotated/trio.denovo.snpeff.csv"
+      ],
+      "params": {
+        "genome_db": "config[snpeff_genome_db]",
+        "java_opts": "-Xmx16g",
+        "data_dir": "config[snpeff_data_dir]"
+      },
+      "shell_cmd": "snpEff {params.java_opts} -dataDir {params.data_dir} -v -stats {output[1]} -csvStats {output[2]} {params.genome_db} {input[0]} > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 120,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/snpeff/snpeff_annotate.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "MultiQC",
+      "input": [
+        "qc/fastqc",
+        "logs/trimmomatic",
+        "qc/flagstat",
+        "logs/gatk",
+        "annotated/trio.denovo.snpeff.html"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "dirs": "qc logs annotated"
+      },
+      "shell_cmd": "multiqc {params.dirs} --outdir {params.outdir} --force > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "align_bwa_mem2"
+    ],
+    [
+      "align_bwa_mem2",
+      "sort_bam"
+    ],
+    [
+      "sort_bam",
+      "flagstat"
+    ],
+    [
+      "sort_bam",
+      "mark_duplicates"
+    ],
+    [
+      "mark_duplicates",
+      "base_recalibrator"
+    ],
+    [
+      "base_recalibrator",
+      "apply_bqsr"
+    ],
+    [
+      "apply_bqsr",
+      "haplotype_caller"
+    ],
+    [
+      "haplotype_caller",
+      "genomicsdb_import"
+    ],
+    [
+      "genomicsdb_import",
+      "genotype_gvcfs"
+    ],
+    [
+      "genotype_gvcfs",
+      "vqsr_snp"
+    ],
+    [
+      "genotype_gvcfs",
+      "vqsr_indel"
+    ],
+    [
+      "vqsr_snp",
+      "apply_vqsr_snp"
+    ],
+    [
+      "vqsr_indel",
+      "apply_vqsr_indel"
+    ],
+    [
+      "apply_vqsr_snp",
+      "merge_filtered_vcf"
+    ],
+    [
+      "apply_vqsr_indel",
+      "merge_filtered_vcf"
+    ],
+    [
+      "merge_filtered_vcf",
+      "denovogear"
+    ],
+    [
+      "apply_bqsr",
+      "denovogear"
+    ],
+    [
+      "denovogear",
+      "snpeff_annotate"
+    ],
+    [
+      "raw_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "flagstat",
+      "multiqc_report"
+    ],
+    [
+      "snpeff_annotate",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "mother",
+      "father",
+      "proband"
+    ],
+    "trio_members": {
+      "mother": "mother",
+      "father": "father",
+      "proband": "proband"
+    },
+    "paired_end": true,
+    "strandedness": 0,
+    "reference": "resources/reference/GRCh38.fa",
+    "adapters": ""
+  },
+  "wildcards": []
+}

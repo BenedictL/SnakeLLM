@@ -1,0 +1,592 @@
+{
+  "pipeline_type": "rna-seq-de-umi",
+  "description": "Paired-end bulk RNA-seq differential expression pipeline with UMI-based deduplication, STAR alignment, featureCounts quantification, and DESeq2 DE analysis with limma-based batch correction.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw and trimmed paired-end reads",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter trimming and quality filtering of paired-end reads",
+      "language": "CLI"
+    },
+    {
+      "name": "UMI-tools",
+      "version": "1.1.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/umi_tools",
+        "tag": "1.1.2--py38h4a8c8d9_0",
+        "full_uri": "quay.io/biocontainers/umi_tools:1.1.2--py38h4a8c8d9_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Extract UMI sequences from read headers and deduplicate PCR duplicates post-alignment",
+      "language": "CLI"
+    },
+    {
+      "name": "STAR",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of trimmed UMI-extracted paired-end reads to the reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "1.9",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "1.9--h10a08f8_12",
+        "full_uri": "quay.io/biocontainers/samtools:1.9--h10a08f8_12",
+        "source": "biocontainers"
+      },
+      "purpose": "Sort and index aligned BAM files for downstream deduplication and quantification",
+      "language": "CLI"
+    },
+    {
+      "name": "subread",
+      "version": "1.5.0p3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/subread",
+        "tag": "1.5.0p3--0",
+        "full_uri": "quay.io/biocontainers/subread:1.5.0p3--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level quantification of deduplicated BAM files using GTF annotation",
+      "language": "CLI"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Differential expression analysis with batch variable in design formula and limma batch correction",
+      "language": "R"
+    },
+    {
+      "name": "clusterProfiler",
+      "version": "3.6.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-clusterprofiler",
+        "tag": "3.6.0--r3.4.1_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+        "source": "biocontainers"
+      },
+      "purpose": "GO and KEGG pathway enrichment analysis on significant differentially expressed genes",
+      "language": "R"
+    },
+    {
+      "name": "MultiQC",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from FastQC, STAR, featureCounts, and UMI-tools into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/raw_fastqc/{sample}_R1_fastqc.html",
+        "qc/raw_fastqc/{sample}_R2_fastqc.html",
+        "qc/raw_fastqc/{sample}_R1_fastqc.zip",
+        "qc/raw_fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/raw_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/raw_{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "post_trim_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/post_trim_fastqc/{sample}_R1_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R2_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R1_fastqc.zip",
+        "qc/post_trim_fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/post_trim_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/post_trim_{sample}.log"
+      ]
+    },
+    {
+      "name": "umi_extract",
+      "tool": "UMI-tools",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "umi_extracted/{sample}_R1.fastq.gz",
+        "umi_extracted/{sample}_R2.fastq.gz"
+      ],
+      "params": {
+        "bc_pattern": "NNNNNNNN",
+        "bc_pattern2": "NNNNNNNN"
+      },
+      "shell_cmd": "umi_tools extract --bc-pattern={params.bc_pattern} --bc-pattern2={params.bc_pattern2} --stdin={input[0]} --read2-in={input[1]} --stdout={output[0]} --read2-out={output[1]} --log={log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/umi_extract/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_star",
+      "tool": "STAR",
+      "input": [
+        "umi_extracted/{sample}_R1.fastq.gz",
+        "umi_extracted/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}/Aligned.out.bam",
+        "aligned/{sample}/Log.final.out"
+      ],
+      "params": {
+        "genome_dir": "resources/star_index",
+        "threads": 8,
+        "out_prefix": "aligned/{sample}/"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --outFileNamePrefix {params.out_prefix} --runMode alignReads 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}/Aligned.out.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/samtools/sort_{sample}.log"
+      ]
+    },
+    {
+      "name": "index_bam",
+      "tool": "samtools",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools index -@ {params.threads} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/samtools/index_{sample}.log"
+      ]
+    },
+    {
+      "name": "umi_dedup",
+      "tool": "UMI-tools",
+      "input": [
+        "sorted/{sample}.sorted.bam",
+        "sorted/{sample}.sorted.bam.bai"
+      ],
+      "output": [
+        "dedup/{sample}.dedup.bam"
+      ],
+      "params": {
+        "method": "directional"
+      },
+      "shell_cmd": "umi_tools dedup --paired --method={params.method} --stdin={input[0]} --stdout={output[0]} --log={log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/umi_dedup/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts",
+      "tool": "subread",
+      "input": [
+        "dedup/S1.dedup.bam",
+        "dedup/S2.dedup.bam",
+        "dedup/S3.dedup.bam"
+      ],
+      "output": [
+        "counts/all_samples_counts.txt"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "threads": 8,
+        "strandedness": "{config[strandedness]}",
+        "paired_end_flag": "{config[paired_end]}"
+      },
+      "shell_cmd": "featureCounts -T {params.threads} -s {params.strandedness} -p -a {params.gtf} -o {output[0]} {input} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/featurecounts/featurecounts.log"
+      ]
+    },
+    {
+      "name": "limma_batch_correction",
+      "tool": "DESeq2",
+      "input": [
+        "counts/all_samples_counts.txt"
+      ],
+      "output": [
+        "counts/batch_corrected_counts.rds"
+      ],
+      "params": {
+        "sample_metadata": "resources/sample_metadata.csv",
+        "batch_column": "batch"
+      },
+      "shell_cmd": "Rscript scripts/limma_batch_correction.R --counts {input[0]} --metadata {params.sample_metadata} --batch_col {params.batch_column} --output {output[0]} 2> {log[0]}",
+      "script": "scripts/limma_batch_correction.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/limma/batch_correction.log"
+      ]
+    },
+    {
+      "name": "differential_expr",
+      "tool": "DESeq2",
+      "input": [
+        "counts/batch_corrected_counts.rds"
+      ],
+      "output": [
+        "results/deseq2/de_results.csv",
+        "results/deseq2/normalized_counts.csv",
+        "results/deseq2/deseq2_summary.txt"
+      ],
+      "params": {
+        "sample_metadata": "resources/sample_metadata.csv",
+        "condition_column": "condition",
+        "batch_column": "batch",
+        "contrast_numerator": "treatment",
+        "contrast_denominator": "control",
+        "alpha": 0.05,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/run_deseq2.R --counts {input[0]} --metadata {params.sample_metadata} --condition_col {params.condition_column} --batch_col {params.batch_column} --contrast_num {params.contrast_numerator} --contrast_denom {params.contrast_denominator} --alpha {params.alpha} --lfc {params.lfc_threshold} --out_de {output[0]} --out_norm {output[1]} --out_summary {output[2]} 2> {log[0]}",
+      "script": "scripts/run_deseq2.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deseq2/deseq2.log"
+      ]
+    },
+    {
+      "name": "go_enrichment",
+      "tool": "clusterProfiler",
+      "input": [
+        "results/deseq2/de_results.csv"
+      ],
+      "output": [
+        "results/enrichment/go_enrichment.csv",
+        "results/enrichment/kegg_enrichment.csv",
+        "results/enrichment/enrichment_plots.pdf"
+      ],
+      "params": {
+        "organism_db": "org.Hs.eg.db",
+        "pval_cutoff": 0.05,
+        "qval_cutoff": 0.2,
+        "gene_id_type": "ENSEMBL"
+      },
+      "shell_cmd": "Rscript scripts/run_clusterprofiler.R --de_results {input[0]} --organism_db {params.organism_db} --pval_cutoff {params.pval_cutoff} --qval_cutoff {params.qval_cutoff} --gene_id_type {params.gene_id_type} --out_go {output[0]} --out_kegg {output[1]} --out_plots {output[2]} 2> {log[0]}",
+      "script": "scripts/run_clusterprofiler.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/clusterprofiler/enrichment.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "MultiQC",
+      "input": [
+        "qc/raw_fastqc",
+        "qc/post_trim_fastqc",
+        "logs/star",
+        "logs/umi_dedup",
+        "logs/featurecounts",
+        "results/deseq2/deseq2_summary.txt"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "title": "RNA-seq UMI Pipeline QC Report"
+      },
+      "shell_cmd": "multiqc --outdir {params.outdir} --title \"{params.title}\" --force qc/raw_fastqc qc/post_trim_fastqc logs/star logs/umi_dedup logs/featurecounts results/deseq2/deseq2_summary.txt 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "post_trim_fastqc"
+    ],
+    [
+      "trim_reads",
+      "umi_extract"
+    ],
+    [
+      "post_trim_fastqc",
+      "umi_extract"
+    ],
+    [
+      "umi_extract",
+      "align_star"
+    ],
+    [
+      "align_star",
+      "sort_bam"
+    ],
+    [
+      "sort_bam",
+      "index_bam"
+    ],
+    [
+      "index_bam",
+      "umi_dedup"
+    ],
+    [
+      "umi_dedup",
+      "featurecounts"
+    ],
+    [
+      "featurecounts",
+      "limma_batch_correction"
+    ],
+    [
+      "limma_batch_correction",
+      "differential_expr"
+    ],
+    [
+      "differential_expr",
+      "go_enrichment"
+    ],
+    [
+      "raw_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "post_trim_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "align_star",
+      "multiqc_report"
+    ],
+    [
+      "umi_dedup",
+      "multiqc_report"
+    ],
+    [
+      "featurecounts",
+      "multiqc_report"
+    ],
+    [
+      "differential_expr",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "S1",
+      "S2",
+      "S3"
+    ],
+    "strandedness": 2,
+    "paired_end": true,
+    "adapters": "resources/adapters.fa",
+    "genome_dir": "resources/star_index",
+    "gtf": "resources/annotation.gtf",
+    "sample_metadata": "resources/sample_metadata.csv",
+    "batch_column": "batch",
+    "condition_column": "condition",
+    "contrast_numerator": "treatment",
+    "contrast_denominator": "control",
+    "umi_pattern": "NNNNNNNN",
+    "dedup_method": "directional",
+    "alpha": 0.05,
+    "lfc_threshold": 1.0,
+    "organism_db": "org.Hs.eg.db",
+    "gene_id_type": "ENSEMBL",
+    "pval_cutoff": 0.05,
+    "qval_cutoff": 0.2
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

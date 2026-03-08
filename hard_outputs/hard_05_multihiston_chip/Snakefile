@@ -1,0 +1,285 @@
+# SnakeLLM — chip-seq
+# Paired-end ChIP-seq pipeline for H3K4me3, H3K27ac (narrow peaks) and H3K27me3 (broad peaks) with Bowtie2 alignment, Picard deduplication, MACS2 peak calling, IDR filtering, deepTools bigWig generation, and ChIPseeker annotation.
+
+configfile: "config.yaml"
+samples = config["samples"]
+
+rule all:
+    input:
+        expand("bigwig/{sample}.bw", sample=config["samples"]),
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+
+rule fastqc_raw:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.zip",
+    params:
+        outdir = "qc/fastqc",
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 4000,
+        runtime = 60
+    log:
+        "logs/fastqc/{sample}.log"
+    shell:
+        "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log}"
+
+rule trim_reads:
+    input:
+        r1 = "data/raw/{sample}_R1.fastq.gz",
+        r2 = "data/raw/{sample}_R2.fastq.gz",
+    output:
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz",
+    params:
+        adapters = "resources/adapters.fa",
+        leading = 3,
+        trailing = 3,
+        slidingwindow = "4:15",
+        minlen = 36,
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 8000,
+        runtime = 90
+    log:
+        "logs/trimmomatic/{sample}.log"
+    shell:
+        "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log}"
+
+rule bowtie2_align:
+    input:
+        r1 = "trimmed/{sample}_R1.fastq.gz",
+        r2 = "trimmed/{sample}_R2.fastq.gz",
+    output:
+        "aligned/{sample}.bam",
+    params:
+        index = "resources/bowtie2_index/genome",
+        threads = 8,
+        max_insert = 1000,
+    threads: 8
+    resources:
+        mem_mb  = 32000,
+        runtime = 180
+    log:
+        "logs/bowtie2/{sample}.log"
+    shell:
+        "bowtie2 -p {params.threads} -x {params.index} -1 {input[0]} -2 {input[1]} -X {params.max_insert} --no-mixed --no-discordant 2> {log[0]} | samtools view -bS - > {output[0]} 2> {log}"
+
+rule samtools_filter_sort:
+    input:
+        "aligned/{sample}.bam"
+    output:
+        "filtered/{sample}.filtered.sorted.bam",
+        "filtered/{sample}.filtered.sorted.bam.bai",
+    params:
+        mapq = 20,
+        threads = 4,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/samtools/{sample}.log"
+    shell:
+        "samtools view -b -F 4 -q {params.mapq} {input[0]} | samtools sort -@ {params.threads} -o {output[0]} - && samtools index {output[0]} 2> {log}"
+
+rule picard_markdup:
+    input:
+        "filtered/{sample}.filtered.sorted.bam"
+    output:
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai",
+        "dedup/{sample}.dup_metrics.txt",
+    params:
+        java_opts = "-Xmx16g",
+        remove_duplicates = "true",
+        validation_stringency = "LENIENT",
+    threads: 4
+    resources:
+        mem_mb  = 20000,
+        runtime = 120
+    log:
+        "logs/picard/{sample}.log"
+    shell:
+        "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} REMOVE_DUPLICATES={params.remove_duplicates} VALIDATION_STRINGENCY={params.validation_stringency} 2> {log[0]} && samtools index {output[0]} 2> {log}"
+
+rule deeptools_bamcoverage:
+    input:
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai",
+    output:
+        "bigwig/{sample}.bw",
+    params:
+        bin_size = 10,
+        normalize_using = "RPKM",
+        threads = 8,
+        ignore_duplicates = "--ignoreDuplicates",
+        extendreads = "--extendReads",
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/deeptools/bamcoverage_{sample}.log"
+    shell:
+        "bamCoverage --bam {input[0]} --outFileName {output[0]} --outFileFormat bigwig --binSize {params.bin_size} --normalizeUsing {params.normalize_using} --numberOfProcessors {params.threads} {params.ignore_duplicates} {params.extendreads} 2> {log}"
+
+rule deeptools_fingerprint:
+    input:
+        "dedup/all_dedup_bams.txt"
+    output:
+        "qc/deeptools/fingerprint.png",
+        "qc/deeptools/fingerprint_counts.tab",
+        "qc/deeptools/fingerprint_qc.tab",
+    params:
+        threads = 8,
+        bin_size = 500,
+        outdir = "qc/deeptools",
+    threads: 8
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/deeptools/fingerprint.log"
+    shell:
+        "plotFingerprint --bamfiles $(cat {input[0]}) --numberOfProcessors {params.threads} --binSize {params.bin_size} --plotFile {output[0]} --outRawCounts {output[1]} --outQualityMetrics {output[2]} 2> {log}"
+
+rule macs2_broad_peaks:
+    input:
+        "dedup/{chip_sample}.dedup.bam",
+        "dedup/{input_sample}.dedup.bam",
+    output:
+        "peaks/broad/{chip_sample}_peaks.broadPeak",
+        "peaks/broad/{chip_sample}_peaks.gappedPeak",
+        "peaks/broad/{chip_sample}_peaks.xls",
+    params:
+        outdir = "peaks/broad",
+        genome_size = "hs",
+        qvalue = 0.05,
+        format = "BAMPE",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/macs2/broad_{chip_sample}.log"
+    shell:
+        "macs2 callpeak -t {input[0]} -c {input[1]} -f {params.format} -g {params.genome_size} -q {params.qvalue} --broad --outdir {params.outdir} -n {wildcards.chip_sample} 2> {log}"
+
+rule macs2_narrow_peaks:
+    input:
+        "dedup/{chip_sample}.dedup.bam",
+        "dedup/{input_sample}.dedup.bam",
+    output:
+        "peaks/narrow/{chip_sample}_peaks.narrowPeak",
+        "peaks/narrow/{chip_sample}_summits.bed",
+        "peaks/narrow/{chip_sample}_peaks.xls",
+    params:
+        outdir = "peaks/narrow",
+        genome_size = "hs",
+        qvalue = 0.05,
+        format = "BAMPE",
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 120
+    log:
+        "logs/macs2/narrow_{chip_sample}.log"
+    shell:
+        "macs2 callpeak -t {input[0]} -c {input[1]} -f {params.format} -g {params.genome_size} -q {params.qvalue} --outdir {params.outdir} -n {wildcards.chip_sample} 2> {log}"
+
+rule idr_broad:
+    input:
+        "peaks/broad/{rep1_sample}_peaks.broadPeak",
+        "peaks/broad/{rep2_sample}_peaks.broadPeak",
+    output:
+        "idr/broad/{mark}_idr_peaks.broadPeak",
+        "idr/broad/{mark}_idr.log",
+    params:
+        threshold = 0.05,
+        rank = "signal.value",
+        peak_type = "broadPeak",
+        plot = "--plot",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 60
+    log:
+        "logs/idr/broad_{mark}.log"
+    shell:
+        "idr --samples {input[0]} {input[1]} --input-file-type {params.peak_type} --rank {params.rank} --soft-idr-threshold {params.threshold} {params.plot} --output-file {output[0]} --log-output-file {output[1]} 2> {log}"
+
+rule idr_narrow:
+    input:
+        "peaks/narrow/{rep1_sample}_peaks.narrowPeak",
+        "peaks/narrow/{rep2_sample}_peaks.narrowPeak",
+    output:
+        "idr/narrow/{mark}_idr_peaks.narrowPeak",
+        "idr/narrow/{mark}_idr.log",
+    params:
+        threshold = 0.05,
+        rank = "signal.value",
+        peak_type = "narrowPeak",
+        plot = "--plot",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 60
+    log:
+        "logs/idr/narrow_{mark}.log"
+    shell:
+        "idr --samples {input[0]} {input[1]} --input-file-type {params.peak_type} --rank {params.rank} --soft-idr-threshold {params.threshold} {params.plot} --output-file {output[0]} --log-output-file {output[1]} 2> {log}"
+
+rule chipseeker_annotate:
+    input:
+        "idr/all_idr_peaks.txt"
+    output:
+        "annotation/chipseeker_annotation.csv",
+        "annotation/chipseeker_pie.pdf",
+        "annotation/chipseeker_upsetplot.pdf",
+        "annotation/chipseeker_tss_heatmap.pdf",
+    params:
+        txdb = "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        organism_db = "org.Hs.eg.db",
+        tss_region_upstream = 3000,
+        tss_region_downstream = 3000,
+    threads: 4
+    resources:
+        mem_mb  = 16000,
+        runtime = 60
+    log:
+        "logs/chipseeker/annotate.log"
+    shell:
+        "Rscript scripts/chipseeker_annotate.R {input[0]} {params.txdb} {params.organism_db} {params.tss_region_upstream} {params.tss_region_downstream} {output[0]} {output[1]} {output[2]} {output[3]} 2> {log}"
+
+rule multiqc_report:
+    input:
+        ancient("qc/fastqc"),
+        ancient("logs/trimmomatic"),
+        ancient("logs/bowtie2"),
+        ancient("dedup"),
+        ancient("qc/deeptools"),
+    output:
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data",
+    params:
+        outdir = "qc/multiqc",
+        title = "ChIP-seq QC Report",
+    threads: 2
+    resources:
+        mem_mb  = 8000,
+        runtime = 30
+    log:
+        "logs/multiqc/multiqc.log"
+    shell:
+        "multiqc {input[0]} {input[1]} {input[2]} {input[3]} {input[4]} --outdir {params.outdir} --title \"{params.title}\" --force 2> {log}"

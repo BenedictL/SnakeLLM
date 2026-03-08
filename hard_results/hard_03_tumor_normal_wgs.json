@@ -1,0 +1,650 @@
+{
+  "pipeline_type": "wgs-somatic-variant-calling",
+  "description": "Tumor-normal paired somatic variant calling pipeline using BWA-MEM2 alignment, GATK4 Mutect2 for SNVs/indels, Manta for structural variants, CNVkit for copy number analysis, and VEP for functional annotation.",
+  "tools": [
+    {
+      "name": "fastqc",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control of raw FASTQ reads for both tumor and normal samples",
+      "language": "CLI"
+    },
+    {
+      "name": "trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter trimming and quality-based read trimming for tumor and normal FASTQ files",
+      "language": "CLI"
+    },
+    {
+      "name": "bwa-mem2",
+      "version": "2.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bwa-mem2",
+        "tag": "2.0--he513fc3_0",
+        "full_uri": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Fast alignment of tumor and normal reads to reference genome producing BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort aligned BAM files for tumor and normal samples",
+      "language": "CLI"
+    },
+    {
+      "name": "picard",
+      "version": "2.9.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/picard",
+        "tag": "2.9.2--py35_1",
+        "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Flag and remove PCR duplicates in tumor and normal BAMs",
+      "language": "CLI"
+    },
+    {
+      "name": "gatk4",
+      "version": "4.0.0.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/gatk4",
+        "tag": "4.0.0.0--py36_0",
+        "full_uri": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Base quality score recalibration, somatic SNV/indel calling with Mutect2, and filtering of variant calls",
+      "language": "CLI"
+    },
+    {
+      "name": "manta",
+      "version": "1.6.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/manta",
+        "tag": "1.6.0--py27_0",
+        "full_uri": "quay.io/biocontainers/manta:1.6.0--py27_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Structural variant detection from tumor-normal BAM pairs",
+      "language": "CLI"
+    },
+    {
+      "name": "cnvkit",
+      "version": "0.9.9",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/cnvkit",
+        "tag": "0.9.9--pyhdfd78af_0",
+        "full_uri": "quay.io/biocontainers/cnvkit:0.9.9--pyhdfd78af_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Genome-wide somatic copy number variant analysis and segmentation from tumor-normal BAM pair",
+      "language": "Python"
+    },
+    {
+      "name": "vep",
+      "version": "104.3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/ensembl-vep",
+        "tag": "104.3--pl5262h4a94de4_0",
+        "full_uri": "quay.io/biocontainers/ensembl-vep:104.3--pl5262h4a94de4_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Functional annotation of somatic SNVs, indels, and SVs using Ensembl VEP",
+      "language": "CLI"
+    },
+    {
+      "name": "multiqc",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from all pipeline steps into a single HTML report",
+      "language": "Python"
+    }
+  ],
+  "rules": [
+    {
+      "name": "fastqc_raw",
+      "tool": "fastqc",
+      "input": [
+        "data/{sample}_{read}.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/{sample}_{read}_fastqc.html",
+        "qc/fastqc/{sample}_{read}_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/{sample}_{read}.log"
+      ]
+    },
+    {
+      "name": "trimmomatic_pe",
+      "tool": "trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2_trimmed.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 8
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "bwa_mem2_align",
+      "tool": "bwa-mem2",
+      "input": [
+        "trimmed/{sample}_R1_trimmed.fastq.gz",
+        "trimmed/{sample}_R2_trimmed.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}.bam"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "threads": 16,
+        "read_group": "@RG\\tID:{sample}\\tSM:{sample}\\tPL:ILLUMINA\\tLB:{sample}\\tPU:{sample}"
+      },
+      "shell_cmd": "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 16,
+        "mem_mb": 64000,
+        "time_min": 480,
+        "disk_mb": 200000
+      },
+      "log": [
+        "logs/bwa_mem2/{sample}.log"
+      ]
+    },
+    {
+      "name": "samtools_sort",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "params": {
+        "threads": 8,
+        "memory_per_thread": "2G"
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -m {params.memory_per_thread} -o {output[0]} {input[0]} && samtools index {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 180,
+        "disk_mb": 100000
+      },
+      "log": [
+        "logs/samtools_sort/{sample}.log"
+      ]
+    },
+    {
+      "name": "picard_markduplicates",
+      "tool": "picard",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "deduped/{sample}.deduped.bam",
+        "deduped/{sample}.deduped.bai",
+        "deduped/{sample}.metrics.txt"
+      ],
+      "params": {
+        "java_opts": "-Xmx32g",
+        "validation_stringency": "LENIENT"
+      },
+      "shell_cmd": "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} REMOVE_DUPLICATES=false CREATE_INDEX=true VALIDATION_STRINGENCY={params.validation_stringency} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 40000,
+        "time_min": 240,
+        "disk_mb": 150000
+      },
+      "log": [
+        "logs/picard_markduplicates/{sample}.log"
+      ]
+    },
+    {
+      "name": "gatk_baserecalibrator",
+      "tool": "gatk4",
+      "input": [
+        "deduped/{sample}.deduped.bam"
+      ],
+      "output": [
+        "bqsr/{sample}.recal.table"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "known_sites_dbsnp": "resources/dbsnp.vcf.gz",
+        "known_sites_mills": "resources/mills_indels.vcf.gz",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites_dbsnp} --known-sites {params.known_sites_mills} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 24000,
+        "time_min": 240,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/gatk_baserecalibrator/{sample}.log"
+      ]
+    },
+    {
+      "name": "gatk_applybqsr",
+      "tool": "gatk4",
+      "input": [
+        "deduped/{sample}.deduped.bam",
+        "bqsr/{sample}.recal.table"
+      ],
+      "output": [
+        "bqsr/{sample}.bqsr.bam",
+        "bqsr/{sample}.bqsr.bai"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' ApplyBQSR -R {params.reference} -I {input[0]} --bqsr-recal-file {input[1]} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 24000,
+        "time_min": 180,
+        "disk_mb": 100000
+      },
+      "log": [
+        "logs/gatk_applybqsr/{sample}.log"
+      ]
+    },
+    {
+      "name": "gatk_mutect2",
+      "tool": "gatk4",
+      "input": [
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam"
+      ],
+      "output": [
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz.tbi",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.stats"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "germline_resource": "resources/af-only-gnomad.vcf.gz",
+        "panel_of_normals": "resources/somatic-hg38-1e6-pon.vcf.gz",
+        "java_opts": "-Xmx32g",
+        "threads": 8
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' Mutect2 -R {params.reference} -I {input[0]} -tumor {wildcards.tumor_sample} -I {input[1]} -normal {wildcards.normal_sample} --germline-resource {params.germline_resource} --panel-of-normals {params.panel_of_normals} -O {output[0]} --native-pair-hmm-threads {params.threads} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 48000,
+        "time_min": 600,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/mutect2/{tumor_sample}_vs_{normal_sample}.log"
+      ]
+    },
+    {
+      "name": "gatk_filtermutectcalls",
+      "tool": "gatk4",
+      "input": [
+        "mutect2/{tumor_sample}_vs_{normal_sample}.vcf.gz",
+        "mutect2/{tumor_sample}_vs_{normal_sample}.stats"
+      ],
+      "output": [
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz",
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' FilterMutectCalls -R {params.reference} -V {input[0]} --stats {input[1]} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 24000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/filtermutectcalls/{tumor_sample}_vs_{normal_sample}.log"
+      ]
+    },
+    {
+      "name": "manta_somatic",
+      "tool": "manta",
+      "input": [
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam"
+      ],
+      "output": [
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz",
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "rundir": "manta/{tumor_sample}_vs_{normal_sample}",
+        "jobs": 8
+      },
+      "shell_cmd": "configManta.py --tumorBam {input[0]} --normalBam {input[1]} --referenceFasta {params.reference} --runDir {params.rundir} && {params.rundir}/runWorkflow.py -m local -j {params.jobs} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 360,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/manta/{tumor_sample}_vs_{normal_sample}.log"
+      ]
+    },
+    {
+      "name": "cnvkit_batch",
+      "tool": "cnvkit",
+      "input": [
+        "bqsr/{tumor_sample}.bqsr.bam",
+        "bqsr/{normal_sample}.bqsr.bam"
+      ],
+      "output": [
+        "cnvkit/{tumor_sample}_vs_{normal_sample}/{tumor_sample}.bqsr.cnr",
+        "cnvkit/{tumor_sample}_vs_{normal_sample}/{tumor_sample}.bqsr.cns"
+      ],
+      "params": {
+        "reference": "resources/reference/genome.fa",
+        "targets": "resources/target_regions.bed",
+        "outdir": "cnvkit/{tumor_sample}_vs_{normal_sample}",
+        "method": "wgs",
+        "threads": 8
+      },
+      "shell_cmd": "cnvkit.py batch {input[0]} --normal {input[1]} --fasta {params.reference} --method {params.method} --output-dir {params.outdir} -p {params.threads} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 240,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/cnvkit/{tumor_sample}_vs_{normal_sample}.log"
+      ]
+    },
+    {
+      "name": "vep_annotate_snv",
+      "tool": "vep",
+      "input": [
+        "filtered/{tumor_sample}_vs_{normal_sample}.filtered.vcf.gz"
+      ],
+      "output": [
+        "vep/{tumor_sample}_vs_{normal_sample}.snv.vep.vcf.gz",
+        "vep/{tumor_sample}_vs_{normal_sample}.snv.vep.vcf.gz_summary.html"
+      ],
+      "params": {
+        "vep_cache": "resources/vep_cache",
+        "assembly": "GRCh38",
+        "species": "homo_sapiens",
+        "fork": 8,
+        "extra_flags": "--everything --vcf --compress_output bgzip --force_overwrite"
+      },
+      "shell_cmd": "vep --input_file {input[0]} --output_file {output[0]} --stats_file {output[1]} --cache --dir_cache {params.vep_cache} --assembly {params.assembly} --species {params.species} --fork {params.fork} {params.extra_flags} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 240,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/vep/{tumor_sample}_vs_{normal_sample}_snv.log"
+      ]
+    },
+    {
+      "name": "vep_annotate_sv",
+      "tool": "vep",
+      "input": [
+        "manta/{tumor_sample}_vs_{normal_sample}/results/variants/somaticSV.vcf.gz"
+      ],
+      "output": [
+        "vep/{tumor_sample}_vs_{normal_sample}.sv.vep.vcf.gz",
+        "vep/{tumor_sample}_vs_{normal_sample}.sv.vep.vcf.gz_summary.html"
+      ],
+      "params": {
+        "vep_cache": "resources/vep_cache",
+        "assembly": "GRCh38",
+        "species": "homo_sapiens",
+        "fork": 8,
+        "extra_flags": "--everything --vcf --compress_output bgzip --force_overwrite"
+      },
+      "shell_cmd": "vep --input_file {input[0]} --output_file {output[0]} --stats_file {output[1]} --cache --dir_cache {params.vep_cache} --assembly {params.assembly} --species {params.species} --fork {params.fork} {params.extra_flags} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/vep/{tumor_sample}_vs_{normal_sample}_sv.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "multiqc",
+      "input": [
+        "qc/fastqc",
+        "logs/trimmomatic",
+        "deduped",
+        "bqsr",
+        "mutect2",
+        "filtered",
+        "cnvkit",
+        "vep"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "title": "WGS Somatic Variant Calling QC Report"
+      },
+      "shell_cmd": "multiqc qc/fastqc logs/trimmomatic deduped bqsr mutect2 filtered cnvkit vep --outdir {params.outdir} --title '{params.title}' --force 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "fastqc_raw",
+      "trimmomatic_pe"
+    ],
+    [
+      "trimmomatic_pe",
+      "bwa_mem2_align"
+    ],
+    [
+      "bwa_mem2_align",
+      "samtools_sort"
+    ],
+    [
+      "samtools_sort",
+      "picard_markduplicates"
+    ],
+    [
+      "picard_markduplicates",
+      "gatk_baserecalibrator"
+    ],
+    [
+      "gatk_baserecalibrator",
+      "gatk_applybqsr"
+    ],
+    [
+      "gatk_applybqsr",
+      "gatk_mutect2"
+    ],
+    [
+      "gatk_applybqsr",
+      "manta_somatic"
+    ],
+    [
+      "gatk_applybqsr",
+      "cnvkit_batch"
+    ],
+    [
+      "gatk_mutect2",
+      "gatk_filtermutectcalls"
+    ],
+    [
+      "gatk_filtermutectcalls",
+      "vep_annotate_snv"
+    ],
+    [
+      "manta_somatic",
+      "vep_annotate_sv"
+    ],
+    [
+      "fastqc_raw",
+      "multiqc_report"
+    ],
+    [
+      "trimmomatic_pe",
+      "multiqc_report"
+    ],
+    [
+      "picard_markduplicates",
+      "multiqc_report"
+    ],
+    [
+      "gatk_applybqsr",
+      "multiqc_report"
+    ],
+    [
+      "gatk_filtermutectcalls",
+      "multiqc_report"
+    ],
+    [
+      "cnvkit_batch",
+      "multiqc_report"
+    ],
+    [
+      "vep_annotate_snv",
+      "multiqc_report"
+    ],
+    [
+      "vep_annotate_sv",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "tumor_sample1",
+      "normal_sample1"
+    ],
+    "tumor_sample": "tumor_sample1",
+    "normal_sample": "normal_sample1",
+    "paired_end": true,
+    "strandedness": 0,
+    "reference_genome": "resources/reference/genome.fa",
+    "known_sites_dbsnp": "resources/dbsnp.vcf.gz",
+    "known_sites_mills": "resources/mills_indels.vcf.gz",
+    "germline_resource": "resources/af-only-gnomad.vcf.gz",
+    "panel_of_normals": "resources/somatic-hg38-1e6-pon.vcf.gz",
+    "adapters": "resources/adapters.fa",
+    "vep_cache": "resources/vep_cache",
+    "vep_assembly": "GRCh38",
+    "vep_species": "homo_sapiens",
+    "cnvkit_method": "wgs",
+    "target_regions": "resources/target_regions.bed",
+    "trimmomatic_leading": 3,
+    "trimmomatic_trailing": 3,
+    "trimmomatic_slidingwindow": "4:15",
+    "trimmomatic_minlen": 36
+  },
+  "wildcards": [
+    "sample",
+    "read",
+    "tumor_sample",
+    "normal_sample"
+  ]
+}

@@ -1,0 +1,21 @@
+# SnakeLLM config
+# Pipeline: wgs-variant-calling
+
+# Samples
+samples:
+  - sample1
+  - sample2
+  - sample3
+
+# Reference files
+reference: "resources/reference/genome.fa"
+adapters: "resources/adapters.fa"
+genome_build: "hg38"
+java_opts_default: "-Xmx16g"
+
+# Thresholds
+snp_filter_expr: QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0
+indel_filter_expr: QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0
+min_read_length: 36
+
+# Parameters

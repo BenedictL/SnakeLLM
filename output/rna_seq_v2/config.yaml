@@ -1,0 +1,24 @@
+# SnakeLLM config
+# Pipeline: rna-seq-de
+
+# Samples
+samples:
+  - S1
+  - S2
+  - S3
+  - S4
+  - S5
+  - S6
+
+# Reference files
+genome_dir: "resources/star_index"
+gtf: "resources/annotation.gtf"
+adapters: "resources/adapters.fa"
+reference_level: "control"
+genome_build: "hg38"
+
+# Thresholds
+lfc_threshold: 1.0
+padj_threshold: 0.05
+
+# Parameters
