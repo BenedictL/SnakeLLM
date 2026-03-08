@@ -1,0 +1,461 @@
+{
+  "pipeline_type": "rna-seq-de",
+  "description": "Bulk RNA-seq differential expression analysis pipeline using STAR alignment and DESeq2 with full QC and pathway enrichment.",
+  "tools": [
+    {
+      "name": "fastqc",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw and trimmed reads",
+      "language": "CLI"
+    },
+    {
+      "name": "trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming of raw reads",
+      "language": "CLI"
+    },
+    {
+      "name": "star",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of trimmed reads to reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Sort and index aligned BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "featureCounts",
+      "version": "2.4.23",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bedops",
+        "tag": "2.4.23--0",
+        "full_uri": "quay.io/biocontainers/bedops:2.4.23--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level read quantification from sorted BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Differential expression analysis generating results table, MA plot, and PCA",
+      "language": "R"
+    },
+    {
+      "name": "clusterProfiler",
+      "version": "3.6.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-clusterprofiler",
+        "tag": "3.6.0--r3.4.1_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+        "source": "biocontainers"
+      },
+      "purpose": "GO and KEGG pathway enrichment analysis on DEGs",
+      "language": "R"
+    },
+    {
+      "name": "multiqc",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate all QC logs into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "fastqc",
+      "input": [
+        "data/raw/{sample}_R1.fastq.gz",
+        "data/raw/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/raw_fastqc/{sample}_R1_fastqc.html",
+        "qc/raw_fastqc/{sample}_R1_fastqc.zip",
+        "qc/raw_fastqc/{sample}_R2_fastqc.html",
+        "qc/raw_fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/raw_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/fastqc/raw/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "trimmomatic",
+      "input": [
+        "data/raw/{sample}_R1.fastq.gz",
+        "data/raw/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "post_trim_fastqc",
+      "tool": "fastqc",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "qc/post_trim_fastqc/{sample}_R1_paired_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R1_paired_fastqc.zip",
+        "qc/post_trim_fastqc/{sample}_R2_paired_fastqc.html",
+        "qc/post_trim_fastqc/{sample}_R2_paired_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/post_trim_fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/fastqc/post_trim/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_star",
+      "tool": "star",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam",
+        "aligned/{sample}/Log.final.out"
+      ],
+      "params": {
+        "genome_dir": "resources/star_genome",
+        "threads": 8,
+        "out_prefix": "aligned/{sample}/"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outSAMattributes NH HI AS NM MD --outFileNamePrefix {params.out_prefix} --outSAMstrandField intronMotif --outFilterIntronMotifs RemoveNoncanonical 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 120,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_index_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam"
+      ],
+      "output": [
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam.bai"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools index -@ {params.threads} {input[0]} {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/samtools/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts",
+      "tool": "featureCounts",
+      "input": [
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam",
+        "aligned/{sample}/Aligned.sortedByCoord.out.bam.bai"
+      ],
+      "output": [
+        "counts/{sample}_counts.txt",
+        "counts/{sample}_counts.txt.summary"
+      ],
+      "params": {
+        "gtf": "resources/annotation.gtf",
+        "threads": 4,
+        "strandness": 0
+      },
+      "shell_cmd": "featureCounts -T {params.threads} -p -s {params.strandness} -a {params.gtf} -o {output[0]} {input[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/featurecounts/{sample}.log"
+      ]
+    },
+    {
+      "name": "differential_expr",
+      "tool": "DESeq2",
+      "input": [
+        "counts/{sample}_counts.txt"
+      ],
+      "output": [
+        "results/deseq2/de_results.csv",
+        "results/deseq2/ma_plot.pdf",
+        "results/deseq2/pca_plot.pdf",
+        "results/deseq2/normalized_counts.csv"
+      ],
+      "params": {
+        "sample_table": "resources/sample_table.csv",
+        "condition_col": "condition",
+        "contrast": [
+          "condition",
+          "treatment",
+          "control"
+        ],
+        "alpha": 0.05,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/deseq2.R --sample_table {params.sample_table} --counts_dir counts/ --condition_col {params.condition_col} --alpha {params.alpha} --lfc_threshold {params.lfc_threshold} --out_results {output[0]} --out_ma {output[1]} --out_pca {output[2]} --out_norm_counts {output[3]} 2> {log[0]}",
+      "script": "scripts/deseq2.R",
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/deseq2/deseq2.log"
+      ]
+    },
+    {
+      "name": "go_enrichment",
+      "tool": "clusterProfiler",
+      "input": [
+        "results/deseq2/de_results.csv"
+      ],
+      "output": [
+        "results/enrichment/go_results.csv",
+        "results/enrichment/kegg_results.csv",
+        "results/enrichment/go_dotplot.pdf",
+        "results/enrichment/kegg_dotplot.pdf"
+      ],
+      "params": {
+        "organism_db": "org.Hs.eg.db",
+        "pvalue_cutoff": 0.05,
+        "qvalue_cutoff": 0.2,
+        "lfc_threshold": 1.0
+      },
+      "shell_cmd": "Rscript scripts/clusterprofiler.R --de_results {input[0]} --organism_db {params.organism_db} --pvalue_cutoff {params.pvalue_cutoff} --qvalue_cutoff {params.qvalue_cutoff} --lfc_threshold {params.lfc_threshold} --out_go {output[0]} --out_kegg {output[1]} --out_go_plot {output[2]} --out_kegg_plot {output[3]} 2> {log[0]}",
+      "script": "scripts/clusterprofiler.R",
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/clusterprofiler/clusterprofiler.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "multiqc",
+      "input": [
+        "qc/raw_fastqc",
+        "qc/post_trim_fastqc",
+        "aligned",
+        "counts",
+        "results/enrichment/go_results.csv"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html",
+        "qc/multiqc/multiqc_data"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "dirs": "qc/raw_fastqc qc/post_trim_fastqc aligned counts logs"
+      },
+      "shell_cmd": "multiqc {params.dirs} --outdir {params.outdir} --filename multiqc_report.html --force 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 4000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "post_trim_fastqc"
+    ],
+    [
+      "post_trim_fastqc",
+      "align_star"
+    ],
+    [
+      "align_star",
+      "sort_index_bam"
+    ],
+    [
+      "sort_index_bam",
+      "featurecounts"
+    ],
+    [
+      "featurecounts",
+      "differential_expr"
+    ],
+    [
+      "differential_expr",
+      "go_enrichment"
+    ],
+    [
+      "raw_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "post_trim_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "align_star",
+      "multiqc_report"
+    ],
+    [
+      "featurecounts",
+      "multiqc_report"
+    ],
+    [
+      "go_enrichment",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "sample1",
+      "sample2",
+      "sample3",
+      "sample4"
+    ],
+    "raw_data_dir": "data/raw",
+    "adapters": "resources/adapters.fa",
+    "star_genome_dir": "resources/star_genome",
+    "gtf": "resources/annotation.gtf",
+    "sample_table": "resources/sample_table.csv",
+    "condition_col": "condition",
+    "contrast": [
+      "condition",
+      "treatment",
+      "control"
+    ],
+    "deseq2_alpha": 0.05,
+    "lfc_threshold": 1.0,
+    "organism_db": "org.Hs.eg.db",
+    "pvalue_cutoff": 0.05,
+    "qvalue_cutoff": 0.2,
+    "trimmomatic_leading": 3,
+    "trimmomatic_trailing": 3,
+    "trimmomatic_slidingwindow": "4:15",
+    "trimmomatic_minlen": 36,
+    "star_threads": 8,
+    "featurecounts_strandness": 0
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

@@ -1,0 +1,15 @@
+name: wgs_v2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - FastQC=0.11.5
+  - Trimmomatic=0.33
+  - BWA-MEM2=2.0
+  - samtools=1.17
+  - Picard=2.9.2
+  - GATK4=4.0.0.0
+  - bcftools=1.7
+  - MultiQC=1.0

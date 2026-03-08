@@ -1,0 +1,580 @@
+{
+  "pipeline_type": "wgs-cnv-analysis",
+  "description": "Whole genome sequencing copy number variation analysis using CNVkit following read alignment and preprocessing.",
+  "tools": [
+    {
+      "name": "fastqc",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control assessment of raw FASTQ reads",
+      "language": "CLI"
+    },
+    {
+      "name": "trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming of raw reads",
+      "language": "CLI"
+    },
+    {
+      "name": "bwa-mem2",
+      "version": "2.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bwa-mem2",
+        "tag": "2.0--he513fc3_0",
+        "full_uri": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Align trimmed reads to reference genome producing BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort aligned BAM files for downstream processing",
+      "language": "CLI"
+    },
+    {
+      "name": "picard",
+      "version": "2.9.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/picard",
+        "tag": "2.9.2--py35_1",
+        "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Flag PCR duplicates in sorted BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "gatk4",
+      "version": "4.0.0.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/gatk4",
+        "tag": "4.0.0.0--py36_0",
+        "full_uri": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Base quality score recalibration to correct systematic sequencing errors",
+      "language": "CLI"
+    },
+    {
+      "name": "cnvkit",
+      "version": "0.9.10",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/cnvkit",
+        "tag": "0.9.10--pyhdfd78af_0",
+        "full_uri": "quay.io/biocontainers/cnvkit:0.9.10--pyhdfd78af_0",
+        "source": "biocontainers"
+      },
+      "purpose": "CNV detection, segmentation, calling, and visualization from WGS BAM files",
+      "language": "Python"
+    },
+    {
+      "name": "multiqc",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate QC metrics from FastQC, Trimmomatic, Picard, and CNVkit into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "fastqc",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "resources/adapters.fa",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_bwa",
+      "tool": "bwa-mem2",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}.bam"
+      ],
+      "params": {
+        "reference": "resources/genome.fa",
+        "threads": 16,
+        "read_group": "@RG\\tID:{sample}\\tSM:{sample}\\tPL:ILLUMINA\\tLB:{sample}"
+      },
+      "shell_cmd": "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 16,
+        "mem_mb": 32000,
+        "time_min": 240,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/bwa_mem2/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam",
+        "sorted/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 8
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} > {log[0]} 2>&1 && samtools index {output[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/samtools_sort/{sample}.log"
+      ]
+    },
+    {
+      "name": "mark_duplicates",
+      "tool": "picard",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai",
+        "dedup/{sample}.metrics.txt"
+      ],
+      "params": {
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT > {log[0]} 2>&1 && mv dedup/{wildcards.sample}.dedup.bai {output[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/picard_markdup/{sample}.log"
+      ]
+    },
+    {
+      "name": "gatk_bqsr",
+      "tool": "gatk4",
+      "input": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bam.bai"
+      ],
+      "output": [
+        "bqsr/{sample}.recal.bam",
+        "bqsr/{sample}.recal.bam.bai",
+        "bqsr/{sample}.recal.table"
+      ],
+      "params": {
+        "reference": "resources/genome.fa",
+        "known_sites": "resources/dbsnp.vcf.gz",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites} -O {output[2]} > {log[0]} 2>&1 && gatk --java-options '{params.java_opts}' ApplyBQSR -I {input[0]} -R {params.reference} --bqsr-recal-file {output[2]} -O {output[0]} >> {log[0]} 2>&1 && samtools index {output[0]} -o {output[1]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 20000,
+        "time_min": 240,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/gatk_bqsr/{sample}.log"
+      ]
+    },
+    {
+      "name": "cnvkit_batch",
+      "tool": "cnvkit",
+      "input": [
+        "bqsr/all_recal_bams.txt"
+      ],
+      "output": [
+        "cnvkit/batch.done"
+      ],
+      "params": {
+        "reference": "resources/genome.fa",
+        "outdir": "cnvkit",
+        "method": "wgs",
+        "processes": 8
+      },
+      "shell_cmd": "cnvkit.py batch $(cat {input[0]} | tr '\\n' ' ') --method {params.method} --fasta {params.reference} --output-dir {params.outdir} -p {params.processes} > {log[0]} 2>&1 && touch {output[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 32000,
+        "time_min": 480,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/cnvkit/batch.log"
+      ]
+    },
+    {
+      "name": "cnvkit_segment",
+      "tool": "cnvkit",
+      "input": [
+        "cnvkit/{sample}.cnr"
+      ],
+      "output": [
+        "cnvkit/{sample}.cns"
+      ],
+      "params": {
+        "method": "cbs",
+        "processes": 4
+      },
+      "shell_cmd": "cnvkit.py segment {input[0]} -m {params.method} -p {params.processes} -o {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/cnvkit/segment_{sample}.log"
+      ]
+    },
+    {
+      "name": "cnvkit_call",
+      "tool": "cnvkit",
+      "input": [
+        "cnvkit/{sample}.cns"
+      ],
+      "output": [
+        "cnvkit/{sample}.call.cns"
+      ],
+      "params": {
+        "ploidy": 2,
+        "purity": 1.0
+      },
+      "shell_cmd": "cnvkit.py call {input[0]} --ploidy {params.ploidy} --purity {params.purity} -o {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 60,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/cnvkit/call_{sample}.log"
+      ]
+    },
+    {
+      "name": "cnvkit_scatter",
+      "tool": "cnvkit",
+      "input": [
+        "cnvkit/{sample}.cnr",
+        "cnvkit/{sample}.call.cns"
+      ],
+      "output": [
+        "cnvkit/scatter/{sample}_scatter.pdf"
+      ],
+      "params": {
+        "outdir": "cnvkit/scatter"
+      },
+      "shell_cmd": "cnvkit.py scatter {input[0]} -s {input[1]} -o {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/cnvkit/scatter_{sample}.log"
+      ]
+    },
+    {
+      "name": "cnvkit_heatmap",
+      "tool": "cnvkit",
+      "input": [
+        "cnvkit/all_call_cns.txt"
+      ],
+      "output": [
+        "cnvkit/heatmap/all_samples_heatmap.pdf"
+      ],
+      "params": {
+        "outdir": "cnvkit/heatmap"
+      },
+      "shell_cmd": "cnvkit.py heatmap $(cat {input[0]} | tr '\\n' ' ') -o {output[0]} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/cnvkit/heatmap.log"
+      ]
+    },
+    {
+      "name": "collect_recal_bams",
+      "tool": "samtools",
+      "input": [
+        "bqsr/{sample}.recal.bam"
+      ],
+      "output": [
+        "bqsr/all_recal_bams.txt"
+      ],
+      "params": {},
+      "shell_cmd": "ls bqsr/*.recal.bam > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 1,
+        "mem_mb": 1000,
+        "time_min": 5,
+        "disk_mb": 1000
+      },
+      "log": [
+        "logs/collect_recal_bams/collect.log"
+      ]
+    },
+    {
+      "name": "collect_call_cns",
+      "tool": "cnvkit",
+      "input": [
+        "cnvkit/{sample}.call.cns"
+      ],
+      "output": [
+        "cnvkit/all_call_cns.txt"
+      ],
+      "params": {},
+      "shell_cmd": "ls cnvkit/*.call.cns > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 1,
+        "mem_mb": 1000,
+        "time_min": 5,
+        "disk_mb": 1000
+      },
+      "log": [
+        "logs/collect_call_cns/collect.log"
+      ]
+    },
+    {
+      "name": "multiqc",
+      "tool": "multiqc",
+      "input": [
+        "qc/fastqc",
+        "logs/trimmomatic",
+        "dedup",
+        "cnvkit/scatter"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "dirs": "qc/fastqc logs/trimmomatic dedup cnvkit/scatter"
+      },
+      "shell_cmd": "multiqc {params.dirs} --outdir {params.outdir} > {log[0]} 2>&1",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 5000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "align_bwa"
+    ],
+    [
+      "align_bwa",
+      "sort_bam"
+    ],
+    [
+      "sort_bam",
+      "mark_duplicates"
+    ],
+    [
+      "mark_duplicates",
+      "gatk_bqsr"
+    ],
+    [
+      "gatk_bqsr",
+      "collect_recal_bams"
+    ],
+    [
+      "collect_recal_bams",
+      "cnvkit_batch"
+    ],
+    [
+      "cnvkit_batch",
+      "cnvkit_segment"
+    ],
+    [
+      "cnvkit_segment",
+      "cnvkit_call"
+    ],
+    [
+      "cnvkit_call",
+      "cnvkit_scatter"
+    ],
+    [
+      "cnvkit_call",
+      "collect_call_cns"
+    ],
+    [
+      "collect_call_cns",
+      "cnvkit_heatmap"
+    ],
+    [
+      "cnvkit_scatter",
+      "multiqc"
+    ],
+    [
+      "cnvkit_heatmap",
+      "multiqc"
+    ],
+    [
+      "raw_fastqc",
+      "multiqc"
+    ],
+    [
+      "trim_reads",
+      "multiqc"
+    ],
+    [
+      "mark_duplicates",
+      "multiqc"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "sample1",
+      "sample2",
+      "sample3"
+    ],
+    "tumor_samples": [
+      "sample1",
+      "sample2"
+    ],
+    "normal_samples": [
+      "sample3"
+    ],
+    "paired_end": true,
+    "strandedness": 0,
+    "reference_genome": "resources/genome.fa",
+    "adapters": "resources/adapters.fa",
+    "known_sites_dbsnp": "resources/dbsnp.vcf.gz",
+    "cnvkit_method": "wgs",
+    "cnvkit_segment_method": "cbs",
+    "cnvkit_ploidy": 2,
+    "cnvkit_purity": 1.0,
+    "bwa_threads": 16,
+    "trimmomatic_minlen": 36,
+    "trimmomatic_leading": 3,
+    "trimmomatic_trailing": 3,
+    "trimmomatic_slidingwindow": "4:15"
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

@@ -1,0 +1,35 @@
+name: Infra CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install make
+        run: sudo apt update && sudo apt install make -y
+
+      - name: Ensure pip
+        run: python -m ensurepip --upgrade || true
+        
+      - name: Install python deps
+        run: pip install -r requirements.txt    
+
+      - name: Run full infra pipeline
+        run: make all
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundled-pipelines
+          path: dist/*.zip

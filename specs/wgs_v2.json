@@ -1,0 +1,582 @@
+{
+  "pipeline_type": "wgs-variant-calling",
+  "description": "Whole genome sequencing germline variant calling pipeline following GATK4 Best Practices with HaplotypeCaller in GVCF mode.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control on raw FASTQ reads",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming of raw reads",
+      "language": "CLI"
+    },
+    {
+      "name": "BWA-MEM2",
+      "version": "2.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bwa-mem2",
+        "tag": "2.0--he513fc3_0",
+        "full_uri": "quay.io/biocontainers/bwa-mem2:2.0--he513fc3_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Align trimmed reads to reference genome",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "1.17",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "1.17--h00cdaf9_0",
+        "full_uri": "quay.io/biocontainers/samtools:1.17--h00cdaf9_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Coordinate-sort aligned BAM files and index",
+      "language": "CLI"
+    },
+    {
+      "name": "Picard",
+      "version": "2.9.2",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/picard",
+        "tag": "2.9.2--py35_1",
+        "full_uri": "quay.io/biocontainers/picard:2.9.2--py35_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Flag PCR duplicates without removal for GATK compatibility",
+      "language": "CLI"
+    },
+    {
+      "name": "GATK4",
+      "version": "4.0.0.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/gatk4",
+        "tag": "4.0.0.0--py36_0",
+        "full_uri": "quay.io/biocontainers/gatk4:4.0.0.0--py36_0",
+        "source": "biocontainers"
+      },
+      "purpose": "GATK4 suite: BaseRecalibrator, ApplyBQSR, HaplotypeCaller, CombineGVCFs, GenotypeGVCFs, VQSR, Funcotator",
+      "language": "CLI"
+    },
+    {
+      "name": "bcftools",
+      "version": "1.7",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bcftools",
+        "tag": "1.7--0",
+        "full_uri": "quay.io/biocontainers/bcftools:1.7--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Generate summary statistics on final annotated VCF",
+      "language": "CLI"
+    },
+    {
+      "name": "MultiQC",
+      "version": "1.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/multiqc",
+        "tag": "1.0--py36_1",
+        "full_uri": "quay.io/biocontainers/multiqc:1.0--py36_1",
+        "source": "biocontainers"
+      },
+      "purpose": "Aggregate all QC logs into a single HTML report",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/{sample}_R1_fastqc.html",
+        "qc/fastqc/{sample}_R1_fastqc.zip",
+        "qc/fastqc/{sample}_R2_fastqc.html",
+        "qc/fastqc/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "config[adapters]",
+        "min_len": 36,
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.min_len} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 120,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_bwa",
+      "tool": "BWA-MEM2",
+      "input": [
+        "trimmed/{sample}_R1.fastq.gz",
+        "trimmed/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}.bam"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "threads": 16,
+        "read_group": "@RG\\tID:{wildcards.sample}\\tSM:{wildcards.sample}\\tPL:ILLUMINA\\tLB:{wildcards.sample}"
+      },
+      "shell_cmd": "bwa-mem2 mem -t {params.threads} -R '{params.read_group}' {params.reference} {input[0]} {input[1]} | samtools view -bS - > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 16,
+        "mem_mb": 32000,
+        "time_min": 480,
+        "disk_mb": 100000
+      },
+      "log": [
+        "logs/bwa_mem2/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}.bam"
+      ],
+      "output": [
+        "sorted/{sample}.sorted.bam",
+        "sorted/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 8
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} 2> {log[0]} && samtools index {output[0]} 2>> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/samtools_sort/{sample}.log"
+      ]
+    },
+    {
+      "name": "mark_duplicates",
+      "tool": "Picard",
+      "input": [
+        "sorted/{sample}.sorted.bam"
+      ],
+      "output": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bai",
+        "qc/picard/{sample}.dup_metrics.txt"
+      ],
+      "params": {
+        "java_opts": "-Xmx16g",
+        "tmp_dir": "tmp/"
+      },
+      "shell_cmd": "picard {params.java_opts} MarkDuplicates INPUT={input[0]} OUTPUT={output[0]} METRICS_FILE={output[2]} CREATE_INDEX=true TMP_DIR={params.tmp_dir} VALIDATION_STRINGENCY=LENIENT 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 240,
+        "disk_mb": 80000
+      },
+      "log": [
+        "logs/picard_markdup/{sample}.log"
+      ]
+    },
+    {
+      "name": "base_recalibrator",
+      "tool": "GATK4",
+      "input": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bai"
+      ],
+      "output": [
+        "bqsr/{sample}.recal.table"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "known_sites_dbsnp": "config[known_sites_dbsnp]",
+        "known_sites_mills": "config[known_sites_mills]",
+        "known_sites_1kg": "config[known_sites_1kg]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' BaseRecalibrator -I {input[0]} -R {params.reference} --known-sites {params.known_sites_dbsnp} --known-sites {params.known_sites_mills} --known-sites {params.known_sites_1kg} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 360,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/base_recalibrator/{sample}.log"
+      ]
+    },
+    {
+      "name": "apply_bqsr",
+      "tool": "GATK4",
+      "input": [
+        "dedup/{sample}.dedup.bam",
+        "dedup/{sample}.dedup.bai",
+        "bqsr/{sample}.recal.table"
+      ],
+      "output": [
+        "bqsr/{sample}.recal.bam",
+        "bqsr/{sample}.recal.bai"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' ApplyBQSR -R {params.reference} -I {input[0]} --bqsr-recal-file {input[2]} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 360,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/apply_bqsr/{sample}.log"
+      ]
+    },
+    {
+      "name": "haplotype_caller",
+      "tool": "GATK4",
+      "input": [
+        "bqsr/{sample}.recal.bam",
+        "bqsr/{sample}.recal.bai"
+      ],
+      "output": [
+        "gvcf/{sample}.g.vcf.gz",
+        "gvcf/{sample}.g.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx16g",
+        "dbsnp": "config[known_sites_dbsnp]"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' HaplotypeCaller -R {params.reference} -I {input[0]} -O {output[0]} -ERC GVCF --dbsnp {params.dbsnp} -G StandardAnnotation -G AS_StandardAnnotation 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 24000,
+        "time_min": 720,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/haplotype_caller/{sample}.log"
+      ]
+    },
+    {
+      "name": "combine_gvcfs",
+      "tool": "GATK4",
+      "input": [
+        "gvcf/all_samples.gvcf.list"
+      ],
+      "output": [
+        "genotyping/cohort.g.vcf.gz",
+        "genotyping/cohort.g.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx32g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' CombineGVCFs -R {params.reference} --variant {input[0]} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 480,
+        "disk_mb": 100000
+      },
+      "log": [
+        "logs/combine_gvcfs/combine.log"
+      ]
+    },
+    {
+      "name": "genotype_gvcfs",
+      "tool": "GATK4",
+      "input": [
+        "genotyping/cohort.g.vcf.gz",
+        "genotyping/cohort.g.vcf.gz.tbi"
+      ],
+      "output": [
+        "genotyping/cohort.vcf.gz",
+        "genotyping/cohort.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "dbsnp": "config[known_sites_dbsnp]",
+        "java_opts": "-Xmx32g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' GenotypeGVCFs -R {params.reference} -V {input[0]} --dbsnp {params.dbsnp} -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 480,
+        "disk_mb": 80000
+      },
+      "log": [
+        "logs/genotype_gvcfs/genotype.log"
+      ]
+    },
+    {
+      "name": "variant_filtration",
+      "tool": "GATK4",
+      "input": [
+        "genotyping/cohort.vcf.gz",
+        "genotyping/cohort.vcf.gz.tbi"
+      ],
+      "output": [
+        "filtered/cohort.filtered.vcf.gz",
+        "filtered/cohort.filtered.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "java_opts": "-Xmx16g",
+        "snp_filter_expr": "QD < 2.0 || FS > 60.0 || MQ < 40.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0",
+        "indel_filter_expr": "QD < 2.0 || FS > 200.0 || ReadPosRankSum < -20.0"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' VariantFiltration -R {params.reference} -V {input[0]} --filter-expression '{params.snp_filter_expr}' --filter-name 'SNP_HARD_FILTER' --filter-expression '{params.indel_filter_expr}' --filter-name 'INDEL_HARD_FILTER' -O {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 240,
+        "disk_mb": 40000
+      },
+      "log": [
+        "logs/variant_filtration/filter.log"
+      ]
+    },
+    {
+      "name": "annotate_variants",
+      "tool": "GATK4",
+      "input": [
+        "filtered/cohort.filtered.vcf.gz",
+        "filtered/cohort.filtered.vcf.gz.tbi"
+      ],
+      "output": [
+        "annotated/cohort.annotated.vcf.gz",
+        "annotated/cohort.annotated.vcf.gz.tbi"
+      ],
+      "params": {
+        "reference": "config[reference]",
+        "data_sources": "config[funcotator_data_sources]",
+        "ref_version": "config[ref_version]",
+        "java_opts": "-Xmx16g"
+      },
+      "shell_cmd": "gatk --java-options '{params.java_opts}' Funcotator -R {params.reference} -V {input[0]} -O {output[0]} --output-file-format VCF --data-sources-path {params.data_sources} --ref-version {params.ref_version} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 20000,
+        "time_min": 480,
+        "disk_mb": 60000
+      },
+      "log": [
+        "logs/funcotator/annotate.log"
+      ]
+    },
+    {
+      "name": "variant_qc",
+      "tool": "bcftools",
+      "input": [
+        "annotated/cohort.annotated.vcf.gz"
+      ],
+      "output": [
+        "qc/bcftools/cohort.stats.txt"
+      ],
+      "params": {},
+      "shell_cmd": "bcftools stats {input[0]} > {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/bcftools_stats/stats.log"
+      ]
+    },
+    {
+      "name": "multiqc_report",
+      "tool": "MultiQC",
+      "input": [
+        "qc/fastqc",
+        "qc/picard",
+        "qc/bcftools",
+        "logs/"
+      ],
+      "output": [
+        "qc/multiqc/multiqc_report.html"
+      ],
+      "params": {
+        "outdir": "qc/multiqc",
+        "dirs": "qc/ logs/"
+      },
+      "shell_cmd": "multiqc {params.dirs} --outdir {params.outdir} --filename multiqc_report.html 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 2,
+        "mem_mb": 8000,
+        "time_min": 30,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/multiqc/multiqc.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "align_bwa"
+    ],
+    [
+      "align_bwa",
+      "sort_bam"
+    ],
+    [
+      "sort_bam",
+      "mark_duplicates"
+    ],
+    [
+      "mark_duplicates",
+      "base_recalibrator"
+    ],
+    [
+      "base_recalibrator",
+      "apply_bqsr"
+    ],
+    [
+      "apply_bqsr",
+      "haplotype_caller"
+    ],
+    [
+      "haplotype_caller",
+      "combine_gvcfs"
+    ],
+    [
+      "combine_gvcfs",
+      "genotype_gvcfs"
+    ],
+    [
+      "genotype_gvcfs",
+      "variant_filtration"
+    ],
+    [
+      "variant_filtration",
+      "annotate_variants"
+    ],
+    [
+      "annotate_variants",
+      "variant_qc"
+    ],
+    [
+      "variant_qc",
+      "multiqc_report"
+    ],
+    [
+      "raw_fastqc",
+      "multiqc_report"
+    ],
+    [
+      "mark_duplicates",
+      "multiqc_report"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "sample1",
+      "sample2",
+      "sample3"
+    ],
+    "paired_end": true,
+    "strandedness": 0,
+    "reference": "resources/hg38/Homo_sapiens_assembly38.fasta",
+    "known_sites_dbsnp": "resources/hg38/dbsnp_146.hg38.vcf.gz",
+    "known_sites_mills": "resources/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz",
+    "known_sites_1kg": "resources/hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz",
+    "funcotator_data_sources": "resources/funcotator/funcotator_dataSources.v1.7.20200521g",
+    "ref_version": "hg38",
+    "adapters": "resources/adapters/TruSeq3-PE.fa",
+    "gvcf_list": "gvcf/all_samples.gvcf.list"
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

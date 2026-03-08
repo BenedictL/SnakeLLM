@@ -1,0 +1,15 @@
+name: rna_seq_v2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - FastQC=0.11.5
+  - Trimmomatic=0.33
+  - STAR=2.7.10a
+  - samtools=1.17
+  - featureCounts=1.5.0p3
+  - DESeq2=1.20.0
+  - clusterProfiler=3.6.0
+  - MultiQC=1.0

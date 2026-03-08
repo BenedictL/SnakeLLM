@@ -1,0 +1,16 @@
+name: wgs_somatic
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - FastQC=0.11.5
+  - Trimmomatic=0.33
+  - bwa-mem2=2.0
+  - samtools=0.1.19
+  - picard=2.9.2
+  - gatk4=4.0.0.0
+  - vep=99.0
+  - bcftools=1.7
+  - multiqc=1.0

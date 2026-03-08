@@ -1,0 +1,11 @@
+name: scrna_seurat
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - STARsolo=2.5.4a
+  - Seurat=4.3.0
+  - SingleR=1.8.0
+  - DESeq2=1.20.0

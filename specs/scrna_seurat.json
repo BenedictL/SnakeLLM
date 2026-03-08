@@ -1,0 +1,383 @@
+{
+  "pipeline_type": "scrna-seq",
+  "description": "Single-cell RNA-seq analysis using STARsolo for alignment and UMI counting followed by Seurat-based QC, normalization, clustering, marker gene identification, cell type annotation with SingleR, and pseudobulk differential expression with DESeq2.",
+  "tools": [
+    {
+      "name": "STARsolo",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Align single-cell RNA-seq reads and perform UMI counting using STARsolo as a Cell Ranger alternative",
+      "language": "CLI"
+    },
+    {
+      "name": "Seurat",
+      "version": "4.3.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "QC filtering, normalization, HVG selection, PCA, UMAP, clustering, and marker gene identification for scRNA-seq data",
+      "language": "R"
+    },
+    {
+      "name": "SingleR",
+      "version": "1.8.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-clusterprofiler",
+        "tag": "3.6.0--r3.4.1_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Automated cell type annotation of clusters using reference transcriptomes via SingleR",
+      "language": "R"
+    },
+    {
+      "name": "DESeq2",
+      "version": "1.20.0",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/bioconductor-deseq2",
+        "tag": "1.20.0--r351hfc679d8_0",
+        "full_uri": "quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0",
+        "source": "biocontainers"
+      },
+      "purpose": "Pseudobulk differential expression analysis between experimental conditions using aggregated counts",
+      "language": "R"
+    }
+  ],
+  "rules": [
+    {
+      "name": "starsolo_align",
+      "tool": "STARsolo",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "starsolo/{sample}/Aligned.sortedByCoord.out.bam",
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/matrix.mtx",
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/barcodes.tsv",
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/features.tsv"
+      ],
+      "params": {
+        "genome_dir": "{config[genome_dir]}",
+        "whitelist": "{config[barcode_whitelist]}",
+        "cb_len": "{config[cb_len]}",
+        "umi_len": "{config[umi_len]}",
+        "threads": 8,
+        "solo_cell_filter": "EmptyDrops_CR"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[1]} {input[0]} --readFilesCommand zcat --soloType CB_UMI_Simple --soloCBwhitelist {params.whitelist} --soloCBLen {params.cb_len} --soloUMILen {params.umi_len} --soloFeatures GeneFull --soloCellFilter {params.solo_cell_filter} --outSAMtype BAM SortedByCoordinate --outSAMattributes NH HI nM AS CR UR CB UB GX GN sS sQ sM --outFileNamePrefix starsolo/{wildcards.sample}/ 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 240,
+        "disk_mb": 80000
+      },
+      "log": [
+        "logs/starsolo/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_qc",
+      "tool": "Seurat",
+      "input": [
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/matrix.mtx",
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/barcodes.tsv",
+        "starsolo/{sample}/Solo.out/GeneFull/filtered/features.tsv"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_qc.rds"
+      ],
+      "params": {
+        "min_cells": "{config[min_cells]}",
+        "min_features": "{config[min_features]}",
+        "max_features": "{config[max_features]}",
+        "max_mt_pct": "{config[max_mt_pct]}",
+        "mt_pattern": "{config[mt_pattern]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_qc.R --matrix_dir starsolo/{wildcards.sample}/Solo.out/GeneFull/filtered --sample {wildcards.sample} --min_cells {params.min_cells} --min_features {params.min_features} --max_features {params.max_features} --max_mt_pct {params.max_mt_pct} --mt_pattern {params.mt_pattern} --output {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/seurat_qc/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_normalize",
+      "tool": "Seurat",
+      "input": [
+        "seurat/{sample}/seurat_qc.rds"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_normalized.rds"
+      ],
+      "params": {
+        "normalization_method": "{config[normalization_method]}",
+        "scale_factor": "{config[scale_factor]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_normalize.R --input {input[0]} --normalization_method {params.normalization_method} --scale_factor {params.scale_factor} --output {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/seurat_normalize/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_hvg",
+      "tool": "Seurat",
+      "input": [
+        "seurat/{sample}/seurat_normalized.rds"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_hvg.rds"
+      ],
+      "params": {
+        "n_hvgs": "{config[n_hvgs]}",
+        "hvg_method": "{config[hvg_method]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_hvg.R --input {input[0]} --n_hvgs {params.n_hvgs} --hvg_method {params.hvg_method} --output {output[0]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/seurat_hvg/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_dimred",
+      "tool": "Seurat",
+      "input": [
+        "seurat/{sample}/seurat_hvg.rds"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_dimred.rds",
+        "plots/{sample}/pca_elbow.pdf",
+        "plots/{sample}/umap.pdf"
+      ],
+      "params": {
+        "n_pcs": "{config[n_pcs]}",
+        "umap_dims": "{config[umap_dims]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_dimred.R --input {input[0]} --n_pcs {params.n_pcs} --umap_dims {params.umap_dims} --output {output[0]} --pca_plot {output[1]} --umap_plot {output[2]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/seurat_dimred/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_cluster",
+      "tool": "Seurat",
+      "input": [
+        "seurat/{sample}/seurat_dimred.rds"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_clustered.rds",
+        "plots/{sample}/umap_clusters.pdf"
+      ],
+      "params": {
+        "resolution": "{config[cluster_resolution]}",
+        "algorithm": "{config[cluster_algorithm]}",
+        "dims": "{config[umap_dims]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_cluster.R --input {input[0]} --resolution {params.resolution} --algorithm {params.algorithm} --dims {params.dims} --output {output[0]} --umap_plot {output[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 60,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/seurat_cluster/{sample}.log"
+      ]
+    },
+    {
+      "name": "seurat_markers",
+      "tool": "Seurat",
+      "input": [
+        "seurat/{sample}/seurat_clustered.rds"
+      ],
+      "output": [
+        "results/{sample}/cluster_markers.csv",
+        "plots/{sample}/marker_dotplot.pdf"
+      ],
+      "params": {
+        "test_method": "{config[marker_test]}",
+        "logfc_threshold": "{config[logfc_threshold]}",
+        "min_pct": "{config[min_pct]}"
+      },
+      "shell_cmd": "Rscript scripts/seurat_markers.R --input {input[0]} --test_method {params.test_method} --logfc_threshold {params.logfc_threshold} --min_pct {params.min_pct} --output {output[0]} --dotplot {output[1]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/seurat_markers/{sample}.log"
+      ]
+    },
+    {
+      "name": "singler_annotate",
+      "tool": "SingleR",
+      "input": [
+        "seurat/{sample}/seurat_clustered.rds",
+        "results/{sample}/cluster_markers.csv"
+      ],
+      "output": [
+        "seurat/{sample}/seurat_annotated.rds",
+        "results/{sample}/cell_type_annotations.csv",
+        "plots/{sample}/umap_celltypes.pdf"
+      ],
+      "params": {
+        "reference": "{config[singler_reference]}",
+        "organism": "{config[organism]}"
+      },
+      "shell_cmd": "Rscript scripts/singler_annotate.R --input {input[0]} --markers {input[1]} --reference {params.reference} --organism {params.organism} --output_seurat {output[0]} --output_annotations {output[1]} --umap_plot {output[2]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 32000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/singler/{sample}.log"
+      ]
+    },
+    {
+      "name": "pseudobulk_deseq2",
+      "tool": "DESeq2",
+      "input": [
+        "seurat/all_samples_annotated.rds"
+      ],
+      "output": [
+        "results/pseudobulk/deseq2_results.csv",
+        "plots/pseudobulk/volcano_plot.pdf",
+        "plots/pseudobulk/ma_plot.pdf"
+      ],
+      "params": {
+        "condition_col": "{config[condition_col]}",
+        "ref_condition": "{config[ref_condition]}",
+        "fdr_threshold": "{config[fdr_threshold]}",
+        "lfc_threshold": "{config[lfc_threshold]}"
+      },
+      "shell_cmd": "Rscript scripts/pseudobulk_deseq2.R --input {input[0]} --condition_col {params.condition_col} --ref_condition {params.ref_condition} --fdr_threshold {params.fdr_threshold} --lfc_threshold {params.lfc_threshold} --output {output[0]} --volcano {output[1]} --ma_plot {output[2]} 2> {log[0]}",
+      "script": null,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 32000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/deseq2/pseudobulk.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "starsolo_align",
+      "seurat_qc"
+    ],
+    [
+      "seurat_qc",
+      "seurat_normalize"
+    ],
+    [
+      "seurat_normalize",
+      "seurat_hvg"
+    ],
+    [
+      "seurat_hvg",
+      "seurat_dimred"
+    ],
+    [
+      "seurat_dimred",
+      "seurat_cluster"
+    ],
+    [
+      "seurat_cluster",
+      "seurat_markers"
+    ],
+    [
+      "seurat_markers",
+      "singler_annotate"
+    ],
+    [
+      "singler_annotate",
+      "pseudobulk_deseq2"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "sample1",
+      "sample2",
+      "sample3"
+    ],
+    "genome_dir": "resources/star_genome",
+    "barcode_whitelist": "resources/10x_whitelist_3M_v3.txt",
+    "cb_len": 16,
+    "umi_len": 12,
+    "strandedness": 1,
+    "paired_end": true,
+    "min_cells": 3,
+    "min_features": 200,
+    "max_features": 6000,
+    "max_mt_pct": 20,
+    "mt_pattern": "^MT-",
+    "normalization_method": "LogNormalize",
+    "scale_factor": 10000,
+    "n_hvgs": 2000,
+    "hvg_method": "vst",
+    "n_pcs": 50,
+    "umap_dims": 30,
+    "cluster_resolution": 0.5,
+    "cluster_algorithm": 4,
+    "marker_test": "wilcox",
+    "logfc_threshold": 0.25,
+    "min_pct": 0.1,
+    "singler_reference": "HumanPrimaryCellAtlasData",
+    "organism": "human",
+    "condition_col": "condition",
+    "ref_condition": "control",
+    "fdr_threshold": 0.05,
+    "lfc_threshold": 1.0
+  },
+  "wildcards": [
+    "sample"
+  ]
+}

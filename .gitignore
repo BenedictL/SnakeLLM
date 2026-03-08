@@ -85,3 +85,10 @@ test_out/
 test_smk_dir/
 testinghard/
 tests/
+profiles/
+.github/
+dist/
+scripts/
+specs/
+LICENSE
+Makefile
