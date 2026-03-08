@@ -1,1 +1,0 @@
-rule all: input: ancient("bigwig"), ancient("qc/fastqc")
