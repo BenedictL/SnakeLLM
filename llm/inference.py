@@ -197,7 +197,7 @@ class SnakeLLMInference:
 
         # ── STEP 1: Plan RAG ─────────────────────────────────────────────────
         log.info("  [1/4] Plan RAG retrieval...")
-        plan_docs = self.plan_rag.retrieve(user_prompt, top_k=4)
+        plan_docs    = self.plan_rag.retrieve(user_prompt, top_k=4)
         plan_context = self.plan_rag.format_for_prompt(plan_docs)
 
         # ── STEP 2: LLM Planning Call ────────────────────────────────────────
@@ -207,8 +207,8 @@ class SnakeLLMInference:
 
         # ── STEP 3: Execute RAG ──────────────────────────────────────────────
         log.info("  [3/4] Execute RAG container lookup...")
-        tool_names     = tool_plan.get("ordered_tools", [])
-        execute_hits   = self.execute_rag.retrieve_for_tools(tool_names)
+        tool_names      = tool_plan.get("ordered_tools", [])
+        execute_hits    = self.execute_rag.retrieve_for_tools(tool_names)
         execute_context = self.execute_rag.format_for_prompt(execute_hits)
 
         # ── STEP 4: LLM Generation Call with Retry ───────────────────────────
@@ -242,7 +242,6 @@ class SnakeLLMInference:
             return plan
         except Exception as e:
             log.warning(f"Planning call failed ({e}), using fallback plan")
-            # Fallback: extract tool names from prompt heuristically
             return {
                 "pipeline_type": "unknown",
                 "description":   user_prompt,
@@ -259,6 +258,9 @@ class SnakeLLMInference:
         """
         Call 2 — full PipelineSpec generation with validation retry loop.
         On schema failure, feeds the exact pydantic error back to the LLM.
+
+        Message history is capped at 5 entries (original + 2 retry pairs max)
+        to prevent token blowup on repeated failures.
         """
         schema_json = PipelineSpec.model_json_schema()
         system = EXECUTE_SYSTEM_PROMPT.format(
@@ -268,7 +270,7 @@ class SnakeLLMInference:
             examples=FEW_SHOT_EXAMPLES,
         )
 
-        messages = [{"role": "user", "content": user_prompt}]
+        messages       = [{"role": "user", "content": user_prompt}]
         last_good_json = None  # tracks last JSON that parsed but failed schema
 
         for attempt in range(1, self.max_retries + 1):
@@ -276,38 +278,43 @@ class SnakeLLMInference:
 
             raw_text = self.provider.complete(
                 system=system,
-                messages=messages,  # use multi-turn conversation history
+                messages=messages,
                 max_tokens=8192,
             ).strip()
 
             if self.verbose:
                 log.debug(f"Raw LLM output:\n{raw_text[:500]}...")
 
-            # Try to parse JSON
+            # ── Try to parse JSON ─────────────────────────────────────────────
             try:
-                raw_json = json_repair.loads(self._strip_markdown_fences(raw_text))
-                last_good_json = raw_json  # save the last parseable JSON
+                raw_json       = json_repair.loads(self._strip_markdown_fences(raw_text))
+                last_good_json = raw_json
             except ValueError as e:
                 log.warning(f"    JSON parse failed: {e}")
-                # Optional: feed back JSON parsing error
                 messages.append({"role": "assistant", "content": raw_text})
                 messages.append({"role": "user", "content": f"JSON parse failed:\n{e}"})
+                # FIX 2: cap history to prevent token blowup (original + 2 retry pairs)
+                if len(messages) > 5:
+                    messages = messages[:1] + messages[-4:]
                 continue
 
-            # Try to validate schema
+            # ── Try to validate schema ────────────────────────────────────────
             try:
                 spec = PipelineSpec(**raw_json)
                 return spec  # ✓ success
             except ValidationError as e:
                 errors = self._format_validation_errors(e)
-                log.warning(f"    Schema validation failed:\n{errors}")
-                print("EXACT PYDANTIC ERROR:", e.errors())  # ← add this
+                log.warning(f"    Schema validation failed (attempt {attempt}):\n{errors}")
+                # FIX 1: removed debug print("EXACT PYDANTIC ERROR:", e.errors())
+                # Validation errors are now logged properly via log.warning above.
 
-                # Retry with focused correction prompt (don't grow system prompt, just conversation history)
                 messages.append({"role": "assistant", "content": raw_text})
                 messages.append({"role": "user", "content": f"Fix these schema errors:\n{errors}"})
+                # FIX 2: cap history to prevent token blowup (original + 2 retry pairs)
+                if len(messages) > 5:
+                    messages = messages[:1] + messages[-4:]
 
-        # All attempts exhausted — save the last parseable JSON
+        # ── All attempts exhausted ────────────────────────────────────────────
         import os
         os.makedirs("results", exist_ok=True)
         raw_path = "results/my_pipeline.json"
