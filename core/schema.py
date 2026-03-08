@@ -6,11 +6,14 @@ and the Pipeline Engineer (TM2). Every field here is agreed upon by both.
 
 NEVER change field names without notifying TM2 — their Jinja2 templates
 depend on this schema directly.
+
+v1.1 — Added threads to RuleSpec (TM3 merge), ConfigDict(extra="ignore")
+       to PipelineSpec for forward compatibility with TM3 spec fields.
 """
 
 from __future__ import annotations
 from typing import Any, Optional
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 # ── TOOL LEVEL ────────────────────────────────────────────────────────────────
@@ -55,6 +58,9 @@ class RuleSpec(BaseModel):
     params:      dict[str, Any]  = Field(default_factory=dict, description="key-value CLI params")
     shell_cmd:   str             = Field(..., description="shell command template")
     script:      Optional[str]   = Field(default=None, description="path to R/Python script if not shell")
+    # TM3 addition (v1.1): first-class Snakemake threads: directive, separate from resources.
+    # Used by parallel tools: bowtie2 -p {threads}, samtools sort -@ {threads}, etc.
+    threads:     Optional[int]   = Field(default=None, description="Snakemake threads: directive for parallel tools")
     resources:   ResourceSpec    = Field(default_factory=ResourceSpec)
     log:         list[str]       = Field(default_factory=list, description="log file paths")
 
@@ -75,7 +81,13 @@ class PipelineSpec(BaseModel):
     Produced by:  LLM Core (Benedict)
     Consumed by:  Pipeline Engineer (TM2) → generates Snakefile + config.yaml
                   Infrastructure (TM3)    → adds container directives
+
+    extra="ignore": TM3's hand-crafted specs carry additional metadata fields
+    (e.g. pipeline-level annotations). We accept them silently without storing
+    them so validation passes without polluting the model.
     """
+    model_config = ConfigDict(extra="ignore")
+
     pipeline_type:  str                  = Field(..., description="e.g. rna-seq-de, atac-seq, wgs-variant")
     description:    str                  = Field(..., description="one sentence summary of what this pipeline does")
     tools:          list[ToolSpec]        = Field(..., min_length=1)
