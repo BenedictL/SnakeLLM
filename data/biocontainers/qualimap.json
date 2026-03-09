@@ -1,0 +1,238 @@
+{
+  "tool_name": "qualimap",
+  "display_name": "qualimap",
+  "description": "Quality control of alignment sequencing data and its derivatives like feature counts",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/qualimap",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/qualimap:2.2--0",
+    "registry": "quay.io",
+    "tag": "2.2--0",
+    "version": "qualimap",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2b--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2b--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2b--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2b--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2a--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2a--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2a--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2a--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2a--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2a--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2a--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2a--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2a--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2c--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2c--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2c--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2c--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2c--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2c--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2c--hdfd78af_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2c--hdfd78af_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.1.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.1.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.1.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.1.1--hdfd78af_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.1.1--hdfd78af_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.1.1--hdfd78af_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2d--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2d--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2d--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2d--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.2.2d--hdfd78af_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.2.2d--hdfd78af_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.2.2d--hdfd78af_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "qualimap==2.3--hdfd78af_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/qualimap:2.3--hdfd78af_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/qualimap:2.3--hdfd78af_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 7,
+  "embedding_text": "Tool: qualimap\nDescription: Quality control of alignment sequencing data and its derivatives like feature counts\nContainer: quay.io/biocontainers/qualimap:2.2--0\nRecent versions: qualimap, qualimap, qualimap\nUsage context: This tool is used in bioinformatics pipelines for quality control of alignment sequencing data and its derivatives like feature counts.\nSnakemake container directive: container: \"quay.io/biocontainers/qualimap:2.2--0\""
+}

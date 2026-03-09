@@ -1,0 +1,283 @@
+{
+  "tool_name": "kallisto",
+  "display_name": "kallisto",
+  "description": "Quantifying abundances of transcripts from rna-seq data, or more generally of target sequences using high-throughput sequencing reads",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/kallisto",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/kallisto:0.42.4--2",
+    "registry": "quay.io",
+    "tag": "0.42.4--2",
+    "version": "kallisto",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.42.4--2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.42.4--2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.42.4--2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.43.1--hdf51.8.17_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.43.1--hdf51.8.17_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.43.1--hdf51.8.17_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.43.1--hdf51.8.17_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.43.1--hdf51.8.17_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.43.1--hdf51.8.17_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.44.0--hdf51.8.17_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.44.0--h7d86c95_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.44.0--hdf51.8.17_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.44.0--h7d86c95_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.44.0--h7d86c95_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.44.0--hdf51.8.17_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.45.0--hdcc98e5_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.45.0--hdcc98e5_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.45.0--hdcc98e5_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.43.0--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.43.0--hdf51.8.17_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.43.0--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.43.0--hdf51.8.17_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.43.0--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.43.0--hdf51.8.17_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.45.1--hb6a4e58_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.45.1--hb6a4e58_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.45.1--hb6a4e58_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.0--hb6a4e58_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.0--hb6a4e58_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.0--h4f7b962_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.0--h4f7b962_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.0--h4f7b962_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.0--hb6a4e58_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.1--h4f7b962_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.1--h4f7b962_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.1--h4f7b962_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.1--h6f0a7f7_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.1--h6f0a7f7_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.2--h4f7b962_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.2--h4f7b962_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.2--h4f7b962_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.2--h4f7b962_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.2--h4f7b962_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.2--h4f7b962_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.46.2--h60f4f9f_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.46.2--h60f4f9f_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.46.2--h60f4f9f_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.48.0--h0d531b0_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.48.0--h0d531b0_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.48.0--h0d531b0_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "kallisto==0.48.0--h15996b6_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/kallisto:0.48.0--h15996b6_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/kallisto:0.48.0--h15996b6_2",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 14,
+  "embedding_text": "Tool: kallisto\nDescription: Quantifying abundances of transcripts from rna-seq data, or more generally of target sequences using high-throughput sequencing reads\nContainer: quay.io/biocontainers/kallisto:0.42.4--2\nRecent versions: kallisto, kallisto, kallisto\nUsage context: This tool is used in bioinformatics pipelines for quantifying abundances of transcripts from rna-seq data, or more generally of target sequences using high-throughput sequencing reads.\nSnakemake container directive: container: \"quay.io/biocontainers/kallisto:0.42.4--2\""
+}

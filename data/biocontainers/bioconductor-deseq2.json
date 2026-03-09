@@ -303,6 +303,6 @@
       "registry": ""
     }
   ],
-  "version_count": 20,
+  "version_count": 21,
   "embedding_text": "Tool: bioconductor-deseq2\nDescription: R package for rna-seq differential expression analysis\nContainer: quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0\nRecent versions: bioconductor-deseq2, bioconductor-deseq2, bioconductor-deseq2\nUsage context: This tool is used in bioinformatics pipelines for r package for rna-seq differential expression analysis.\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-deseq2:1.20.0--r351hfc679d8_0\""
 }

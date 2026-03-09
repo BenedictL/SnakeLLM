@@ -1,0 +1,228 @@
+{
+  "tool_name": "snpeff",
+  "display_name": "snpeff",
+  "description": "Genetic variant annotation and effect prediction toolbox",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/snpeff",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/snpeff:4.3g--0",
+    "registry": "quay.io",
+    "tag": "4.3g--0",
+    "version": "snpeff",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3g--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3g--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3g--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1o--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1o--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1o--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3i--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3i--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3i--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1p--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1p--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1p--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1p--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1p--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1p--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3k--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3k--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3k--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3b--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3b--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3b--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.1l--5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.1l--5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.1l--6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.1l--6",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.1l--7",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.1l--7",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.1l--5",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.1l--6",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.1l--7",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.1l--hdfd78af_8",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.1l--hdfd78af_8",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.1l--hdfd78af_8",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1k--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1k--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1k--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1m--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1m--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1m--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/snpeff:4.3.1r--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "snpeff==4.3.1r--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/snpeff:4.3.1r--0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 23,
+  "embedding_text": "Tool: snpeff\nDescription: Genetic variant annotation and effect prediction toolbox\nContainer: quay.io/biocontainers/snpeff:4.3g--0\nRecent versions: snpeff, snpeff, snpeff\nUsage context: This tool is used in bioinformatics pipelines for genetic variant annotation and effect prediction toolbox.\nSnakemake container directive: container: \"quay.io/biocontainers/snpeff:4.3g--0\""
+}

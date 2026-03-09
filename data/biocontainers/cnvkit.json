@@ -1,0 +1,573 @@
+{
+  "tool_name": "cnvkit",
+  "display_name": "cnvkit",
+  "description": "Copy number variant detection from targeted dna sequencing",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/cnvkit",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/cnvkit:0.8.5dev0--py27_0",
+    "registry": "quay.io",
+    "tag": "0.8.5dev0--py27_0",
+    "version": "cnvkit",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py34_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5dev0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py34_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5dev0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py34_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5dev0--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.4--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.4--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.4--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.4--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.4--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.4--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.4--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.4--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.4--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.5--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.5--py36_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.5--py_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.5--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.5--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.5--py36_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.5--py_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.5--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.5--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.5--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.5--py36_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.5--py_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.4a0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.4a0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.4a0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.4a0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.4a0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.4a0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.4a0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.4a0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.4a0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.5--py34_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.5--py34_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5--py34_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.5--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.1--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.1--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.1--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.1--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.1--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.1--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.2--py27_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.2--py36_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.2--py35_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.2--py27_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.2--py36_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.2--py35_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.2--py27_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.2--py35_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.2--py36_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.7.11--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.7.11--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.7.11--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.0--py36_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.9.0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.0--py36_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.9.0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.9.0--py36_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py36_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py27_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py35_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py35_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/cnvkit:0.8.6a0--py35_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py36_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py27_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py35_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py35_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "cnvkit==0.8.6a0--py35_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py27_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py35_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py35_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py35_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/cnvkit:0.8.6a0--py36_2",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 25,
+  "embedding_text": "Tool: cnvkit\nDescription: Copy number variant detection from targeted dna sequencing\nContainer: quay.io/biocontainers/cnvkit:0.8.5dev0--py27_0\nRecent versions: cnvkit, cnvkit, cnvkit\nUsage context: This tool is used in bioinformatics pipelines for copy number variant detection from targeted dna sequencing.\nSnakemake container directive: container: \"quay.io/biocontainers/cnvkit:0.8.5dev0--py27_0\""
+}

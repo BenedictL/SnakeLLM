@@ -351,8 +351,48 @@
       "tag": "quay.io/biocontainers/macs3:3.0.3--py312h4711d71_0",
       "type": "Docker",
       "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.4--py310h5a5e57a_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.4--py310h5a5e57a_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.4--py311hbd8efe9_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.4--py311hbd8efe9_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.4--py312h71493bf_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.4--py312h71493bf_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "macs3==3.0.4--py313hda738de_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/macs3:3.0.4--py313hda738de_0",
+      "type": "Docker",
+      "registry": ""
     }
   ],
-  "version_count": 3,
+  "version_count": 4,
   "embedding_text": "Tool: macs3\nDescription: \nContainer: quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2\nRecent versions: macs3, macs3, macs3\nUsage context: This tool is used in bioinformatics pipelines for .\nSnakemake container directive: container: \"quay.io/biocontainers/macs3:3.0.1--py310h83093d7_2\""
 }

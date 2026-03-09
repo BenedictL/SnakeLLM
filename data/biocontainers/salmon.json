@@ -1,0 +1,243 @@
+{
+  "tool_name": "salmon",
+  "display_name": "salmon",
+  "description": "Wicked-fast transcript quantification from rna-seq data",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/salmon",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/salmon:0.11.3--h86b0361_1",
+    "registry": "quay.io",
+    "tag": "0.11.3--h86b0361_1",
+    "version": "salmon",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/salmon:0.11.3--h86b0361_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.11.3--h86b0361_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.11.3--h86b0361_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.11.3--h86b0361_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.11.3--h86b0361_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.11.3--h86b0361_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.8.2--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.8.2--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.8.2--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.8.2--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.8.2--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.8.2--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.12.0--h86b0361_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.12.0--h86b0361_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.12.0--h86b0361_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.7.2--boost1.60_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.7.2--boost1.61_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.7.2--boost1.60_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.7.2--boost1.61_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.7.2--boost1.60_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.7.2--boost1.61_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.10.1--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.10.1--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.10.1--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.11.2--h445c947_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.11.2--h445c947_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.11.2--h445c947_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.9.0--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.9.0--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.9.0--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.11.0--h445c947_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.11.0--h445c947_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.11.0--h445c947_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.9.1--0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.9.1--1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.9.1--0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.9.1--1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.9.1--0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.9.1--1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.8.0--boost1.61_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/salmon:0.8.0--boost1.60_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.8.0--boost1.60_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "salmon==0.8.0--boost1.61_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.8.0--boost1.60_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/salmon:0.8.0--boost1.61_0",
+      "type": "Singularity",
+      "registry": ""
+    }
+  ],
+  "version_count": 38,
+  "embedding_text": "Tool: salmon\nDescription: Wicked-fast transcript quantification from rna-seq data\nContainer: quay.io/biocontainers/salmon:0.11.3--h86b0361_1\nRecent versions: salmon, salmon, salmon\nUsage context: This tool is used in bioinformatics pipelines for wicked-fast transcript quantification from rna-seq data.\nSnakemake container directive: container: \"quay.io/biocontainers/salmon:0.11.3--h86b0361_1\""
+}

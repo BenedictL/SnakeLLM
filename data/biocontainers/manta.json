@@ -1,0 +1,248 @@
+{
+  "tool_name": "manta",
+  "display_name": "manta",
+  "description": "Structural variant and indel caller for mapped sequencing data",
+  "homepage": "http://api.biocontainers.pro/ga4gh/trs/v2/tools/manta",
+  "tool_class": "",
+  "best_container": {
+    "full_uri": "quay.io/biocontainers/manta:1.0.3--py27_0",
+    "registry": "quay.io",
+    "tag": "1.0.3--py27_0",
+    "version": "manta",
+    "type": "Docker"
+  },
+  "all_tags": [
+    {
+      "tag": "quay.io/biocontainers/manta:1.0.3--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.0.3--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.0.3--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.5.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.5.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.5.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.0.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.0.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.0.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.1.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.1.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.1.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.3.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.3.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.3.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.4.0--py27_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.4.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.4.0--py27_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.4.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.4.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.4.0--py27_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.2.1--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.2.1--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.2.1--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.3.2--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.3.2--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.3.2--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--py27_0",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--py27_0",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.6.0--py27_0",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--h9ee0642_1",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--h9ee0642_1",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_2",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--h9ee0642_2",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--h9ee0642_2",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--h9ee0642_3",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--h9ee0642_3",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_3",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--py27h9948957_4",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--py27h9948957_4",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "https://depot.galaxyproject.org/singularity/manta:1.6.0--py27h9948957_4",
+      "type": "Singularity",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--py27h9948957_5",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--py27h9948957_5",
+      "type": "Docker",
+      "registry": ""
+    },
+    {
+      "tag": "manta==1.6.0--py27h9948957_6",
+      "type": "Conda",
+      "registry": ""
+    },
+    {
+      "tag": "quay.io/biocontainers/manta:1.6.0--py27h9948957_6",
+      "type": "Docker",
+      "registry": ""
+    }
+  ],
+  "version_count": 9,
+  "embedding_text": "Tool: manta\nDescription: Structural variant and indel caller for mapped sequencing data\nContainer: quay.io/biocontainers/manta:1.0.3--py27_0\nRecent versions: manta, manta, manta\nUsage context: This tool is used in bioinformatics pipelines for structural variant and indel caller for mapped sequencing data.\nSnakemake container directive: container: \"quay.io/biocontainers/manta:1.0.3--py27_0\""
+}
