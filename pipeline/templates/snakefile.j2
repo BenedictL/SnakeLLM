@@ -32,6 +32,7 @@ rule {{ rule.name }}:
     output:
 {%- for out in rule.outputs %}
         "{{ out }}"{% if not loop.last %},{% endif %}
+
 {%- endfor %}
 {%- endif %}
 {%- if rule.params %}
@@ -44,10 +45,10 @@ rule {{ rule.name }}:
     {%- endif %}
 {%- endfor %}
 {%- endif %}
-    threads: {{ rule.resources.get('cpus', 1) }}
+    threads: {{ rule.threads }}
     resources:
-        mem_mb  = {{ rule.resources.get('mem_mb', 4000) }},
-        runtime = {{ rule.resources.get('time_min', 60) }}
+        mem_mb  = {{ rule.resources.mem_mb }},
+        runtime = {{ rule.resources.time_min }}
     log:
         "{{ rule.log }}"
 {%- if rule.script and not rule.shell_cmd %}

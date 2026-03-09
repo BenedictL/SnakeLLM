@@ -56,8 +56,10 @@ class ExecuteRAG:
     def _load_tool_registry(self) -> dict[str, dict]:
         """
         Loads all BioContainers JSON records from disk into a dict keyed by tool name.
-        Also builds name aliases (e.g. "bioconductor-deseq2" → "deseq2").
+        Also builds name aliases via the centralised apply_registry_aliases() function.
         """
+        from llm.biocontainers_indexer import apply_registry_aliases
+
         registry = {}
         if not BIOCONTAINERS_DIR.exists():
             log.warning(f"BioContainers index not found at {BIOCONTAINERS_DIR}. "
@@ -70,21 +72,15 @@ class ExecuteRAG:
                 name   = record["tool_name"].lower()
                 registry[name] = record
 
-                # Build aliases for easier lookup
                 # "bioconductor-deseq2" → also accessible as "deseq2"
                 if "-" in name:
                     parts = name.split("-")
-                    registry[parts[-1]] = record   # last segment as alias
+                    registry[parts[-1]] = record
             except Exception as e:
                 log.warning(f"  Could not load {f}: {e}")
 
-        # Hard-coded aliases for tools stored under a different name
-        if "gatk4" in registry:
-            registry["gatk"] = registry["gatk4"]
-            
-        if "subread" in registry:
-            registry["featurecounts"] = registry["subread"]
-            registry["featureCounts"] = registry["subread"]
+        # Apply all canonical aliases (gatk, bwa-mem2, featurecounts, etc.)
+        registry = apply_registry_aliases(registry)
 
         return registry
 

@@ -19,35 +19,7 @@ logs/
 
 # Results and outputs
 results/
-
-# Editor/IDE specific files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS generated files
-# Python virtual environments
-.venv/
-venv/
-ENV/
-env/
-
-# Python compiled files
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Environment variables
-.env
-
-# Logs
-logs/
-*.log
-
-# Results and outputs
-results/
+output/
 
 # Editor/IDE specific files
 .vscode/
@@ -62,7 +34,8 @@ Thumbs.db
 # Database files
 *.db
 *.sqlite3
-# Benchmark and Testing files
+
+# Benchmark and testing scratch files (not the tests/ package)
 enrich_benchmark.py
 enriched.py
 fails.txt
@@ -84,7 +57,8 @@ test_auto_fix.py
 test_out/
 test_smk_dir/
 testinghard/
-tests/
+
+# TM3 infra files (managed in TM3's own branch — merged via PR)
 profiles/
 .github/
 dist/
@@ -92,3 +66,6 @@ scripts/
 specs/
 LICENSE
 Makefile
+
+# NOTE: tests/ is NOT ignored — remove this line when writing integration tests
+tests/

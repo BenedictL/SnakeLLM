@@ -27,3 +27,5 @@ python-dotenv>=1.0.0
 
 # ── UTILITIES ─────────────────────────────────────────────────────
 numpy>=1.26.0
+json-repair>=0.28.0         # tolerant JSON parser for LLM outputs (used in inference.py)
+jinja2>=3.1.0               # Snakefile template rendering (used in pipeline/assembler.py)

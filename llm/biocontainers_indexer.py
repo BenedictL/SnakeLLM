@@ -65,7 +65,6 @@ def fetch_tool_versions(tool_name: str) -> list[dict]:
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()
         versions = resp.json()
-        # Sort by version tag — newest first (rough lexicographic sort)
         return sorted(versions, key=lambda v: v.get("name", ""), reverse=True)
     except Exception as e:
         log.warning(f"Could not fetch versions for '{tool_name}': {e}")
@@ -99,23 +98,20 @@ def parse_container_record(tool_name: str, raw: dict, versions: list[dict]) -> d
     Converts raw BioContainers API response into a clean structured record
     that the Execute RAG system can embed and retrieve.
     """
-    # Extract best container URI — prefer quay.io Singularity, fall back to Docker
     best_container = extract_best_container(tool_name, versions)
 
-    # Extract description
     description = raw.get("description", "").strip()
     if not description and versions:
         description = versions[0].get("description", "")
 
-    # Extract all available tags
     all_tags = []
-    for v in versions[:10]:  # limit to 10 most recent
+    for v in versions[:10]:
         for img in v.get("images", []):
             tag = img.get("image_name", "")
             if tag:
                 all_tags.append({
                     "tag":      tag,
-                    "type":     img.get("image_type", ""),  # Docker, Singularity
+                    "type":     img.get("image_type", ""),
                     "registry": img.get("registry", ""),
                 })
 
@@ -128,7 +124,6 @@ def parse_container_record(tool_name: str, raw: dict, versions: list[dict]) -> d
         "best_container":  best_container,
         "all_tags":        all_tags,
         "version_count":   len(versions),
-        # Metadata for Execute RAG embedding
         "embedding_text":  build_embedding_text(tool_name, description, best_container, versions),
     }
 
@@ -141,10 +136,9 @@ def extract_best_container(tool_name: str, versions: list[dict]) -> dict:
     3. Any available image
     Returns empty dict if none found.
     """
-    for v in versions[:5]:  # check 5 most recent versions
+    for v in versions[:5]:
         images = v.get("images", [])
 
-        # Prefer quay.io
         for img in images:
             name = img.get("image_name", "")
             if "quay.io" in name and img.get("image_type") == "Docker":
@@ -156,7 +150,6 @@ def extract_best_container(tool_name: str, versions: list[dict]) -> dict:
                     "type":     "Docker",
                 }
 
-        # Fall back to docker.io
         for img in images:
             name = img.get("image_name", "")
             if img.get("image_type") == "Docker":
@@ -219,8 +212,8 @@ def index_tool(tool_name: str) -> Optional[dict]:
         log.warning(f"  Skipping '{tool_name}' — no data found")
         return None
 
-    raw      = raw or {}
-    record   = parse_container_record(tool_name, raw, versions)
+    raw    = raw or {}
+    record = parse_container_record(tool_name, raw, versions)
     save_tool_record(record)
 
     log.info(f"  ✓ {tool_name} → {record['best_container'].get('full_uri', 'no container found')}")
@@ -239,8 +232,56 @@ def index_all(tool_names: list[str]) -> dict[str, dict]:
     return results
 
 
+# ── REGISTRY ALIAS TABLE ──────────────────────────────────────────────────────
+# Applied in execute_rag.py's _load_tool_registry() after loading JSON files.
+# Centralised here so both indexer and RAG share the same alias logic.
+
+def apply_registry_aliases(registry: dict) -> dict:
+    """
+    Add lookup aliases for tools that are stored under a different name
+    or have common alternative spellings.
+
+    Called by ExecuteRAG._load_tool_registry() after loading all JSON files.
+    """
+    # gatk → gatk4
+    if "gatk4" in registry:
+        registry["gatk"] = registry["gatk4"]
+
+    # featurecounts / featureCounts → subread (stored as subread in BioContainers)
+    if "subread" in registry:
+        registry["featurecounts"]  = registry["subread"]
+        registry["featureCounts"]  = registry["subread"]
+
+    # FIX: bwa-mem2 aliases — stored as "bwa-mem2", also accessible as "bwamem2" / "bwa_mem2"
+    if "bwa-mem2" in registry:
+        registry["bwamem2"]  = registry["bwa-mem2"]
+        registry["bwa_mem2"] = registry["bwa-mem2"]
+
+    # hisat2 → hisat (some pipelines use short name)
+    if "hisat2" in registry:
+        registry["hisat"] = registry["hisat2"]
+
+    # bismark → bismark2 (version naming inconsistency)
+    if "bismark" in registry:
+        registry["bismark2"] = registry["bismark"]
+
+    if "cellranger" in registry:
+    registry["cell ranger"] = registry["cellranger"]
+    registry["cell_ranger"] = registry["cellranger"]    
+
+    # bioconductor-* → short name (e.g. "bioconductor-deseq2" → "deseq2")
+    # This is already handled by the "-" split loop in _load_tool_registry,
+    # but we add explicit aliases for the most common ones for safety.
+    for long_name in list(registry.keys()):
+        if long_name.startswith("bioconductor-"):
+            short = long_name.replace("bioconductor-", "")
+            if short not in registry:
+                registry[short] = registry[long_name]
+
+    return registry
+
+
 # ── DEFAULT TOOL LIST ─────────────────────────────────────────────────────────
-# These are the tools covering RNA-seq, ATAC-seq, and WGS pipelines.
 
 DEFAULT_TOOLS = [
     # QC
@@ -263,7 +304,7 @@ DEFAULT_TOOLS = [
     "deeptools", "ataqv",
     # Genome annotation
     "bedtools", "bedops",
-    # R / Bioconductor (these have containers too)
+    # R / Bioconductor
     "bioconductor-deseq2", "bioconductor-edger",
     "bioconductor-clusterprofiler",
     "bioconductor-chipseeker",
@@ -271,8 +312,7 @@ DEFAULT_TOOLS = [
     "bismark",
     # Misc
     "bowtie2", "subread",
-    
-    # Newly added extended tools
+    # Extended tools
     "salmon", "kallisto", "stringtie", "snpeff",
     "manta", "cnvkit", "rseqc", "qualimap",
     "starsolo", "cellranger", "diffbind"
