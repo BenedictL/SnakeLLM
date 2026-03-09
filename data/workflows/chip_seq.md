@@ -1,44 +1,53 @@
-# Workflow Pattern: ChIP-seq Chromatin Immunoprecipitation Analysis
+# Workflow Pattern: ChIP-seq Histone Modification and Transcription Factor Analysis
 Category: chip-seq
-Analysis type: protein-DNA binding, epigenomics, transcription factor, histone modification
-Keywords: ChIP-seq, peak calling, MACS2, transcription factor, histone modification, IDR, motif, DiffBind, binding
+Analysis type: histone modification, transcription factor binding, peak calling, epigenomics
+Keywords: ChIP-seq, histone, H3K27ac, H3K4me3, transcription factor, TF binding, peak calling, MACS2, ChIP, immunoprecipitation, enrichment, epigenomics
 
 ## Purpose
-Identify genome-wide binding sites for transcription factors or map histone modifications.
-Unlike ATAC-seq, ChIP-seq involves immunoprecipitation of specific proteins cross-linked to DNA or mapping nucleosome bounds.
+Map genome-wide binding sites of transcription factors or histone modifications
+using chromatin immunoprecipitation followed by sequencing (ChIP-seq).
+Identifies regulatory elements, promoters, enhancers, and repressed regions.
 
 ## Pipeline Steps (in order)
-1. raw_fastqc          — FastQC QC on raw reads
-2. trim_reads          — Trimmomatic or fastp: adapter trimming
-3. align_bowtie2       — Bowtie2: alignment to reference genome 
-4. filter_bam          — samtools: remove unmapped, low MAPQ (<20) reads and duplicates
+1. raw_fastqc          — FastQC QC on raw reads (input + IP samples)
+2. trim_reads          — Trimmomatic: adapter trimming
+3. align_bowtie2       — Bowtie2: align to reference genome (single-end or paired-end)
+4. filter_bam          — samtools: remove unmapped, low MAPQ (<30), blacklisted reads
 5. remove_duplicates   — Picard MarkDuplicates: remove PCR duplicates
-6. call_peaks          — MACS2 callpeak: identify binding peaks (use --broad for histone marks, --narrow for TFs)
-7. peak_qc             — deepTools plotFingerprint or plotCoverage: evaluate ChIP-seq quality metrics
-8. create_bigwig       — deeptools bamCoverage: generate bigWig tracks for visualization
-9. motif_analysis      — HOMER or MEME-ChIP: transcription factor motif enrichment in peaks
-10. diff_binding       — DiffBind or DESeq2 on peak counts: differential binding between conditions
-11. annotate_peaks     — ChIPseeker (R): annotate peaks to nearest gene, promoter, enhancer
-12. multiqc_report     — MultiQC: aggregate all QC
+6. call_peaks          — MACS2 callpeak: peak calling vs input control
+7. filter_blacklist    — bedtools intersect: remove ENCODE blacklist regions
+8. create_bigwig       — deeptools bamCompare: IP/input log2 fold-change bigWig tracks
+9. peak_annotation     — ChIPseeker (R): annotate peaks to genomic features
+10. motif_enrichment   — HOMER findMotifsGenome or MEME-ChIP: TF motif analysis
+11. diff_binding       — DiffBind (R): differential binding between conditions
+12. multiqc_report     — MultiQC + deeptools plotFingerprint: QC aggregate
 
-## Critical ChIP-seq Specific Steps (do NOT skip)
-- MACS2 requires a control sample (Input DNA or IgG) for accurate peak calling to model background noise.
-- Use `--broad` in MACS2 for dispersed marks like H3K36me3, and default (narrow) for sharp TF binding (e.g., CTCF).
-- ChIP-seq reads are NOT shifted like ATAC-seq reads. Normal MACS2 model generation is preferred.
+## ChIP-seq vs ATAC-seq Key Differences
+- ChIP-seq requires INPUT control sample (genomic DNA without antibody pull-down)
+- No read shifting required (unlike ATAC-seq)
+- MACS2 is used WITH input control: macs2 callpeak -t IP.bam -c input.bam
+- Fragment size is ~200bp (mononucleosomal); use MACS2 --nomodel only if sonication QC fails
+- Histone marks (broad): H3K27me3, H3K9me3 → use --broad flag in MACS2
+- TF binding and active marks (narrow): H3K27ac, H3K4me3, H3K4me1 → default MACS2
 
 ## Key Decision Points
-- Bowtie2 vs BWA: Bowtie2 preferred for short reads (TF ChIP), BWA-MEM for longer reads.
-- IDR filtering: use IDR (Irreproducibility Discovery Rate) if you have biological replicates instead of simply merging peaks.
+- Narrow vs broad peaks: TF/active marks → narrow; repressive marks → --broad
+- Paired-end vs single-end: PE recommended; allows fragment size estimation
+- Spike-in normalisation: required for quantitative comparison of histone marks between conditions
+- IDR: use for TF ChIP replicates; less critical for broad histone marks
 
 ## File Format Flow
-.fastq.gz → [trim] → .fastq.gz → [bowtie2] → .bam → [filter+dedup] → .bam → [MACS2 (with Input)] → .narrowPeak/.broadPeak → [annotate] → peaks_annotated.csv
+.fastq.gz → [bowtie2] → .bam → [filter+dedup] → .bam → [MACS2 with input] → .narrowPeak/.broadPeak → [annotate+motif] → results/
 
 ## Required Config Parameters
-- samples: list of sample names (ChIP and Input)
+- samples: list of IP sample names
+- input_samples: matching input control sample names (dict: ip_sample → input_sample)
 - reference: path to reference genome
-- blacklist: path to ENCODE blacklist BED file (removes artifact regions)
+- blacklist: path to ENCODE blacklist BED file
+- effective_genome_size: e.g. 2913022398 for hg38
+- peak_type: narrow or broad (depends on antibody target)
 
 ## Resource Requirements
 - Bowtie2: 8GB RAM, 8 CPUs, ~30 min per sample
 - MACS2: 8GB RAM, 4 CPUs, ~15 min
-- deeptools bamCoverage: 8GB RAM, 8 CPUs, ~30 min
+- DiffBind: 16GB RAM, 4 CPUs

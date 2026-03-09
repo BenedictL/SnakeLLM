@@ -266,8 +266,8 @@ def apply_registry_aliases(registry: dict) -> dict:
         registry["bismark2"] = registry["bismark"]
 
     if "cellranger" in registry:
-    registry["cell ranger"] = registry["cellranger"]
-    registry["cell_ranger"] = registry["cellranger"]    
+        registry["cell ranger"] = registry["cellranger"]
+        registry["cell_ranger"] = registry["cellranger"]    
 
     # bioconductor-* → short name (e.g. "bioconductor-deseq2" → "deseq2")
     # This is already handled by the "-" split loop in _load_tool_registry,

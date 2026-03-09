@@ -1,14 +1,14 @@
 # Workflow Pattern: Single-Cell RNA-seq Analysis
 Category: scrna-seq
 Analysis type: single cell, cell clustering, cell type annotation
-Keywords: scRNA-seq, single cell, 10x Genomics, Cell Ranger, Seurat, Scanpy, clustering, UMAP, cell types
+Keywords: scRNA-seq, single cell, 10x Genomics, Cell Ranger, cellranger, Seurat, Scanpy, clustering, UMAP, cell types
 
 ## Purpose
 Profile gene expression at single-cell resolution. Identify distinct cell populations,
 marker genes, and cell-type-specific expression patterns.
 
 ## Pipeline Steps (in order)
-1. cellranger_count    — Cell Ranger: alignment + UMI counting (10x Genomics data)
+1. cellranger_count    — Cell Ranger (cellranger): alignment + UMI counting (10x Genomics data)
    OR star_solo        — STARsolo: open-source alternative to Cell Ranger
 2. quality_control     — Seurat or Scanpy: filter low-quality cells (nCount, nFeature, % mito)
 3. normalization       — Normalize + log-transform count matrix
