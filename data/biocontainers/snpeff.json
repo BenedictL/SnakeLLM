@@ -223,6 +223,6 @@
       "registry": ""
     }
   ],
-  "version_count": 23,
+  "version_count": 24,
   "embedding_text": "Tool: snpeff\nDescription: Genetic variant annotation and effect prediction toolbox\nContainer: quay.io/biocontainers/snpeff:4.3g--0\nRecent versions: snpeff, snpeff, snpeff\nUsage context: This tool is used in bioinformatics pipelines for genetic variant annotation and effect prediction toolbox.\nSnakemake container directive: container: \"quay.io/biocontainers/snpeff:4.3g--0\""
 }

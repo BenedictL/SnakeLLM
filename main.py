@@ -141,7 +141,7 @@ def cmd_generate(args):
     log.info("=" * 60)
 
     # Save output
-    output_path = args.output if hasattr(args, 'output') and args.output else "pipeline_spec.json"
+    output_path = args.output if hasattr(args, 'output') and args.output else "pipeline_spec/pipeline_spec.json"
     spec_json   = json.loads(spec.model_dump_json(indent=2))
 
     import os
@@ -211,7 +211,7 @@ if __name__ == "__main__":
     # generate command
     gen_parser = subparsers.add_parser("generate", help="Generate a pipeline from a prompt")
     gen_parser.add_argument("prompt",   type=str, help="Natural language pipeline description")
-    gen_parser.add_argument("--output", type=str, default="pipeline_spec.json", help="Output JSON path")
+    gen_parser.add_argument("--output", type=str, default="pipeline_spec/pipeline_spec.json", help="Output JSON path")
     gen_parser.add_argument("--verbose", action="store_true", help="Show raw LLM output")
 
     # demo command

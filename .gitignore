@@ -68,4 +68,3 @@ LICENSE
 Makefile
 
 # NOTE: tests/ is NOT ignored — remove this line when writing integration tests
-tests/

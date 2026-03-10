@@ -208,6 +208,6 @@
       "registry": ""
     }
   ],
-  "version_count": 17,
+  "version_count": 18,
   "embedding_text": "Tool: bioconductor-clusterprofiler\nDescription: This package implements methods to analyze and visualize functional profiles (go and kegg) of gene and gene clusters.\nContainer: quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0\nRecent versions: bioconductor-clusterprofiler, bioconductor-clusterprofiler, bioconductor-clusterprofiler\nUsage context: This tool is used in bioinformatics pipelines for this package implements methods to analyze and visualize functional profiles (go and kegg) of gene and gene clusters..\nSnakemake container directive: container: \"quay.io/biocontainers/bioconductor-clusterprofiler:3.6.0--r3.4.1_0\""
 }

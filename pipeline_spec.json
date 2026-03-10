@@ -1,0 +1,288 @@
+{
+  "pipeline_type": "rna-seq-de",
+  "description": "Bulk RNA-seq pipeline for paired-end reads performing QC, adapter trimming, splice-aware alignment, and gene-level quantification.",
+  "tools": [
+    {
+      "name": "FastQC",
+      "version": "0.11.5",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/fastqc",
+        "tag": "0.11.5--1",
+        "full_uri": "quay.io/biocontainers/fastqc:0.11.5--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Quality control assessment of raw and trimmed paired-end FASTQ reads",
+      "language": "CLI"
+    },
+    {
+      "name": "Trimmomatic",
+      "version": "0.33",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/trimmomatic",
+        "tag": "0.33--1",
+        "full_uri": "quay.io/biocontainers/trimmomatic:0.33--1",
+        "source": "biocontainers"
+      },
+      "purpose": "Adapter removal and quality trimming of paired-end reads",
+      "language": "CLI"
+    },
+    {
+      "name": "STAR",
+      "version": "2.5.4a",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/star",
+        "tag": "2.5.4a--0",
+        "full_uri": "quay.io/biocontainers/star:2.5.4a--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Splice-aware alignment of trimmed reads to the reference genome producing BAM files",
+      "language": "CLI"
+    },
+    {
+      "name": "samtools",
+      "version": "0.1.19",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/samtools",
+        "tag": "0.1.19--2",
+        "full_uri": "quay.io/biocontainers/samtools:0.1.19--2",
+        "source": "biocontainers"
+      },
+      "purpose": "Sorting and indexing of aligned BAM files for downstream quantification",
+      "language": "CLI"
+    },
+    {
+      "name": "featureCounts",
+      "version": "1.5.0p3",
+      "container": {
+        "registry": "quay.io",
+        "image": "biocontainers/subread",
+        "tag": "1.5.0p3--0",
+        "full_uri": "quay.io/biocontainers/subread:1.5.0p3--0",
+        "source": "biocontainers"
+      },
+      "purpose": "Gene-level read quantification by counting reads overlapping annotated genomic features",
+      "language": "CLI"
+    }
+  ],
+  "rules": [
+    {
+      "name": "raw_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/raw/{sample}_R1_fastqc.html",
+        "qc/fastqc/raw/{sample}_R1_fastqc.zip",
+        "qc/fastqc/raw/{sample}_R2_fastqc.html",
+        "qc/fastqc/raw/{sample}_R2_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc/raw",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "threads": 4,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/raw/{sample}.log"
+      ]
+    },
+    {
+      "name": "trim_reads",
+      "tool": "Trimmomatic",
+      "input": [
+        "data/{sample}_R1.fastq.gz",
+        "data/{sample}_R2.fastq.gz"
+      ],
+      "output": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R1_unpaired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz",
+        "trimmed/{sample}_R2_unpaired.fastq.gz"
+      ],
+      "params": {
+        "adapters": "config[adapters]",
+        "leading": 3,
+        "trailing": 3,
+        "slidingwindow": "4:15",
+        "minlen": 36,
+        "threads": 4
+      },
+      "shell_cmd": "trimmomatic PE -threads {params.threads} {input[0]} {input[1]} {output[0]} {output[1]} {output[2]} {output[3]} ILLUMINACLIP:{params.adapters}:2:30:10 LEADING:{params.leading} TRAILING:{params.trailing} SLIDINGWINDOW:{params.slidingwindow} MINLEN:{params.minlen} 2> {log[0]}",
+      "script": null,
+      "threads": 4,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 8000,
+        "time_min": 90,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/trimmomatic/{sample}.log"
+      ]
+    },
+    {
+      "name": "post_trim_fastqc",
+      "tool": "FastQC",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "qc/fastqc/trimmed/{sample}_R1_paired_fastqc.html",
+        "qc/fastqc/trimmed/{sample}_R1_paired_fastqc.zip",
+        "qc/fastqc/trimmed/{sample}_R2_paired_fastqc.html",
+        "qc/fastqc/trimmed/{sample}_R2_paired_fastqc.zip"
+      ],
+      "params": {
+        "outdir": "qc/fastqc/trimmed",
+        "threads": 4
+      },
+      "shell_cmd": "fastqc --threads {params.threads} --outdir {params.outdir} {input[0]} {input[1]}",
+      "script": null,
+      "threads": 4,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 4000,
+        "time_min": 60,
+        "disk_mb": 10000
+      },
+      "log": [
+        "logs/fastqc/trimmed/{sample}.log"
+      ]
+    },
+    {
+      "name": "align_star",
+      "tool": "STAR",
+      "input": [
+        "trimmed/{sample}_R1_paired.fastq.gz",
+        "trimmed/{sample}_R2_paired.fastq.gz"
+      ],
+      "output": [
+        "aligned/{sample}/Aligned.out.bam",
+        "aligned/{sample}/Log.final.out"
+      ],
+      "params": {
+        "genome_dir": "config[star_genome_dir]",
+        "threads": 8,
+        "outdir_prefix": "aligned/{sample}/"
+      },
+      "shell_cmd": "STAR --runThreadN {params.threads} --genomeDir {params.genome_dir} --readFilesIn {input[0]} {input[1]} --readFilesCommand zcat --outSAMtype BAM Unsorted --outSAMattributes NH HI AS NM MD --outFileNamePrefix {params.outdir_prefix} 2> {log[0]}",
+      "script": null,
+      "threads": 8,
+      "resources": {
+        "cpus": 8,
+        "mem_mb": 40000,
+        "time_min": 180,
+        "disk_mb": 50000
+      },
+      "log": [
+        "logs/star/{sample}.log"
+      ]
+    },
+    {
+      "name": "sort_index_bam",
+      "tool": "samtools",
+      "input": [
+        "aligned/{sample}/Aligned.out.bam"
+      ],
+      "output": [
+        "aligned/{sample}/{sample}.sorted.bam",
+        "aligned/{sample}/{sample}.sorted.bam.bai"
+      ],
+      "params": {
+        "threads": 4
+      },
+      "shell_cmd": "samtools sort -@ {params.threads} -o {output[0]} {input[0]} && samtools index {output[0]} 2> {log[0]}",
+      "script": null,
+      "threads": 4,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 90,
+        "disk_mb": 30000
+      },
+      "log": [
+        "logs/samtools/{sample}.log"
+      ]
+    },
+    {
+      "name": "featurecounts",
+      "tool": "featureCounts",
+      "input": [
+        "expand('aligned/{sample}/{sample}.sorted.bam', sample=config['samples'])"
+      ],
+      "output": [
+        "counts/all_samples_counts.txt",
+        "counts/all_samples_counts.txt.summary"
+      ],
+      "params": {
+        "gtf": "config[gtf_file]",
+        "threads": 4,
+        "strandedness": "config[strandedness]",
+        "paired_end": "config[paired_end]"
+      },
+      "shell_cmd": "featureCounts -T {params.threads} -s {params.strandedness} $(if [ \"{params.paired_end}\" = \"True\" ]; then echo \"-p\"; fi) -a {params.gtf} -o {output[0]} {input} 2> {log[0]}",
+      "script": null,
+      "threads": 4,
+      "resources": {
+        "cpus": 4,
+        "mem_mb": 16000,
+        "time_min": 120,
+        "disk_mb": 20000
+      },
+      "log": [
+        "logs/featurecounts/all_samples.log"
+      ]
+    }
+  ],
+  "dag_edges": [
+    [
+      "raw_fastqc",
+      "trim_reads"
+    ],
+    [
+      "trim_reads",
+      "post_trim_fastqc"
+    ],
+    [
+      "post_trim_fastqc",
+      "align_star"
+    ],
+    [
+      "align_star",
+      "sort_index_bam"
+    ],
+    [
+      "sort_index_bam",
+      "featurecounts"
+    ]
+  ],
+  "config_params": {
+    "samples": [
+      "sample1",
+      "sample2",
+      "sample3"
+    ],
+    "adapters": "resources/adapters.fa",
+    "star_genome_dir": "resources/star_genome",
+    "gtf_file": "resources/annotation.gtf",
+    "strandedness": 0,
+    "paired_end": true
+  },
+  "wildcards": [
+    "sample"
+  ]
+}
